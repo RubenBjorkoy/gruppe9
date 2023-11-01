@@ -1,22 +1,25 @@
 import pool from './mysql-pool';
 import type { RowDataPacket, ResultSetHeader } from 'mysql2';
 
-export type Task = {
-  id: number;
-  title: string;
-  done: boolean;
+export type Sporsmal = {
+  sporsmalid: number;
+  tittel: string;
+  innhold: string;
+  poeng: number;
+  dato: Date;
+  sistendret: Date;
 };
 
-class TaskService {
+class SporsmalService {
   /**
    * Get task with given id.
    */
   get(id: number) {
-    return new Promise<Task | undefined>((resolve, reject) => {
-      pool.query('SELECT * FROM Tasks WHERE id = ?', [id], (error, results: RowDataPacket[]) => {
+    return new Promise<Sporsmal | undefined>((resolve, reject) => {
+      pool.query('SELECT * FROM Sporsmal WHERE sporsmalid = ?', [id], (error, results: RowDataPacket[]) => {
         if (error) return reject(error);
 
-        resolve(results[0] as Task);
+        resolve(results[0] as Sporsmal);
       });
     });
   }
@@ -25,11 +28,11 @@ class TaskService {
    * Get all tasks.
    */
   getAll() {
-    return new Promise<Task[]>((resolve, reject) => {
-      pool.query('SELECT * FROM Tasks', [], (error, results: RowDataPacket[]) => {
+    return new Promise<Sporsmal[]>((resolve, reject) => {
+      pool.query('SELECT * FROM Sporsmal', [], (error, results: RowDataPacket[]) => {
         if (error) return reject(error);
 
-        resolve(results as Task[]);
+        resolve(results as Sporsmal[]);
       });
     });
   }
@@ -39,9 +42,9 @@ class TaskService {
    *
    * Resolves the newly created task id.
    */
-  create(title: string) {
+  create(sporsmal: Sporsmal) {
     return new Promise<number>((resolve, reject) => {
-      pool.query('INSERT INTO Tasks SET title=?', [title], (error, results: ResultSetHeader) => {
+      pool.query('INSERT INTO Sporsmal SET tittel=?, innhold=?, poeng=?, dato=?, sistendret=?', [sporsmal.tittel, sporsmal.innhold, sporsmal.poeng, sporsmal.dato, sporsmal.sistendret], (error, results: ResultSetHeader) => {
         if (error) return reject(error);
 
         resolve(results.insertId);
@@ -52,9 +55,9 @@ class TaskService {
   /**
    * Updates a task with a given ID
    */
-  update(task: Task) {
+  update(sporsmal: Sporsmal) {
     return new Promise<void>((resolve, reject) => {
-      pool.query('UPDATE Tasks SET title=?, done=? WHERE id=?', [task.title, task.done, task.id], (error, results: ResultSetHeader) => {
+      pool.query('UPDATE Sporsmal SET tittel=?, innhold=? WHERE sporsmalid=?', [sporsmal.tittel, sporsmal.innhold, sporsmal.sporsmalid], (error, results: ResultSetHeader) => {
         if (error) return reject(error);
         if (results.affectedRows == 0) reject(new Error('No row updated'));
       })
@@ -77,5 +80,5 @@ class TaskService {
   }
 }
 
-const taskService = new TaskService();
-export default taskService;
+const sporsmalService = new SporsmalService();
+export default sporsmalService;
