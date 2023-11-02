@@ -25,3 +25,5 @@ cd client
 npm install
 npm start
 ```
+
+every edit of the questions table will update the "sestendret" serverside
