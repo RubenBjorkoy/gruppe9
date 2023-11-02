@@ -3,11 +3,15 @@ import pool from '../src/mysql-pool';
 import app from '../src/app';
 import sporsmalService, { Sporsmal } from '../src/sporsmal-service';
 
+const now: any = new Date();
+const roundedDate = new Date(Math.floor(now / 1000) * 1000); // Rounds to seconds to account for millisecond delays in creating the questions.
+
 const testQuestions: Sporsmal[] = [
-  { sporsmalid: 1, tittel: 'How to create a database schema?', innhold: 'I need help with designing a database schema for my project.', poeng: 10, dato: new Date(), sistendret: new Date() },
-  { sporsmalid: 2, tittel: 'What are TypeScript interfaces?', innhold: 'I want to understand interfaces in TypeScript. Can someone explain?', poeng: 8, dato: new Date(), sistendret: new Date() },
-  { sporsmalid: 3, tittel: 'How to use async/await in JavaScript?', innhold: 'I am having trouble understanding asynchronous programming. Any examples?', poeng: 12, dato: new Date(), sistendret: new Date() }
+  { sporsmalid: 1, tittel: 'How to create a database schema?', innhold: 'I need help with designing a database schema for my project.', poeng: 10, dato: roundedDate, sistendret: roundedDate },
+  { sporsmalid: 2, tittel: 'What are TypeScript interfaces?', innhold: 'I want to understand interfaces in TypeScript. Can someone explain?', poeng: 8, dato: roundedDate, sistendret: roundedDate },
+  { sporsmalid: 3, tittel: 'How to use async/await in JavaScript?', innhold: 'I am having trouble understanding asynchronous programming. Any examples?', poeng: 12, dato: roundedDate, sistendret: roundedDate }
 ];
+
 
 // Since API is not compatible with v1, API version is increased to v2
 axios.defaults.baseURL = 'http://localhost:3001/api/v2';
@@ -41,24 +45,31 @@ afterAll((done) => {
 describe('Fetch questions (GET)', () => {
   test('Fetch all questions (200 OK)', (done) => {
     axios.get('/sporsmal').then((response) => {
-      console.log(response.data);
+
+      const expectedData = JSON.parse(JSON.stringify(testQuestions))
+      const receivedData = JSON.parse(JSON.stringify(response.data))
+
       expect(response.status).toEqual(200);
-      expect(response.data).toEqual(testQuestions);
+      expect(receivedData).toEqual(expectedData);
       done();
     });
   });
 
-  test.skip('Fetch question (200 OK)', (done) => {
-    axios.get('/tasks/1').then((response) => {
+  test('Fetch question (200 OK)', (done) => {
+    axios.get('/sporsmal/1').then((response) => {
+
+      const expectedData = JSON.parse(JSON.stringify(testQuestions))
+      const receivedData = JSON.parse(JSON.stringify(response.data))
+
       expect(response.status).toEqual(200);
-      expect(response.data).toEqual(testQuestions[0]);
+      expect(receivedData).toEqual(expectedData[0]);
       done();
     });
   });
 
-  test.skip('Fetch question (404 Not Found)', (done) => {
+  test('Fetch question (404 Not Found)', (done) => { //Working
     axios
-      .get('/tasks/4')
+      .get('/sporsmal/4')
       .then((_response) => done(new Error()))
       .catch((error) => {
         expect(error.message).toEqual('Request failed with status code 404');
@@ -68,18 +79,43 @@ describe('Fetch questions (GET)', () => {
 });
 
 describe('Create new question (POST)', () => {
-  test.skip('Create new question (200 OK)', (done) => {
-    axios.post('/tasks', { title: 'Ny oppgave' }).then((response) => {
+  test('Create new question (200 OK)', (done) => {
+    const now: any = new Date();
+    const roundedDate = new Date(Math.floor(now / 1000) * 1000);
+    const testQuestion: Sporsmal = {
+      //sporsmalid: 4, 
+      tittel: 'How to create a new question?', 
+      innhold: 'I need help with creating a question for this test', 
+      poeng: 1, 
+      dato: roundedDate, 
+      sistendret: roundedDate 
+    }
+    
+    axios.post('/sporsmal', { sporsmal: testQuestion }).then((response) => {
       expect(response.status).toEqual(200);
-      expect(response.data).toEqual({ id: 4 });
+      expect(response.data).toEqual({id: 4});
       done();
     });
-  });
+  })
+});
+
+describe('Update question (POST)', () => {
+  test('Create new question (200 OK)', (done) => {
+    const testQuestion: Sporsmal = testQuestions[2];
+    const updatedPoeng = testQuestion.poeng+1;
+    testQuestion.poeng = updatedPoeng;
+    
+    
+    axios.put('/sporsmal', { sporsmal: testQuestion }).then((response) => {
+      expect(response.status).toEqual(200);
+      done();
+    });
+  })
 });
 
 describe('Delete question (DELETE)', () => {
-  test.skip('Delete question (200 OK)', (done) => {
-    axios.delete('/tasks/2').then((response) => {
+  test('Delete question (200 OK)', (done) => {
+    axios.delete('/sporsmal/2').then((response) => {
       expect(response.status).toEqual(200);
       done();
     });

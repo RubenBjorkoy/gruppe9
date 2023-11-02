@@ -2,7 +2,7 @@ import pool from './mysql-pool';
 import type { RowDataPacket, ResultSetHeader } from 'mysql2';
 
 export type Sporsmal = {
-  sporsmalid: number;
+  sporsmalid?: number;
   tittel: string;
   innhold: string;
   poeng: number;
@@ -15,11 +15,20 @@ class SporsmalService {
    * Get task with given id.
    */
   get(id: number) {
+    //Also use this to get comments.
     return new Promise<Sporsmal | undefined>((resolve, reject) => {
-      pool.query('SELECT * FROM Sporsmal WHERE sporsmalid = ?', [id], (error, results: RowDataPacket[]) => {
+      pool.query('SELECT sporsmalid, tittel, innhold, poeng, UNIX_TIMESTAMP(dato) as dato, UNIX_TIMESTAMP(sistendret) as sistendret FROM Sporsmal WHERE sporsmalid = ?', [id], (error, results: RowDataPacket[]) => {
         if (error) return reject(error);
 
-        resolve(results[0] as Sporsmal);
+        const roundedResults = results.map(result => {
+          return {
+            ...result,
+            dato: new Date(result.dato * 1000),
+            sistendret: new Date(result.sistendret * 1000),
+          };
+        });
+
+        resolve(roundedResults[0] as Sporsmal);
       });
     });
   }
@@ -29,10 +38,18 @@ class SporsmalService {
    */
   getAll() {
     return new Promise<Sporsmal[]>((resolve, reject) => {
-      pool.query('SELECT * FROM Sporsmal', [], (error, results: RowDataPacket[]) => {
+      pool.query('SELECT sporsmalid, tittel, innhold, poeng, UNIX_TIMESTAMP(dato) as dato, UNIX_TIMESTAMP(sistendret) as sistendret FROM Sporsmal;', [], (error, results: RowDataPacket[]) => {
         if (error) return reject(error);
 
-        resolve(results as Sporsmal[]);
+        const roundedResults = results.map(result => {
+          return {
+            ...result,
+            dato: new Date(result.dato * 1000),
+            sistendret: new Date(result.sistendret * 1000),
+          };
+        });
+
+        resolve(roundedResults as Sporsmal[]);
       });
     });
   }
@@ -43,10 +60,14 @@ class SporsmalService {
    * Resolves the newly created task id.
    */
   create(sporsmal: Sporsmal) {
-    return new Promise<number>((resolve, reject) => {
-      pool.query('INSERT INTO Sporsmal SET tittel=?, innhold=?, poeng=?, dato=?, sistendret=?', [sporsmal.tittel, sporsmal.innhold, sporsmal.poeng, sporsmal.dato, sporsmal.sistendret], (error, results: ResultSetHeader) => {
-        if (error) return reject(error);
+    const unixDato = Math.floor(sporsmal.dato.getTime() / 1000);
+    const unixSistendret = Math.floor(sporsmal.sistendret.getTime() / 1000);
 
+    return new Promise<number>((resolve, reject) => {
+      pool.query('INSERT INTO Sporsmal(tittel, innhold, poeng, dato, sistendret) VALUES (?, ?, ?, FROM_UNIXTIME(?), FROM_UNIXTIME(?)) ', [sporsmal.tittel, sporsmal.innhold, sporsmal.poeng, unixDato, unixSistendret], (error, results: ResultSetHeader) => {
+        if (error) {
+          return reject(error);
+        }
         resolve(results.insertId);
       });
     });
@@ -56,12 +77,15 @@ class SporsmalService {
    * Updates a task with a given ID
    */
   update(sporsmal: Sporsmal) {
-    return new Promise<void>((resolve, reject) => {
-      pool.query('UPDATE Sporsmal SET tittel=?, innhold=? WHERE sporsmalid=?', [sporsmal.tittel, sporsmal.innhold, sporsmal.sporsmalid], (error, results: ResultSetHeader) => {
+    const unixSistendret = Math.floor(new Date().getTime() / 1000);
+    return new Promise<number>((resolve, reject) => {
+      //dato will not change after initial insert, however sistendret updates for every change
+      pool.query('UPDATE Sporsmal SET tittel=?, innhold=?, poeng=?, sistendret=FROM_UNIXTIME(?) WHERE sporsmalid=?', [sporsmal.tittel, sporsmal.innhold, sporsmal.poeng, unixSistendret, sporsmal.sporsmalid], (error, results: ResultSetHeader) => {
         if (error) return reject(error);
         if (results.affectedRows == 0) reject(new Error('No row updated'));
+
+        resolve(results.affectedRows);
       })
-        resolve();
       })
     }
 
@@ -70,7 +94,7 @@ class SporsmalService {
    */
   delete(id: number) {
     return new Promise<void>((resolve, reject) => {
-      pool.query('DELETE FROM Tasks WHERE id = ?', [id], (error, results: ResultSetHeader) => {
+      pool.query('DELETE FROM Sporsmal WHERE sporsmalid = ?', [id], (error, results: ResultSetHeader) => {
         if (error) return reject(error);
         if (results.affectedRows == 0) reject(new Error('No row deleted'));
 

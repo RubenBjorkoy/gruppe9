@@ -13,44 +13,46 @@ router.get('/sporsmal', (_request, response) => {
     .catch((error) => response.status(500).send(error));
 });
 
-router.get('/tasks/:id', (request, response) => {
+router.get('/sporsmal/:id', (request, response) => {
   const id = Number(request.params.id);
   sporsmalService
     .get(id)
-    .then((task) => (task ? response.send(task) : response.status(404).send('Task not found')))
+    .then((sporsmal) => (sporsmal ? response.send(sporsmal) : response.status(404).send('Sporsmal not found')))
     .catch((error) => response.status(500).send(error));
 });
 
 // Example request body: { title: "Ny oppgave" }
 // Example response body: { id: 4 }
-router.post('/tasks', (request, response) => {
-  const data = request.body;
-  if (data && data.title && data.title.length != 0)
-  sporsmalService
-      .create(data.title)
+router.post('/sporsmal', (request, response) => {
+  const data = request.body.sporsmal;
+  data.dato = new Date(data.dato);
+  data.sistendret = new Date(data.sistendret);
+  if (data && data.tittel && data.tittel.length != 0) 
+    sporsmalService
+      .create(data)
       .then((id) => response.send({ id: id }))
-      .catch((error) => response.status(500).send(error));
-  else response.status(400).send('Missing task title');
+      .catch((error) => {response.status(500).send(error)});
+  else response.status(400).send('Missing question title');
 });
 
-router.put('/tasks', (request, response) => {
-  const { sporsmalid, tittel, innhold, poeng, dato, sistendret } = request.body;
+router.put('/sporsmal', (request, response) => {
+  const data = request.body.sporsmal
   if (
-    typeof sporsmalid == 'number' &&
-    typeof tittel == 'string' &&
-    tittel.length > 0 &&
-    typeof innhold == 'string' &&
-    innhold.length > 0 &&
-    typeof poeng == 'number'
+    typeof data.sporsmalid == 'number' &&
+    typeof data.tittel == 'string' &&
+    data.tittel.length > 0 &&
+    typeof data.innhold == 'string' &&
+    data.innhold.length > 0 &&
+    typeof data.poeng == 'number'
   ) {
     sporsmalService
-      .update({ sporsmalid, tittel, innhold, poeng, dato, sistendret })
+      .update(data)
       .then(() => response.send())
       .catch((error) => response.status(500).send(error));
   } else response.status(400).send('Missing task id');
 });
 
-router.delete('/tasks/:id', (request, response) => {
+router.delete('/sporsmal/:id', (request, response) => {
   sporsmalService
     .delete(Number(request.params.id))
     .then((_result) => response.send())
