@@ -2,7 +2,7 @@ import pool from './mysql-pool';
 import type { RowDataPacket, ResultSetHeader } from 'mysql2';
 
 export type Sporsmal = {
-  sporsmalid?: number;
+  sporsmalid?: number; //sporsmalid is handled by the database
   tittel: string;
   innhold: string;
   poeng: number;
@@ -91,12 +91,16 @@ class SporsmalService {
 
   /**
    * Delete task with given id.
+   * 
+   * Deleting a question will also delete all answers to that question.
    */
   delete(id: number) {
     return new Promise<void>((resolve, reject) => {
       pool.query('DELETE FROM Sporsmal WHERE sporsmalid = ?', [id], (error, results: ResultSetHeader) => {
         if (error) return reject(error);
         if (results.affectedRows == 0) reject(new Error('No row deleted'));
+
+        pool.query('DELETE FROM Svar WHERE sporsmalid = ?', [id], (error, results: ResultSetHeader) => {});
 
         resolve();
       });

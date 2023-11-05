@@ -100,7 +100,7 @@ describe('Create new question (POST)', () => {
 });
 
 describe('Update question (POST)', () => {
-  test('Create new question (200 OK)', (done) => {
+  test('Update question (200 OK)', (done) => {
     const testQuestion: Sporsmal = testQuestions[2];
     const updatedPoeng = testQuestion.poeng+1;
     testQuestion.poeng = updatedPoeng;
