@@ -96,7 +96,7 @@ POST /sporsmal
 ```
 PUT /sporsmal
 ```
-- **Description**: Updates an existing question. Every update automatically updates the `sistendret` field.
+- **Description**: Updates an existing question. Every update automatically updates the `sistendret` field. Uses the sporsmalid included in the sent sporsmal object.
 - **Request Body**:
 ```json
 {
@@ -205,7 +205,7 @@ POST /sporsmal/:sporsmalid/svar
 
 #### 4. Update an Answer for a Question
 ```
-PUT /sporsmal/:sporsmalid/svar/:svarid
+PUT /sporsmal/:sporsmalid/svar/
 ```
 - **Description**: Updates an existing answer for a specific question. Every update automatically updates the `sistendret` field.
 - **Parameters**: `sporsmalid` (integer) - Question ID, `svarid` (integer) - Answer ID.
@@ -239,5 +239,3 @@ DELETE /sporsmal/:sporsmalid/svar/:svarid
 - Dates (`dato` and `sistendret`) should be provided in ISO 8601 format (`YYYY-MM-DDTHH:mm:ss.sssZ`).
 - `ersvar` indicates whether the answer is a response to another answer (true) or a direct response to the question (false).
 - If `ersvar` is true, `svarsvarid` should contain the ID of the answer to which it is responding. If `ersvar` is false, `svarsvarid` should be null.
-
-Feel free to reach out if you have any questions or issues using the Svar Service API.

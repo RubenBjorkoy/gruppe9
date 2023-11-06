@@ -23,8 +23,8 @@ router.get('/sporsmal/:sporsmalid/svar/:svarid', (request, response) => {
     .catch((error) => response.status(500).send(error));
 });
 
-// // Example request body: { title: "Ny oppgave" }
-// // Example response body: { id: 4 }
+// Example request body: { title: "Ny oppgave" }
+// Example response body: { id: 4 }
 router.post('/sporsmal/:sporsmalid/svar', (request, response) => {
   if(request.params.sporsmalid != request.body.svar.sporsmalid) response.status(400).send('Sporsmalid in url and body does not match');
   const data = request.body.svar;

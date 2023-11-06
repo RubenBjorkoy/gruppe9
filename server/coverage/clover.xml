@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1699237707690" clover="3.2.0">
-  <project timestamp="1699237707690" name="All files">
+<coverage generated="1699285689318" clover="3.2.0">
+  <project timestamp="1699285689318" name="All files">
     <metrics statements="154" coveredstatements="136" conditionals="78" coveredconditionals="54" methods="77" coveredmethods="65" elements="309" coveredelements="255" complexity="0" loc="154" ncloc="154" packages="1" files="6" classes="6"/>
     <file name="app.ts" path="C:\Users\ruben\OneDrive\Dokumenter\AA NTNU\INFT2002\prosjektoppgave\gruppe9\server\src\app.ts">
       <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
