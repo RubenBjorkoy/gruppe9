@@ -97,29 +97,53 @@ class SvarService {
   /**
    * Delete task with given id.
    */
-  delete(svarid: number) {
+  delete(svarid: number, fromQuestion?: boolean | undefined) {
     return new Promise<void>((resolve, reject) => {
-      function deleteComments(commentId: number): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-          pool.query('DELETE FROM Svar WHERE svarid = ?', [commentId], (error, results: RowDataPacket[]) => {
-            if (error) return reject(error);
 
-            if (results.length > 0) {
-              pool.query('SELECT svarid FROM Svar WHERE svarsvarid = ?', [commentId], (error, rows: RowDataPacket[]) => {
-                if (error) return reject(error);
+      //If fromQuestion is true, we need to delete all comments on the question as well
 
-                const deleteRepliesPromises = rows.map((row) => deleteComments(row.svarid));
-                Promise.all(deleteRepliesPromises)
-                  .then(() => resolve())
-                  .catch((error) => reject(error));
-              });
-            } else {
+      if(fromQuestion) {
+        pool.query('SELECT * FROM Svar WHERE svarsvarid = (SELECT svarid FROM Svar WHERE sporsmalid = ?)', [svarid], (error, results: RowDataPacket[]) => {
+          if(error) return reject(error);
+          if(results.length == 0) {
+            pool.query('DELETE FROM Svar WHERE sporsmalid = ?', [svarid], (error, _results: RowDataPacket[]) => {
+              if (error) return reject(error);
               resolve();
-            }
-          });
+            });
+          }
         });
       }
 
+      pool.query('SELECT * FROM Svar WHERE svarsvarid = ?', [svarid], (error, results: RowDataPacket[]) => {
+        if(error) return reject(error);
+        if(results.length == 0) {
+          pool.query('DELETE FROM Svar WHERE svarid = ?', [svarid], (error, _results: RowDataPacket[]) => {
+            if (error) return reject(error);
+            resolve();
+          });
+        }
+      });
+
+      function deleteComments(commentId: number): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+          // Fetch replies first
+          pool.query('SELECT svarid FROM Svar WHERE svarsvarid = ?', [commentId], (error, rows: RowDataPacket[]) => {
+            if (error) return reject(error);
+  
+            const deleteRepliesPromises = rows.map((row) => deleteComments(row.svarid));
+            Promise.all(deleteRepliesPromises)
+              .then(() => {
+                // Delete the comment itself after deleting its replies
+                pool.query('DELETE FROM Svar WHERE svarid = ?', [commentId], (error, _results: RowDataPacket[]) => {
+                  if (error) return reject(error);
+                  resolve();
+                });
+              })
+              .catch((error) => reject(error));
+          });
+        });
+      }
+  
       deleteComments(svarid)
         .then(() => resolve())
         .catch((error) => reject(error));

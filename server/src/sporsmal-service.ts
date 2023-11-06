@@ -95,13 +95,13 @@ class SporsmalService {
    * 
    * Deleting a question will also delete all answers to that question.
    */
-  delete(id: number) {
+  delete(sporsmalid: number) {
     return new Promise<void>((resolve, reject) => {
-      pool.query('DELETE FROM Sporsmal WHERE sporsmalid = ?', [id], (error, results: ResultSetHeader) => {
+      pool.query('DELETE FROM Sporsmal WHERE sporsmalid = ?', [sporsmalid], async (error, results: ResultSetHeader) => {
         if (error) return reject(error);
         if (results.affectedRows == 0) reject(new Error('No row deleted'));
 
-        svarService.delete(id)
+        await svarService.delete(sporsmalid, true)
 
         resolve();
       });
