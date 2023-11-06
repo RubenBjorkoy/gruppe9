@@ -13,10 +13,10 @@ router.get('/sporsmal', (_request, response) => {
     .catch((error) => response.status(500).send(error));
 });
 
-router.get('/sporsmal/:id', (request, response) => {
-  const id = Number(request.params.id);
+router.get('/sporsmal/:sporsmalid', (request, response) => {
+  const sporsmalid = Number(request.params.sporsmalid);
   sporsmalService
-    .get(id)
+    .get(sporsmalid)
     .then((sporsmal) => (sporsmal ? response.send(sporsmal) : response.status(404).send('Sporsmal not found')))
     .catch((error) => response.status(500).send(error));
 });
@@ -30,7 +30,7 @@ router.post('/sporsmal', (request, response) => {
   if (data && data.tittel && data.tittel.length != 0) 
     sporsmalService
       .create(data)
-      .then((id) => response.send({ id: id }))
+      .then(() => response.send({}))
       .catch((error) => {response.status(500).send(error)});
   else response.status(400).send('Missing question title');
 });
@@ -52,9 +52,9 @@ router.put('/sporsmal', (request, response) => {
   } else response.status(400).send('Missing task id');
 });
 
-router.delete('/sporsmal/:id', (request, response) => {
+router.delete('/sporsmal/:sporsmalid', (request, response) => {
   sporsmalService
-    .delete(Number(request.params.id))
+    .delete(Number(request.params.sporsmalid))
     .then((_result) => response.send())
     .catch((error) => response.status(500).send(error));
 });

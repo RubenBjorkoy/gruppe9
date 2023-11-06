@@ -15,7 +15,7 @@ class SporsmalService {
   /**
    * Get task with given id.
    */
-  get(id: number) {
+  get(sporsmalid: number) {
     //Also use this to get comments.
     return new Promise<Sporsmal | undefined>((resolve, reject) => {
       pool.query('SELECT sporsmalid, tittel, innhold, poeng, UNIX_TIMESTAMP(dato) as dato, UNIX_TIMESTAMP(sistendret) as sistendret FROM Sporsmal WHERE sporsmalid = ?', [id], (error, results: RowDataPacket[]) => {

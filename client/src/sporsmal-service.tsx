@@ -3,52 +3,52 @@ import axios from 'axios';
 axios.defaults.baseURL = 'http://localhost:3000/api/v2';
 
 export type Sporsmal = {
-  sporsmalid: number;
+  sporsmalid?: number;
   tittel: string;
   innhold: string;
   poeng: number;
-  dato: Date;
-  sistendret: Date;
+  dato?: Date;
+  sistendret?: Date;
 };
 
 class SporsmalService {
   /**
    * Get Sporsmal with given id.
    */
-  get(id: number) {
-    return axios.get<Sporsmal>('/Sporsmals/' + id).then((response) => response.data);
+  get(sporsmalid: number) {
+    return axios.get<Sporsmal>('/sporsmal/' + sporsmalid).then((response) => response.data);
   }
 
   /**
-   * Get all Sporsmals.
+   * Get all Sporsmaler.
    */
   getAll() {
-    return axios.get<Sporsmal[]>('/Sporsmals').then((response) => response.data);
+    return axios.get<Sporsmal[]>('/sporsmal').then((response) => response.data);
   }
 
   /**
-   * Create new Sporsmal having the given title.
+   * Create new Sporsmal having the given tittel.
    *
    * Resolves the newly created Sporsmal id.
    */
-  create(title: string) {
+  create(tittel: string, innhold: string, poeng: number, sporsmal?: number, dato?: Date, sistendret?: Date) {
     return axios
-      .post<{ id: number }>('/Sporsmals', { title: title })
-      .then((response) => response.data.id);
+      .post<{ sporsmal: Sporsmal }>('/sporsmal', { tittel: tittel , innhold: innhold, poeng: poeng})
+      .then((response) => response.data);
   }
 
-  delete(id: number) {
+  delete(sporsmalid: number) {
     return axios
-    .delete<Sporsmal>('/Sporsmals/' + id)
+    .delete<Sporsmal>('/sporsmal/' + sporsmalid)
     .then((response) => response.data);
     }
     
-  put(id: number) {
+  put(sporsmalid: number) {
       return axios
-      .put<Sporsmal>('/Sporsmals/' + id)
+      .put<Sporsmal>('/sporsmal/' + sporsmalid)
       .then((response) => response.data);
       }
 }
 
 const sporsmalService = new SporsmalService();
-export default SporsmalService;
+export default sporsmalService;
