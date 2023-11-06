@@ -1,5 +1,6 @@
 import pool from './mysql-pool';
 import type { RowDataPacket, ResultSetHeader } from 'mysql2';
+import svarService from './svar-service';
 
 export type Sporsmal = {
   sporsmalid?: number; //sporsmalid is handled by the database
@@ -100,7 +101,7 @@ class SporsmalService {
         if (error) return reject(error);
         if (results.affectedRows == 0) reject(new Error('No row deleted'));
 
-        pool.query('DELETE FROM Svar WHERE sporsmalid = ?', [id], (error, results: ResultSetHeader) => {});
+        svarService.delete(id)
 
         resolve();
       });

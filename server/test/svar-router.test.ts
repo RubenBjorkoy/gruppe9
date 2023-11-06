@@ -116,11 +116,46 @@ describe('Update comment (POST)', () => {
   })
 });
 
-describe('Delete question (DELETE)', () => {
-  test('Delete question (200 OK)', (done) => {
+describe('Delete comment (DELETE)', () => {
+  test('Delete comment (200 OK)', (done) => {
     axios.delete('/sporsmal/3/svar/3').then((response) => {
       expect(response.status).toEqual(200);
       done();
+    });
+  });
+
+  test('Delete comment with a reply (200 OK)', (done) => {
+    const testAnswer: Svar = {
+      //svarid: 5, 
+      svartekst: 'How to create a new comment?', 
+      poeng: 1, 
+      sporsmalid: 1, 
+      erbest: false, 
+      dato: roundedDate, 
+      sistendret: roundedDate,
+      ersvar: false,
+      svarsvarid: null
+    }
+    const testReply: Svar = {
+      //svarid: 6, 
+      svartekst: 'This is how I reply at least.', 
+      poeng: 1, 
+      sporsmalid: 1, 
+      erbest: false, 
+      dato: roundedDate, 
+      sistendret: roundedDate,
+      ersvar: true,
+      svarsvarid: 5
+    }
+
+    svarService.create(testAnswer).then((id) => {
+      testReply.svarsvarid = id;
+      svarService.create(testReply).then((id) => {
+        axios.delete(`/sporsmal/${testAnswer.sporsmalid}/svar/${testReply.svarsvarid}`).then((response) => {
+          expect(response.status).toEqual(200);
+          done();
+        });
+      });
     });
   });
 });

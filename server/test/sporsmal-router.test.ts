@@ -97,6 +97,24 @@ describe('Create new question (POST)', () => {
       done();
     });
   })
+
+  test.skip('Create new question (400 )', (done) => {
+    const now: any = new Date();
+    const roundedDate = new Date(Math.floor(now / 1000) * 1000);
+    const testQuestion: Sporsmal = {
+      //sporsmalid: 4, 
+      tittel: '', 
+      innhold: 'I need help with creating a question for this test', 
+      poeng: 1, 
+      dato: roundedDate, 
+      sistendret: roundedDate 
+    }
+    
+    axios.post('/sporsmal', { sporsmal: testQuestion }).then((response) => {
+      expect(response.status).toEqual(400);
+      done();
+    });
+  });
 });
 
 describe('Update question (POST)', () => {

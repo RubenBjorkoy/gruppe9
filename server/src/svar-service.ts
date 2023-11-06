@@ -97,16 +97,35 @@ class SvarService {
   /**
    * Delete task with given id.
    */
-  delete(id: number) {
+  delete(svarid: number) {
     return new Promise<void>((resolve, reject) => {
-      pool.query('DELETE FROM Svar WHERE svarid = ?', [id], (error, results: ResultSetHeader) => {
-        if (error) return reject(error);
-        if (results.affectedRows == 0) reject(new Error('No row deleted'));
+      function deleteComments(commentId: number): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+          pool.query('DELETE FROM Svar WHERE svarid = ?', [commentId], (error, results: RowDataPacket[]) => {
+            if (error) return reject(error);
 
-        resolve();
-      });
+            if (results.length > 0) {
+              pool.query('SELECT svarid FROM Svar WHERE svarsvarid = ?', [commentId], (error, rows: RowDataPacket[]) => {
+                if (error) return reject(error);
+
+                const deleteRepliesPromises = rows.map((row) => deleteComments(row.svarid));
+                Promise.all(deleteRepliesPromises)
+                  .then(() => resolve())
+                  .catch((error) => reject(error));
+              });
+            } else {
+              resolve();
+            }
+          });
+        });
+      }
+
+      deleteComments(svarid)
+        .then(() => resolve())
+        .catch((error) => reject(error));
     });
   }
+  
 }
 
 const svarService = new SvarService();
