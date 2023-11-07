@@ -1,8 +1,29 @@
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Component } from 'react-simplified';
-import { Card, Row, Column, Form, Button } from './widgets';
+import { Card, Row, Column, Form, Button, NavBar } from './widgets';
 import sporsmalService, { Sporsmal } from './sporsmal-service';
+import { NavLink } from 'react-router-dom';
+import { HashRouter, Route } from 'react-router-dom';
+
+
+ class Navigation extends Component { 
+    render() {
+        return(<>
+        <NavBar brand="Forum">
+            <NavBar.Link to='/'>Spørsmål</NavBar.Link>
+            <NavBar.Link to='/nyspor'>Nye Spørsmål</NavBar.Link>
+            <NavBar.Link to='/favs'>Favoritter</NavBar.Link>
+            <NavBar.Link to='/tags'>Tags</NavBar.Link>
+
+        </NavBar>
+        
+        </>)
+    }
+
+
+ }
+
 
 class SporsmalList extends Component {
   sporsmaler: Sporsmal[] = [];
@@ -20,6 +41,7 @@ class SporsmalList extends Component {
             <Column width={1}>{sporsmal.sistendret}</Column> */}
           </Row>
         ))}
+        <Card title="test"></Card>
       </Card>
     );
   }
@@ -88,11 +110,42 @@ class SporsmalNew extends Component {
   }
 }
 
-let root = document.getElementById('root');
-if (root)
-  createRoot(root).render(
-    <>
-      <SporsmalList />
-      <SporsmalNew />
-    </>,
-  );
+class Favoritt extends Component {
+    render()   {
+    return(
+        <Card title="Favoritter"> 
+       
+          </Card>
+    )
+    }
+  
+    
+}
+
+
+class Tags extends Component {
+    render()   {
+    return(
+        <Card title="Tags"> 
+        </Card>
+    )
+    }
+  
+    
+}
+
+
+  let root = document.getElementById('root');
+  if (root)
+    createRoot(root).render(
+      <HashRouter>
+        <div>
+          <Navigation />
+          <Route exact path="/" component={SporsmalList} />
+          <Route exact path="/nyspor" component={SporsmalNew} />
+          <Route exact path="/favs" component={Favoritt} />
+          <Route exact path="/tags" component={Tags} />
+        </div>
+      </HashRouter>,
+    );
+  
