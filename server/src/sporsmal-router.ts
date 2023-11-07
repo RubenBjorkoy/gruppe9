@@ -24,13 +24,15 @@ router.get('/sporsmal/:sporsmalid', (request, response) => {
 // Example request body: { title: "Ny oppgave" }
 // Example response body: { id: 4 }
 router.post('/sporsmal', (request, response) => {
-  const data = request.body.sporsmal;
-  data.dato = new Date(data.dato);
-  data.sistendret = new Date(data.sistendret);
+  const data = request.body;
+  const now: any = new Date();
+  const roundedDate = new Date(Math.floor(now / 1000) * 1000);
+  data.dato = new Date(roundedDate);
+  data.sistendret = new Date(roundedDate);
   if (data && data.tittel && data.tittel.length != 0) 
     sporsmalService
       .create(data)
-      .then(() => response.send({}))
+      .then((id) => response.send({id}))
       .catch((error) => {response.status(500).send(error)});
   else response.status(400).send('Missing question title');
 });

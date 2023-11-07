@@ -91,7 +91,7 @@ describe('Create new question (POST)', () => {
       sistendret: roundedDate 
     }
     
-    axios.post('/sporsmal', { sporsmal: testQuestion }).then((response) => {
+    axios.post('/sporsmal', testQuestion).then((response) => {
       expect(response.status).toEqual(200);
       expect(response.data).toEqual({id: 4});
       done();

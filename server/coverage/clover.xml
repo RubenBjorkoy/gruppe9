@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1699285689318" clover="3.2.0">
-  <project timestamp="1699285689318" name="All files">
-    <metrics statements="154" coveredstatements="136" conditionals="78" coveredconditionals="54" methods="77" coveredmethods="65" elements="309" coveredelements="255" complexity="0" loc="154" ncloc="154" packages="1" files="6" classes="6"/>
+<coverage generated="1699376906270" clover="3.2.0">
+  <project timestamp="1699376906270" name="All files">
+    <metrics statements="156" coveredstatements="138" conditionals="78" coveredconditionals="54" methods="77" coveredmethods="65" elements="311" coveredelements="257" complexity="0" loc="156" ncloc="156" packages="1" files="6" classes="6"/>
     <file name="app.ts" path="C:\Users\ruben\OneDrive\Dokumenter\AA NTNU\INFT2002\prosjektoppgave\gruppe9\server\src\app.ts">
       <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       <line num="8" count="2" type="stmt"/>
@@ -15,7 +15,7 @@
       <line num="19" count="61" type="cond" truecount="4" falsecount="0"/>
     </file>
     <file name="sporsmal-router.ts" path="C:\Users\ruben\OneDrive\Dokumenter\AA NTNU\INFT2002\prosjektoppgave\gruppe9\server\src\sporsmal-router.ts">
-      <metrics statements="30" coveredstatements="23" conditionals="15" coveredconditionals="13" methods="15" coveredmethods="10"/>
+      <metrics statements="32" coveredstatements="25" conditionals="15" coveredconditionals="13" methods="15" coveredmethods="10"/>
       <line num="7" count="2" type="stmt"/>
       <line num="9" count="2" type="stmt"/>
       <line num="10" count="1" type="stmt"/>
@@ -30,22 +30,24 @@
       <line num="27" count="1" type="stmt"/>
       <line num="28" count="1" type="stmt"/>
       <line num="29" count="1" type="stmt"/>
-      <line num="30" count="1" type="cond" truecount="4" falsecount="1"/>
+      <line num="30" count="1" type="stmt"/>
       <line num="31" count="1" type="stmt"/>
+      <line num="32" count="1" type="cond" truecount="4" falsecount="1"/>
       <line num="33" count="1" type="stmt"/>
-      <line num="34" count="0" type="stmt"/>
-      <line num="35" count="0" type="stmt"/>
-      <line num="38" count="2" type="stmt"/>
-      <line num="39" count="1" type="stmt"/>
-      <line num="40" count="1" type="cond" truecount="1" falsecount="1"/>
-      <line num="48" count="1" type="stmt"/>
+      <line num="35" count="1" type="stmt"/>
+      <line num="36" count="0" type="stmt"/>
+      <line num="37" count="0" type="stmt"/>
+      <line num="40" count="2" type="stmt"/>
+      <line num="41" count="1" type="stmt"/>
+      <line num="42" count="1" type="cond" truecount="1" falsecount="1"/>
       <line num="50" count="1" type="stmt"/>
-      <line num="51" count="0" type="stmt"/>
-      <line num="52" count="0" type="stmt"/>
-      <line num="55" count="2" type="stmt"/>
-      <line num="56" count="1" type="stmt"/>
+      <line num="52" count="1" type="stmt"/>
+      <line num="53" count="0" type="stmt"/>
+      <line num="54" count="0" type="stmt"/>
+      <line num="57" count="2" type="stmt"/>
       <line num="58" count="1" type="stmt"/>
-      <line num="59" count="0" type="stmt"/>
+      <line num="60" count="1" type="stmt"/>
+      <line num="61" count="0" type="stmt"/>
     </file>
     <file name="sporsmal-service.ts" path="C:\Users\ruben\OneDrive\Dokumenter\AA NTNU\INFT2002\prosjektoppgave\gruppe9\server\src\sporsmal-service.ts">
       <metrics statements="32" coveredstatements="31" conditionals="14" coveredconditionals="7" methods="17" coveredmethods="17"/>
