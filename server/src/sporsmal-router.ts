@@ -13,6 +13,13 @@ router.get('/sporsmal', (_request, response) => {
     .catch((error) => response.status(500).send(error));
 });
 
+// router.get('/sporsmal/unanswered', (request, response) => {
+//   sporsmalService
+//     .getUnanswered()
+//     .then((rows) => response.send(rows))
+//     .catch((error) => response.status(500).send(error));
+// });
+
 router.get('/sporsmal/:sporsmalid', (request, response) => {
   const sporsmalid = Number(request.params.sporsmalid);
   sporsmalService

@@ -35,7 +35,6 @@ class SporsmalService {
       });
     });
   }
-
   /**
    * Get all tasks.
    */
@@ -56,6 +55,24 @@ class SporsmalService {
       });
     });
   }
+
+  // getUnanswered() {
+  //   return new Promise<Sporsmal[]>((resolve, reject) => {
+  //     pool.query('SELECT sporsmalid, tittel, innhold, poeng, UNIX_TIMESTAMP(dato) as dato, UNIX_TIMESTAMP(sistendret) as sistendret, bestsvarid, ersvart FROM Sporsmal WHERE ersvart = 0;', [], (error, results: RowDataPacket[]) => {
+  //       if (error) return reject(error);
+
+  //       const roundedResults = results.map(result => {
+  //         return {
+  //           ...result,
+  //           dato: new Date(result.dato * 1000),
+  //           sistendret: new Date(result.sistendret * 1000),
+  //         };
+  //       });
+
+  //       resolve(roundedResults as Sporsmal[]);
+  //     });
+  //   });
+  // }
 
   /**
    * Create new task having the given title.
