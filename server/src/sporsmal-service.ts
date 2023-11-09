@@ -15,7 +15,7 @@ export type Sporsmal = {
 
 class SporsmalService {
   /**
-   * Get task with given id.
+   * Get question with given id.
    */
   get(id: number) {
     //Also use this to get comments.
@@ -36,7 +36,7 @@ class SporsmalService {
     });
   }
   /**
-   * Get all tasks.
+   * Get all questions.
    */
   getAll() {
     return new Promise<Sporsmal[]>((resolve, reject) => {
@@ -75,9 +75,9 @@ class SporsmalService {
   // }
 
   /**
-   * Create new task having the given title.
+   * Create new question having the given title.
    *
-   * Resolves the newly created task id.
+   * Resolves the newly created question id.
    */
   create(sporsmal: Sporsmal) {
     const unixDato = Math.floor(sporsmal.dato.getTime() / 1000);
@@ -94,7 +94,7 @@ class SporsmalService {
   }
 
   /**
-   * Updates a task with a given ID
+   * Updates a question with a given ID
    */
   update(sporsmal: Sporsmal) {
     const unixSistendret = Math.floor(new Date().getTime() / 1000);
@@ -118,7 +118,7 @@ class SporsmalService {
     }
 
   /**
-   * Delete task with given id.
+   * Delete question with given id.
    * 
    * Deleting a question will also delete all answers to that question.
    */

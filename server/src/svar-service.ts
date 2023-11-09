@@ -14,7 +14,7 @@ export type Svar = {
 
 class SvarService {
   /**
-   * Get task with given id.
+   * Get answers with given id.
    */
   get(sporsmalid: number, svarid: number) {
     //Also use this to get comments.
@@ -36,7 +36,7 @@ class SvarService {
   }
 
   /**
-   * Get all tasks.
+   * Get all answers.
    */
   getAll(sporsmalid: number) {
     return new Promise<Svar[]>((resolve, reject) => {
@@ -87,7 +87,7 @@ class SvarService {
   }
 
   /**
-   * Updates a task with a given ID
+   * Updates a answers with a given ID
    */
   update(svar: Svar) {
     const unixSistendret = Math.floor(new Date().getTime() / 1000);
@@ -105,7 +105,7 @@ class SvarService {
     }
 
   /**
-   * Delete task with given id.
+   * Delete answers with given id.
    */
   delete(svarid: number, fromQuestion?: boolean | undefined) {
     return new Promise<void>((resolve, reject) => {
