@@ -6,7 +6,6 @@ export type Svar = {
   svartekst: string;
   poeng: number;
   sporsmalid: number;
-  erbest: boolean;
   dato: Date;
   sistendret: Date;
   ersvar: boolean;
@@ -20,7 +19,7 @@ class SvarService {
   get(sporsmalid: number, svarid: number) {
     //Also use this to get comments.
     return new Promise<Svar | undefined>((resolve, reject) => {
-      pool.query('SELECT svarid, svartekst, poeng, sporsmalid, erbest, UNIX_TIMESTAMP(dato) as dato, UNIX_TIMESTAMP(sistendret) as sistendret, ersvar, svarsvarid FROM Svar WHERE sporsmalid = ? AND svarid = ?;', [sporsmalid, svarid], (error, results: RowDataPacket[]) => {
+      pool.query('SELECT svarid, svartekst, poeng, sporsmalid, UNIX_TIMESTAMP(dato) as dato, UNIX_TIMESTAMP(sistendret) as sistendret, ersvar, svarsvarid FROM Svar WHERE sporsmalid = ? AND svarid = ?;', [sporsmalid, svarid], (error, results: RowDataPacket[]) => {
         if (error) return reject(error);
 
         const roundedResults = results.map(result => {
@@ -41,7 +40,7 @@ class SvarService {
    */
   getAll(sporsmalid: number) {
     return new Promise<Svar[]>((resolve, reject) => {
-      pool.query('SELECT svarid, svartekst, poeng, sporsmalid, erbest, UNIX_TIMESTAMP(dato) as dato, UNIX_TIMESTAMP(sistendret) as sistendret, ersvar, svarsvarid FROM Svar WHERE sporsmalid = ?;', [sporsmalid], (error, results: RowDataPacket[]) => {
+      pool.query('SELECT svarid, svartekst, poeng, sporsmalid, UNIX_TIMESTAMP(dato) as dato, UNIX_TIMESTAMP(sistendret) as sistendret, ersvar, svarsvarid FROM Svar WHERE sporsmalid = ?;', [sporsmalid], (error, results: RowDataPacket[]) => {
         if (error) return reject(error);
 
         const roundedResults = results.map(result => {
@@ -67,10 +66,21 @@ class SvarService {
     const unixSistendret = Math.floor(svar.sistendret.getTime() / 1000);
 
     return new Promise<number>((resolve, reject) => {
-      pool.query('INSERT INTO Svar(svartekst, poeng, sporsmalid, erbest, dato, sistendret, ersvar, svarsvarid) VALUES (?, ?, ?, ?, FROM_UNIXTIME(?), FROM_UNIXTIME(?), ?, ?) ', [svar.svartekst, svar.poeng, svar.sporsmalid, svar.erbest, unixDato, unixSistendret, svar.ersvar, svar.svarsvarid], (error, results: ResultSetHeader) => {
+      pool.query('INSERT INTO Svar(svartekst, poeng, sporsmalid, dato, sistendret, ersvar, svarsvarid) VALUES (?, ?, ?, FROM_UNIXTIME(?), FROM_UNIXTIME(?), ?, ?) ', [svar.svartekst, svar.poeng, svar.sporsmalid, unixDato, unixSistendret, svar.ersvar, svar.svarsvarid], (error, results: ResultSetHeader) => {
         if (error) {
           return reject(error);
         }
+
+        //Mark a question as answered for the question this comment belongs to.
+        //Is slightly redundant, as the question only needs to be marked as answered when the first comment is created,
+        //but this is the easiest way to do it and it's better ot be safe than sorry
+        pool.query('UPDATE Sporsmal SET ersvart = true WHERE sporsmalid = ?', [svar.sporsmalid], (error, results: ResultSetHeader) => {
+          if (error) {
+            return reject(error);
+          }
+          if(results.affectedRows == 0) reject(new Error('No row updated'));
+        });
+
         resolve(results.insertId);
       });
     });
@@ -85,7 +95,7 @@ class SvarService {
       //dato will not change after initial insert, however sistendret updates for every change
       //Absolutely no need to edit sporsmalid, as a comment is tied to a sporsmalid
       //ersvar and svarsvarid should not be changed, as they are set on creation and will remain that way
-      pool.query('UPDATE Svar SET svartekst=?, poeng=?, erbest=?, sistendret=FROM_UNIXTIME(?) WHERE svarid=?', [svar.svartekst, svar.poeng, svar.erbest, unixSistendret, svar.svarid], (error, results: ResultSetHeader) => {
+      pool.query('UPDATE Svar SET svartekst=?, poeng=?, sistendret=FROM_UNIXTIME(?) WHERE svarid=?', [svar.svartekst, svar.poeng, unixSistendret, svar.svarid], (error, results: ResultSetHeader) => {
         if (error) return reject(error);
         if (results.affectedRows == 0) reject(new Error('No row updated'));
 

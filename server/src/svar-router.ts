@@ -30,7 +30,7 @@ router.post('/sporsmal/:sporsmalid/svar', (request, response) => {
   const data = request.body.svar;
   data.dato = new Date(data.dato);
   data.sistendret = new Date(data.sistendret);
-  if (data && data.svartekst && data.svartekst.length != 0) 
+  if (data && data.svartekst && data.svartekst.length != 0)
     svarService
       .create(data)
       .then((id) => response.send({ id: id }))
@@ -44,7 +44,6 @@ router.put('/sporsmal/:sporsmalid/svar', (request, response) => {
     typeof data.svarid == 'number' &&
     typeof data.svartekst == 'string' &&
     data.svartekst.length > 0 &&
-    typeof data.erbest == 'boolean' &&
     typeof data.poeng == 'number' &&
     typeof data.sporsmalid == 'number'
   ) {

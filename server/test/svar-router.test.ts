@@ -7,10 +7,10 @@ const now: any = new Date();
 const roundedDate = new Date(Math.floor(now / 1000) * 1000); // Rounds to seconds to account for millisecond delays in creating the questions.
 
 const testAnswers: Svar[] = [
-  { svarid: 1, svartekst: 'Create a new database schema in MySQL Workbench.', poeng: 2,  sporsmalid: 1, erbest: false, dato: roundedDate, sistendret: roundedDate, ersvar: false, svarsvarid: null },
-  { svarid: 2, svartekst: 'Interfaces in TypeScript are similar to interfaces in Java and C#. They are used for strongly typing objects.', poeng: 1, sporsmalid: 2, erbest: false, dato: roundedDate, sistendret: roundedDate, ersvar: false, svarsvarid: null },
-  { svarid: 3, svartekst: 'Async/await is syntactic sugar for promises in JavaScript. It makes asynchronous programming easier to understand and write.', poeng: 3, sporsmalid: 3, erbest: false, dato: roundedDate, sistendret: roundedDate, ersvar: false, svarsvarid: null },
-  { svarid: 4, svartekst: "I really don't know either", poeng: -1,  sporsmalid: 1, erbest: false, dato: roundedDate, sistendret: roundedDate, ersvar: false, svarsvarid: null }
+  { svarid: 1, svartekst: 'Create a new database schema in MySQL Workbench.', poeng: 2,  sporsmalid: 1, dato: roundedDate, sistendret: roundedDate, ersvar: false, svarsvarid: null },
+  { svarid: 2, svartekst: 'Interfaces in TypeScript are similar to interfaces in Java and C#. They are used for strongly typing objects.', poeng: 1, sporsmalid: 2, dato: roundedDate, sistendret: roundedDate, ersvar: false, svarsvarid: null },
+  { svarid: 3, svartekst: 'Async/await is syntactic sugar for promises in JavaScript. It makes asynchronous programming easier to understand and write.', poeng: 3, sporsmalid: 3, dato: roundedDate, sistendret: roundedDate, ersvar: false, svarsvarid: null },
+  { svarid: 4, svartekst: "I really don't know either", poeng: -1,  sporsmalid: 1, dato: roundedDate, sistendret: roundedDate, ersvar: false, svarsvarid: null }
 ];
 
 
@@ -20,7 +20,10 @@ axios.defaults.baseURL = 'http://localhost:3002/api/v2';
 let webServer: any;
 beforeAll((done) => {
   // Use separate port for testing
-  webServer = app.listen(3002, () => done());
+  // Use setTimeout to ensure that sporsmal tests finish before starting svar tests
+  setTimeout(() => {
+    webServer = app.listen(3002, () => done());
+  }, 1000);
 });
 
 beforeEach((done) => {
@@ -87,7 +90,6 @@ describe('Create new comment (POST)', () => {
       svartekst: 'How to create a new comment?', 
       poeng: 1, 
       sporsmalid: 1, 
-      erbest: false, 
       dato: roundedDate, 
       sistendret: roundedDate,
       ersvar: false,
@@ -130,7 +132,6 @@ describe('Delete comment (DELETE)', () => {
       svartekst: 'How to create a new comment?', 
       poeng: 1, 
       sporsmalid: 1, 
-      erbest: false, 
       dato: roundedDate, 
       sistendret: roundedDate,
       ersvar: false,
@@ -141,7 +142,6 @@ describe('Delete comment (DELETE)', () => {
       svartekst: 'This is how I reply at least.', 
       poeng: 1, 
       sporsmalid: 1, 
-      erbest: false, 
       dato: roundedDate, 
       sistendret: roundedDate,
       ersvar: true,

@@ -7,9 +7,10 @@ const now: any = new Date();
 const roundedDate = new Date(Math.floor(now / 1000) * 1000); // Rounds to seconds to account for millisecond delays in creating the questions.
 
 const testQuestions: Sporsmal[] = [
-  { sporsmalid: 1, tittel: 'How to create a database schema?', innhold: 'I need help with designing a database schema for my project.', poeng: 10, dato: roundedDate, sistendret: roundedDate },
-  { sporsmalid: 2, tittel: 'What are TypeScript interfaces?', innhold: 'I want to understand interfaces in TypeScript. Can someone explain?', poeng: 8, dato: roundedDate, sistendret: roundedDate },
-  { sporsmalid: 3, tittel: 'How to use async/await in JavaScript?', innhold: 'I am having trouble understanding asynchronous programming. Any examples?', poeng: 12, dato: roundedDate, sistendret: roundedDate }
+  { sporsmalid: 1, tittel: 'How to create a database schema?', innhold: 'I need help with designing a database schema for my project.', poeng: 10, dato: roundedDate, sistendret: roundedDate, bestsvarid: null, ersvart: false },
+  { sporsmalid: 2, tittel: 'What are TypeScript interfaces?', innhold: 'I want to understand interfaces in TypeScript. Can someone explain?', poeng: 8, dato: roundedDate, sistendret: roundedDate, bestsvarid: null, ersvart: false },
+  { sporsmalid: 3, tittel: 'How to use async/await in JavaScript?', innhold: 'I am having trouble understanding asynchronous programming. Any examples?', poeng: 12, dato: roundedDate, sistendret: roundedDate, bestsvarid: null, ersvart: false },
+  { sporsmalid: 4, tittel: 'Test after updating structure of database', innhold: 'I updated the database structure, and need to test a little extra to ensure nothing is wrong.', poeng: 12, dato: roundedDate, sistendret: roundedDate, bestsvarid: null, ersvart: false }
 ];
 
 
@@ -32,7 +33,8 @@ beforeEach((done) => {
       .create(testQuestions[0])
       .then(() => sporsmalService.create(testQuestions[1])) // Create testQuestion[1] after testQuestion[0] has been created
       .then(() => sporsmalService.create(testQuestions[2])) // Create testQuestion[2] after testQuestion[1] has been created
-      .then(() => done()); // Call done() after testQuestion[2] has been created
+      .then(() => sporsmalService.create(testQuestions[3])) // Create testQuestion[3] after testQuestion[2] has been created
+      .then(() => done()); // Call done() after testQuestion[3] has been created
   });
 });
 
@@ -69,7 +71,7 @@ describe('Fetch questions (GET)', () => {
 
   test('Fetch question (404 Not Found)', (done) => { //Working
     axios
-      .get('/sporsmal/4')
+      .get('/sporsmal/5')
       .then((_response) => done(new Error()))
       .catch((error) => {
         expect(error.message).toEqual('Request failed with status code 404');
@@ -88,12 +90,14 @@ describe('Create new question (POST)', () => {
       innhold: 'I need help with creating a question for this test', 
       poeng: 1, 
       dato: roundedDate, 
-      sistendret: roundedDate 
+      sistendret: roundedDate,
+      bestsvarid: null,
+      ersvart: false
     }
     
     axios.post('/sporsmal', testQuestion).then((response) => {
       expect(response.status).toEqual(200);
-      expect(response.data).toEqual({id: 4});
+      expect(response.data).toEqual({id: 5});
       done();
     });
   });
