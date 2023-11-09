@@ -110,8 +110,18 @@ class SvarService {
   delete(svarid: number, fromQuestion?: boolean | undefined) {
     return new Promise<void>((resolve, reject) => {
 
-      //If fromQuestion is true, we need to delete all comments on the question as well
+      /**
+       * This function is extremely long compared to the other svarService functions. Let's break it down:
+       * After taking in an id and a possible boolean if the delete function was called from deleting a question,
+       * we first just delete ALL comments belonging to the question and end the function there.
+       * Then we check if the comment has any replies. If there's no replies, we can simply delete the comment. Easy.
+       * If there are replies, we need to delete all replies first. This is done by a recursive function.
+       * This recursive function first fetches all replies to the comment, then calls itself on each reply.
+       * This means that the function will first delete all replies to the comment, then delete the comment itself.
+       * After deleting the comment, we check if the question has any comments left. If not, we mark the question as unanswered.
+       */
 
+      //If fromQuestion is true, we need to delete all comments on the question as well
       if(fromQuestion) {
         pool.query('SELECT * FROM Svar WHERE svarsvarid = (SELECT svarid FROM Svar WHERE sporsmalid = ?)', [svarid], (error, results: RowDataPacket[]) => {
           if(error) return reject(error);
@@ -124,6 +134,7 @@ class SvarService {
         });
       }
 
+      //Check if comment has replies. If not, delete it.
       pool.query('SELECT * FROM Svar WHERE svarsvarid = ?', [svarid], (error, results: RowDataPacket[]) => {
         if(error) return reject(error);
         if(results.length == 0) {
@@ -134,6 +145,7 @@ class SvarService {
         }
       });
 
+      //Recursive function to delete all comments on a comment
       function deleteComments(commentId: number): Promise<void> {
         return new Promise<void>((resolve, reject) => {
           // Fetch replies first
@@ -155,7 +167,22 @@ class SvarService {
       }
   
       deleteComments(svarid)
-        .then(() => resolve())
+        .then(() => {
+          //Mark a question as unanswered if no more comments are left
+          pool.query('SELECT * FROM Svar WHERE sporsmalid = ?', [svarid], (error, results: RowDataPacket[]) => {
+            if(error) return reject(error);
+            if(results.length == 0) {
+              pool.query('UPDATE Sporsmal SET ersvart = false WHERE sporsmalid = ?', [svarid], (error, results: ResultSetHeader) => {
+                if (error) {
+                  return reject(error);
+                }
+                if(results.affectedRows == 0) reject(new Error('No row updated'));
+              });
+            }
+          });
+
+          resolve();
+        })
         .catch((error) => reject(error));
     });
   }
