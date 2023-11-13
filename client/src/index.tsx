@@ -37,8 +37,8 @@ class SporsmalList extends Component {
             <Column width={1}>{sporsmal.tittel}</Column>
             <Column width={1}>{sporsmal.innhold}</Column>
             <Column width={1}>{sporsmal.poeng}</Column>
-            {/* <Column width={1}>{sporsmal.dato}</Column>
-            <Column width={1}>{sporsmal.sistendret}</Column> */}
+            <Column width={2}>{sporsmal.dato?.toString()}</Column>
+            <Column width={2}>{sporsmal.sistendret?.toString()}</Column>
           </Row>
         ))}
         <Card title="test"></Card>
