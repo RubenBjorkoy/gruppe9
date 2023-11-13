@@ -2,6 +2,7 @@ import express from 'express';
 import sporsmalRouter from './sporsmal-router';
 import svarRouter from './svar-router';
 import tagRouter from './tag-router';
+import sporsmalTagRouter from './sporsmalTag-router';
 
 /**
  * Express application.
@@ -14,5 +15,6 @@ app.use(express.json());
 app.use('/api/v2', sporsmalRouter);
 app.use('/api/v2', svarRouter);
 app.use('/api/v2', tagRouter);
+app.use('/api/v2', sporsmalTagRouter);
 
 export default app;
