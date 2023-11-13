@@ -21,9 +21,9 @@ let webServer: any;
 beforeAll((done) => {
   // Use separate port for testing
   // Use setTimeout to ensure that sporsmal tests finish before starting svar tests
-  setTimeout(() => {
+  //setTimeout(() => {
     webServer = app.listen(3002, () => done());
-  }, 1000);
+  //}, 1000);
 });
 
 beforeEach((done) => {

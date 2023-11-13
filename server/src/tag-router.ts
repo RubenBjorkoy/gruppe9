@@ -14,9 +14,9 @@ router.get('/tag', (_request, response) => {
 });
 
 router.get('/tag/:tagid', (request, response) => {
-  const sporsmalid = Number(request.params.tagid);
+  const tagid = Number(request.params.tagid);
   tagService
-    .get(sporsmalid)
+    .get(tagid)
     .then((sporsmal) => (sporsmal ? response.send(sporsmal) : response.status(404).send('Sporsmal not found')))
     .catch((error) => response.status(500).send(error));
 });
@@ -25,33 +25,20 @@ router.get('/tag/:tagid', (request, response) => {
 // Example response body: { id: 4 }
 router.post('/tag', (request, response) => {
   const data = request.body;
-  const now: any = new Date();
-  const roundedDate = new Date(Math.floor(now / 1000) * 1000);
-  data.dato = new Date(roundedDate);
-  data.sistendret = new Date(roundedDate);
-  if (data && data.tittel && data.tittel.length != 0) 
   tagService
       .create(data)
       .then((id) => response.send({id}))
       .catch((error) => {response.status(500).send(error)});
-  else response.status(400).send('Missing question title');
+  //response.status(400).send('Missing question title');
 });
 
 router.put('/tag', (request, response) => {
-  const data = request.body.sporsmal
-  if (
-    typeof data.sporsmalid == 'number' &&
-    typeof data.tittel == 'string' &&
-    data.tittel.length > 0 &&
-    typeof data.innhold == 'string' &&
-    data.innhold.length > 0 &&
-    typeof data.poeng == 'number'
-  ) {
+  const data = request.body
     tagService
       .update(data)
       .then(() => response.send())
       .catch((error) => response.status(500).send(error));
-  } else response.status(400).send('Missing task id');
+  //response.status(400).send('Missing task id');
 });
 
 router.delete('/tag/:tagid', (request, response) => {
