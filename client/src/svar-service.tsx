@@ -16,37 +16,37 @@ export type Svar = {
 
 class SvarService {
   /**
-   * Get Sporsmal with given id.
+   * Get answers with given sporsmalid and svarid.
    */
   get(sporsmalid: number, svarid: number) {
     return axios.get<Svar>('/sporsmal/' + svarid).then((response) => response.data);
   }
 
   /**
-   * Get all Sporsmaler.
+   * Get all answers to a given question.
    */
   getAll(sporsmalid: number) {
     return axios.get<Svar[]>('/sporsmal').then((response) => response.data);
   }
 
   /**
-   * Create new Sporsmal having the given tittel.
+   * Create new Answer to a given question.
    *
-   * Resolves the newly created Sporsmal id.
+   * Resolves the newly created svarid.
    */
-  create(tittel: string, innhold: string, poeng: number, sporsmal?: number, dato?: Date, sistendret?: Date) {
+  create(svartekst: string, poeng: number, sporsmalid: number, ersvar: boolean, svarid?: number, dato?: Date, sistendret?: Date) {
     return axios
-      .post<{ sporsmal: Svar }>('/sporsmal', { tittel: tittel , innhold: innhold, poeng: poeng})
+      .post<{ svar: Svar }>('/sporsmal', { svartekst: svartekst , poeng: poeng, sporsmalid: sporsmalid, ersvar: ersvar})
       .then((response) => response.data);
   }
 
-  delete(sporsmalid: number) {
+  delete(svarid: number) {
     return axios
     .delete<Svar>('/sporsmal/' + svarid)
     .then((response) => response.data);
     }
     
-  put(sporsmalid: number) {
+  put(svarid: number) {
       return axios
       .put<Svar>('/sporsmal/' + svarid)
       .then((response) => response.data);
