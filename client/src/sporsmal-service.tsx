@@ -9,6 +9,8 @@ export type Sporsmal = {
   poeng: number;
   dato?: Date;
   sistendret?: Date;
+  bestsvarid?: number;
+  ersvart?: boolean;
 };
 
 class SporsmalService {

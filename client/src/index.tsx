@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client';
 import { Component } from 'react-simplified';
 import { Card, Row, Column, Form, Button, NavBar } from './widgets';
 import sporsmalService, { Sporsmal } from './sporsmal-service';
+import TagService, { Tag } from './tag-service';
+import favorittService, { Favoritt } from './favoritt-service';
 import { NavLink } from 'react-router-dom';
 import { HashRouter, Route } from 'react-router-dom';
 
@@ -41,7 +43,6 @@ class SporsmalList extends Component {
             <Column width={2}>{sporsmal.sistendret?.toString()}</Column>
           </Row>
         ))}
-        <Card title="test"></Card>
       </Card>
     );
   }
@@ -110,29 +111,43 @@ class SporsmalNew extends Component {
   }
 }
 
-class Favoritt extends Component {
+class FavorittList extends Component {
+    favortitter: Favoritt[] = [];
+
     render()   {
     return(
         <Card title="Favoritter"> 
-       
+        {this.favortitter.map((favoritt) => (
+            <Row key={favoritt.favorittid}>
+                <Column width={1}>{favoritt.favorittid}</Column>
+                <Column width={1}>{favoritt.svarid}</Column>
+                </Row>
+              ))}
           </Card>
-    )
+    );
     }
   
     
 }
 
 
-class Tags extends Component {
-    render()   {
-    return(
-        <Card title="Tags"> 
-        </Card>
-    )
-    }
-  
+class TagsList extends Component { 
+    tags: Tag[] = [];
     
+    render() {
+        return (
+            <Card title="Tags">
+                {this.tags.map((tag) => (
+                    <Row key={tag.tagid}>
+                        <Column width={1}>{tag.tagid}</Column>
+                        <Column width={1}>{tag.navn}</Column>
+                    </Row>
+                ))}
+            </Card>
+        );
+    }
 }
+
 
 
   let root = document.getElementById('root');
@@ -143,8 +158,8 @@ class Tags extends Component {
           <Navigation />
           <Route exact path="/" component={SporsmalList} />
           <Route exact path="/nyspor" component={SporsmalNew} />
-          <Route exact path="/favs" component={Favoritt} />
-          <Route exact path="/tags" component={Tags} />
+          <Route exact path="/favs" component={FavorittList} />
+          <Route exact path="/tags" component={TagsList} />
         </div>
       </HashRouter>,
     );

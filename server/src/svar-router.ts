@@ -26,11 +26,11 @@ router.get('/sporsmal/:sporsmalid/svar/:svarid', (request, response) => {
 // Example request body: { title: "Ny oppgave" }
 // Example response body: { id: 4 }
 router.post('/sporsmal/:sporsmalid/svar', (request, response) => {
-  if(request.params.sporsmalid != request.body.svar.sporsmalid) response.status(400).send('Sporsmalid in url and body does not match');
-  const data = request.body.svar;
+  if(request.params.sporsmalid != request.body.sporsmalid) response.status(400).send('Sporsmalid in url and body does not match');
+  const data = request.body;
   data.dato = new Date(data.dato);
   data.sistendret = new Date(data.sistendret);
-  if (data && data.svartekst && data.svartekst.length != 0) 
+  if (data && data.svartekst && data.svartekst.length != 0)
     svarService
       .create(data)
       .then((id) => response.send({ id: id }))
@@ -39,12 +39,11 @@ router.post('/sporsmal/:sporsmalid/svar', (request, response) => {
 });
 
 router.put('/sporsmal/:sporsmalid/svar', (request, response) => {
-  const data = request.body.svar
+  const data = request.body
   if (
     typeof data.svarid == 'number' &&
     typeof data.svartekst == 'string' &&
     data.svartekst.length > 0 &&
-    typeof data.erbest == 'boolean' &&
     typeof data.poeng == 'number' &&
     typeof data.sporsmalid == 'number'
   ) {
