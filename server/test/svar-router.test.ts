@@ -96,7 +96,7 @@ describe('Create new comment (POST)', () => {
       svarsvarid: null
     }
     
-    axios.post(`/sporsmal/1/svar`, { svar: testAnswer }).then((response) => {
+    axios.post(`/sporsmal/1/svar`, testAnswer).then((response) => {
       expect(response.status).toEqual(200);
       expect(response.data).toEqual({id: 5});
       done();
@@ -111,7 +111,7 @@ describe('Update comment (POST)', () => {
     testAnswer.poeng = updatedPoeng;
     
     
-    axios.put(`/sporsmal/${testAnswer.sporsmalid}/svar`, { svar: testAnswer }).then((response) => {
+    axios.put(`/sporsmal/${testAnswer.sporsmalid}/svar`, testAnswer ).then((response) => {
       expect(response.status).toEqual(200);
       done();
     });

@@ -110,7 +110,7 @@ describe('Update question (POST)', () => {
     testQuestion.poeng = updatedPoeng;
     
     
-    axios.put('/sporsmal', { sporsmal: testQuestion }).then((response) => {
+    axios.put('/sporsmal', testQuestion ).then((response) => {
       expect(response.status).toEqual(200);
       done();
     });

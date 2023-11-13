@@ -45,7 +45,7 @@ router.post('/sporsmal', (request, response) => {
 });
 
 router.put('/sporsmal', (request, response) => {
-  const data = request.body.sporsmal
+  const data = request.body
   if (
     typeof data.sporsmalid == 'number' &&
     typeof data.tittel == 'string' &&
