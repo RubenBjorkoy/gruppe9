@@ -8,8 +8,8 @@ export type Svar = {
 	poeng: number;
 	sporsmalid: number;
 	erbest: boolean;
-	dato: Date;
-	sistendret: Date;
+	dato: Date | any;
+	sistendret: Date | any;
 	ersvar: boolean;
 	svarsvarid?: number | null; //svarsvarid is based on if ersvar is true or false
 };

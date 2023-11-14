@@ -40,8 +40,15 @@ class SporsmalList extends Component {
 						<Column width={1}>{sporsmal.tittel}</Column>
 						<Column width={1}>{sporsmal.innhold}</Column>
 						<Column width={1}>{sporsmal.poeng}</Column>
-						<Column width={2}>{sporsmal.dato?.toString()}</Column>
-						<Column width={2}>{sporsmal.sistendret?.toString()}</Column>
+						<Column width={2}>
+							{sporsmal.dato?.toString().replace("T", " ").substring(0, 19)}
+						</Column>
+						<Column width={2}>
+							{sporsmal.sistendret
+								?.toString()
+								.replace("T", " ")
+								.substring(0, 19)}
+						</Column>
 						<Column width={1}>
 							<Button.Success
 								onClick={() => history.push("/sporsmal/" + sporsmal.sporsmalid)}
@@ -97,11 +104,18 @@ class SporsmalDetails extends Component<{
 					</Row>
 					<Row>
 						<Column width={2}>Dato:</Column>
-						{/* <Column>{this.sporsmal.dato.toLocaleString()}</Column> */}
+						<Column>
+							{this.sporsmal.dato.toString().replace("T", " ").substring(0, 19)}
+						</Column>
 					</Row>
 					<Row>
 						<Column width={2}>Sist Endret:</Column>
-						{/* <Column>{this.sporsmal.sistendret.toLocaleString()}</Column> */}
+						<Column>
+							{this.sporsmal.sistendret
+								.toString()
+								.replace("T", " ")
+								.substring(0, 19)}
+						</Column>
 					</Row>
 					<Row>
 						<Column width={2}>Godkjent Svar:</Column>
@@ -216,7 +230,7 @@ class SporsmalDetails extends Component<{
 	mounted() {
 		sporsmalService
 			.get(this.props.match.params.sporsmalid)
-			.then((sporsmal) => (this.sporsmal = sporsmal))
+			.then((sporsmal: Sporsmal) => (this.sporsmal = sporsmal))
 			.catch((error) =>
 				Alert.danger("Finner ikke spørsmålet: " + error.message)
 			);
