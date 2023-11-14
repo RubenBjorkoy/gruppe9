@@ -10,6 +10,7 @@ export type Svar = {
   sistendret: Date;
   ersvar: boolean;
   svarsvarid?: number | null; //svarsvarid is based on if ersvar is true or false
+  erbest: boolean;
 };
 
 class SvarService {
@@ -66,7 +67,7 @@ class SvarService {
     const unixSistendret = Math.floor(svar.sistendret.getTime() / 1000);
 
     return new Promise<number>((resolve, reject) => {
-      pool.query('INSERT INTO Svar(svartekst, poeng, sporsmalid, dato, sistendret, ersvar, svarsvarid) VALUES (?, ?, ?, FROM_UNIXTIME(?), FROM_UNIXTIME(?), ?, ?) ', [svar.svartekst, svar.poeng, svar.sporsmalid, unixDato, unixSistendret, svar.ersvar, svar.svarsvarid], (error, results: ResultSetHeader) => {
+      pool.query('INSERT INTO Svar(svartekst, poeng, sporsmalid, dato, sistendret, ersvar, svarsvarid) VALUES (?, 0, ?, FROM_UNIXTIME(?), FROM_UNIXTIME(?), ?, ?) ', [svar.svartekst, svar.poeng, svar.sporsmalid, unixDato, unixSistendret, svar.ersvar, svar.svarsvarid], (error, results: ResultSetHeader) => {
         if (error) {
           return reject(error);
         }

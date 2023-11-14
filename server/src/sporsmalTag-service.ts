@@ -15,7 +15,7 @@ class SporsmalTagService {
   getTagsForSporsmal(sporsmalid: number) {
     //Gets all tags for a question
     return new Promise<Tag[]>((resolve, reject) => {
-        pool.query('SELECT * FROM SporsmalTag WHERE sporsmalid = ?', [sporsmalid], (error, results: RowDataPacket[]) => {
+        pool.query('SELECT t.tagid, t.navn, t.forklaring FROM Tag t JOIN SporsmalTag s ON t.tagid = s.tagid WHERE s.sporsmalid = ?', [sporsmalid], (error, results: RowDataPacket[]) => {
             if (error) return reject(error);
 
             const roundedResults = results.map(result => {
@@ -34,7 +34,7 @@ class SporsmalTagService {
   getSporsmalForTags(tagid: number) {
     //Gets all questions for a tag
     return new Promise<Sporsmal[]>((resolve, reject) => {
-        pool.query('SELECT * FROM SporsmalTag WHERE tagid = ?', [tagid], (error, results: RowDataPacket[]) => {
+        pool.query('SELECT s.sporsmalid, s.tittel, s.innhold, s.poeng, UNIX_TIMESTAMP(s.dato), UNIX_TIMESTAMP(s.sistendret), s.bestsvarid, s.ersvart FROM Sporsmal s JOIN SporsmalTag st ON s.sporsmalid = st.sporsmalid WHERE tagid = ?', [tagid], (error, results: RowDataPacket[]) => {
             if (error) return reject(error);
 
             const roundedResults = results.map(result => {

@@ -26,7 +26,7 @@ class SvarService {
    * Get all answers to a given question.
    */
   getAll(sporsmalid: number) {
-    return axios.get<Svar[]>('/sporsmal').then((response) => response.data);
+    return axios.get<Svar[]>(`/sporsmal/${sporsmalid}/svar`).then((response) => response.data);
   }
 
   /**
@@ -34,9 +34,9 @@ class SvarService {
    *
    * Resolves the newly created svarid.
    */
-  create(svartekst: string, poeng: number, sporsmalid: number, ersvar: boolean, svarid?: number, dato?: Date, sistendret?: Date) {
+   create(svartekst: string, sporsmalid: number, poeng: number, ersvar: boolean, svarsvarid?: number) {
     return axios
-      .post<{ svar: Svar }>('/sporsmal', { svartekst: svartekst , poeng: poeng, sporsmalid: sporsmalid, ersvar: ersvar})
+      .post<{ svar: Svar }>('/sporsmal', { svartekst: svartekst, sporsmalid: sporsmalid, poeng: poeng, ersvar: ersvar, svarsvarid: svarsvarid})
       .then((response) => response.data);
   }
 

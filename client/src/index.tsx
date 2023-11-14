@@ -3,11 +3,13 @@ import { createRoot } from 'react-dom/client';
 import { Component } from 'react-simplified';
 import { Alert, Card, Row, Column, Form, Button, NavBar } from './widgets';
 import sporsmalService, { Sporsmal } from './sporsmal-service';
+import sporsmalTagService from './sporsmalTag-service';
 import TagService, { Tag } from './tag-service';
 import favorittService, { Favoritt } from './favoritt-service';
 import { Link, NavLink } from 'react-router-dom';
 import { HashRouter, Route } from 'react-router-dom';
 import { createHashHistory } from 'history';
+import svarService, { Svar } from './svar-service';
 
 const history = createHashHistory(); // Use history.push(...) to programmatically change path
 
@@ -45,9 +47,11 @@ class SporsmalList extends Component {
             <Column width={2}>{sporsmal.dato?.toString()}</Column>
             <Column width={2}>{sporsmal.sistendret?.toString()}</Column>
             <Column width={1}>
-              <Link to={'/sporsmal/' + sporsmal.sporsmalid}>
-                <button>Til Spørsmål</button>
-              </Link>
+            <Button.Success
+          onClick={() => history.push('/sporsmal/' + sporsmal.sporsmalid)}
+        >
+          Til Spørsmål
+        </Button.Success>
               </Column>
           </Row>
         ))}
@@ -62,6 +66,9 @@ class SporsmalList extends Component {
 
 class SporsmalDetails extends Component <{ match: { params: {sporsmalid: number}}}> {
 sporsmal: Sporsmal = { sporsmalid: 0, tittel: '', innhold: '', poeng: 0, dato: new Date, sistendret: new Date, bestsvarid: 0, ersvart: false };
+svarer: Svar[] = [{ svartekst: '', poeng: 0, sporsmalid: 0, dato: new Date, sistendret: new Date, ersvar: false, erbest: false, svarid: 0, svarsvarid: 0}];
+tags: Tag[] = [{ tagid: 0, navn: '', forklaring: '', antall: 0}];
+svartekst = '';
 
   render() {
 
@@ -94,13 +101,83 @@ sporsmal: Sporsmal = { sporsmalid: 0, tittel: '', innhold: '', poeng: 0, dato: n
               {/* <Form.Checkbox checked={this.sporsmal.ersvart} onChange={() => {}} /> */}
             </Column>
           </Row>
+          <Row>
+            <Column width={2}>Tagger:</Column>
+            <Column>
+              {this.tags.map((tag)=> {
+                return(
+                  <>
+                  <Row key={tag.tagid}>
+                    <Column width={2}>Tag:</Column>
+                    <Column width={1}>{tag.navn}</Column>
+                    <Column width={2}>{tag.forklaring}</Column>
+                  </Row>
+                  </>
+                )
+              })}
+            </Column>
+          </Row>
         </Card>
         <Button.Success
           onClick={() => history.push('/sporsmal/' + this.props.match.params.sporsmalid + '/rediger')}
         >
           Rediger
         </Button.Success>
-      </>
+        
+        <Card title="Nytt Svar">
+        <Row>
+          <Column width={1}>
+            <Form.Label>Svartekst:</Form.Label>
+          </Column>
+          <Column width={4}>
+            <Form.Input
+              type="text"
+              value={this.svartekst}
+              onChange={(event) => (this.svartekst = event.currentTarget.value)}
+            />
+          </Column>
+        </Row>
+        <Column width={1}>
+          <Button.Success
+          onClick={() => {
+            svarService.create(this.svartekst, Number(this.sporsmal.sporsmalid), 0, false ).then(() => {
+              // Reloads the Spørsmal
+              SporsmalList.instance()?.mounted(); // .? meaning: call SporsmalList.instance().mounted() if SporsmalList.instance() does not return null
+              this.svartekst = '';
+            });
+          }}
+        >
+          Create
+        </Button.Success>
+          </Column>
+      </Card>
+        <Card title="Svarene">
+          {
+            this.svarer.map((svar) => {
+              return (
+                <Card title={"SvarID " + svar.svarid} key={svar.svarid}>
+                  <Row>
+                    <Column width={2}>Svar:</Column>
+                    <Column>{svar.svartekst}</Column>
+                  </Row>
+                  <Row>
+                    <Column width={2}>Poeng:</Column>
+                    <Column>{svar.poeng}</Column>
+                  </Row>
+                  <Row>
+                    <Column width={2}>Dato:</Column>
+                    {/* <Column>{this.svar.dato.toLocaleString()}</Column> */}
+                  </Row>
+                  <Row>
+                    <Column width={2}>Sist Endret:</Column>
+                    {/* <Column>{this.svar.sistendret.toLocaleString()}</Column> */}
+                  </Row>
+                </Card>
+              )
+            })
+          }
+          </Card>
+        </>
     );
   }
   
@@ -110,6 +187,16 @@ sporsmal: Sporsmal = { sporsmalid: 0, tittel: '', innhold: '', poeng: 0, dato: n
       .get(this.props.match.params.sporsmalid)
       .then((sporsmal) => (this.sporsmal = sporsmal))
       .catch((error) => Alert.danger('Finner ikke spørsmålet: ' + error.message));
+      //svarservice
+      //getAll
+      sporsmalTagService
+      .getTagForSporsmal(this.props.match.params.sporsmalid)
+      .then((tags) => (this.tags = tags));
+      
+      svarService
+      .getAll(this.props.match.params.sporsmalid)
+      .then((svarer) => (this.svarer = svarer));
+
   }
 }
 
@@ -172,27 +259,35 @@ class SporsmalNew extends Component {
 }
 
 class FavorittList extends Component {
-    favortitter: Favoritt[] = [];
+    favoritter: Svar[] = [];
 
     render()   {
     return(
         <Card title="Favoritter"> 
-        {this.favortitter.map((favoritt) => (
-            <Row key={favoritt.favorittid}>
-                <Column width={1}>{favoritt.favorittid}</Column>
+        {this.favoritter.map((favoritt) => (
+            <Row key={favoritt.svarid}>
+                <Column width={5}>{favoritt.svartekst}</Column>
                 <Column width={1}>{favoritt.svarid}</Column>
+                <Column width={1}>{favoritt.poeng}</Column>
+                {/* <Column width={1}>{favoritt.sistendret}</Column> */}
                 </Row>
               ))}
           </Card>
     );
     }
   
+    mounted()  {
+      favorittService.getAll().then((favoritter: Svar[]) => (this.favoritter = favoritter));
+    }
     
-}
+      
+    }
+
 
 
 class TagsList extends Component { 
     tags: Tag[] = [];
+    sporsmal: Sporsmal[] = [];
     
     render() {
         return (
@@ -201,10 +296,31 @@ class TagsList extends Component {
                     <Row key={tag.tagid}>
                         <Column width={1}>{tag.tagid}</Column>
                         <Column width={1}>{tag.navn}</Column>
+                        <Column width={1}>{tag.forklaring}</Column>
+                        <Column width={1}>{tag.antall}</Column>
+                        {/* <Button.Success
+                          onClick={() => history.push('/tags/' + tag.tagid)}
+                          >
+                          Til Tag
+                        </Button.Success> */}
                     </Row>
                 ))}
             </Card>
         );
+    }
+
+    mounted() {
+      TagService.getAll()
+        .then((tags: Tag[]) => {
+          this.tags = tags;
+
+          this.tags.forEach((tag) => {
+            sporsmalTagService.getSporsmalForTags(tag.tagid).then((sporsmal: Sporsmal[]) => {
+              tag.antall = sporsmal.length;
+              this.tags = this.tags;
+          })
+          })
+        });
     }
 }
 
