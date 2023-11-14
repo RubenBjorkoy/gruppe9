@@ -2,7 +2,6 @@ import axios from 'axios';
 import pool from '../src/mysql-pool';
 import app from '../src/app';
 import favorittService from '../src/favoritt-service';
-import * as favorittServiceModule from '../src/favoritt-service';
 
 type Favoritt = {
     favorittid?: number;

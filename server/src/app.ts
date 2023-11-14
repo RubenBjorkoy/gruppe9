@@ -4,6 +4,7 @@ import svarRouter from './svar-router';
 import tagRouter from './tag-router';
 import sporsmalTagRouter from './sporsmalTag-router';
 import favorittRouter from './favoritt-router';
+import brukerRouter from './bruker-router';
 
 /**
  * Express application.
@@ -18,5 +19,6 @@ app.use('/api/v2', svarRouter);
 app.use('/api/v2', tagRouter);
 app.use('/api/v2', sporsmalTagRouter);
 app.use('/api/v2', favorittRouter);
+app.use('/api/v2', brukerRouter);
 
 export default app;
