@@ -9,14 +9,20 @@ export type Favoritt = {
 
 class FavorittService {
     
-        /**
-        * Get Favoritt with given id.
-        */
-        get(favorittid: number) {
-            return axios.get<Favoritt>('/favoritt/' + favorittid).then((response) => response.data);
-        }
+    getAll () {
+        return axios.get<Favoritt[]>('/favoritt').then((response) => response.data);
+    }
+    
+
+    // create 
+
+    // delete 
     
     }
+
+
+
+
 
 const favorittService = new FavorittService();
 export default favorittService;
