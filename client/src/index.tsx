@@ -339,7 +339,7 @@ class TagsList extends Component {
 						<Column width={1}>{tag.tagid}</Column>
 						<Column width={1}>{tag.navn}</Column>
 						<Column width={1}>{tag.forklaring}</Column>
-						<Column width={1}>{tag.antall}</Column>
+						<Column width={3}>{tag.antall + "x spørsmål"}</Column>
 						{/* <Button.Success
                           onClick={() => history.push('/tags/' + tag.tagid)}
                           >
