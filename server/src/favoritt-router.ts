@@ -3,7 +3,7 @@ import FavorittService from './favoritt-service';
 import { Svar } from './svar-service';
 
 /**
- * Express router containing task methods.
+ * Express router containing favoritt methods.
  */
 const router = express.Router();
 
@@ -22,14 +22,10 @@ router.post('/favoritt/:svarid', (request, response) => {
         .create(svarid)
         .then((id) => response.send({id: id}))
         .catch((error: any) => {
-            if(error === 'Sporsmal does not exist') {
-                response.status(400).send('Sporsmal does not exist');
-            } else if(error === 'Tag does not exist') {
-                response.status(400).send('Tag does not exist');
-            } else if(error === 'Relation already exists') {
-                response.status(400).send('Relation already exists');
-            } else {
-                response.status(500).send(error)
+            if(error === 'Already favorited') {
+                response.status(409).send(`Svarid "${svarid}" is already favorited`);
+            } else if(error === 'Answer does not exist') {
+                response.status(400).send(`Svarid "${svarid}" does not exist`);
             }
         });
     //response.status(400).send('Missing question title');
@@ -40,7 +36,9 @@ router.delete('/favoritt/:favorittid', (request, response) => {
     FavorittService
         .delete(favid)
         .then(() => response.send())
-        .catch((error: any) => response.status(500).send(error));
+        .catch((error) => {
+            response.status(400).send('No row deleted');
+        });
 });
 
 export default router;

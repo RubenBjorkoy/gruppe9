@@ -3,24 +3,24 @@ import type { RowDataPacket, ResultSetHeader } from 'mysql2';
 import { Svar } from './svar-service';
 
 class FavorittService {
-  /**
-   * Get all answers also located in favorites table.
-   */
-  getAll() {
-    return new Promise<Svar[]>((resolve, reject) => {
-        pool.query('SELECT * FROM Svar S JOIN Favoritter F ON S.svarid = F.svarid;', [], (error, results: RowDataPacket[]) => {
-            if (error) return reject(error);
-
-            const roundedResults = results.map(result => {
-                return {
-                    ...result
-                };
-            });
-
-            resolve(roundedResults as Svar[]);
-        });
-    });
-  }
+    /**
+     * Get all answers also located in favorites table.
+     */
+    getAll() {
+      return new Promise<Svar[]>((resolve, reject) => {
+          pool.query('SELECT * FROM Svar S JOIN Favoritter F ON S.svarid = F.svarid;', [], (error, results: RowDataPacket[]) => {
+              if (error) return reject(error);
+  
+              const roundedResults = results.map(result => {
+                  return {
+                      ...result
+                  };
+              });
+  
+              resolve(roundedResults as Svar[]);
+          });
+      });
+    }
 
   /**
    * Create new question having the given title.
@@ -29,9 +29,15 @@ class FavorittService {
    */
   create(svarid: Number) {
     return new Promise<number>((resolve, reject) => {
+        //Check if relation already exists
         pool.query('SELECT * FROM Favoritter WHERE svarid = ?', [svarid], (error, results: RowDataPacket[]) => {
             if (error) return reject(error);
             if (results.length > 0) return reject('Already favorited');
+        });
+        //Check if answer exists
+        pool.query('SELECT * FROM Svar WHERE svarid = ?', [svarid], (error, results: RowDataPacket[]) => {
+            if (error) return reject(error);
+            if (results.length == 0) return reject('Answer does not exist');
         });
 
         pool.query('INSERT INTO Favoritter(svarid) VALUES (?) ', [svarid], (error, results: ResultSetHeader) => {
