@@ -318,7 +318,6 @@ class SporsmalDetails extends Component<{
 					...this.sporsmal,
 					poeng: this.sporsmal.poeng + 1,
 				};
-				console.log(UpdatedQuestion);
 				//sporsmalService.update(UpdatedQuestion).then(() => {});
 			})
 			.catch((error) =>
