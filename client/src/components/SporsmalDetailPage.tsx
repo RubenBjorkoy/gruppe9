@@ -12,7 +12,7 @@ import SvarList from "./SvarListCard";
 const history = createHashHistory();
 
 class SporsmalDetails extends Component<{
-	sporsmalid: number
+	sporsmalid: number;
 }> {
 	sporsmal: Sporsmal = {
 		sporsmalid: 0,
@@ -30,22 +30,22 @@ class SporsmalDetails extends Component<{
 	svarer: Svar[] = [];
 
 	handleReply = () => {
-		svarService.getAll(this.props.sporsmalid).then((svar: Svar[]) => (this.svarer = svar)); // Reloads the tags on tag creation
+		svarService
+			.getAll(this.props.sporsmalid)
+			.then((svar: Svar[]) => (this.svarer = svar)); // Reloads the tags on tag creation
 	};
 
-handleDelete = () => { 
-		sporsmalService.delete(this.props.sporsmalid).then(() => { 
+	handleDelete = () => {
+		sporsmalService.delete(this.props.sporsmalid).then(() => {
 			Alert.success("Spørsmål slettet");
 		});
 	};
 
-handleEdit = () => { 
-	sporsmalService.update(this.sporsmal).then(() => {
-		Alert.success("Spørsmål endret");
-	});
-};
-
-
+	handleEdit = () => {
+		sporsmalService.update(this.sporsmal).then(() => {
+			Alert.success("Spørsmål endret");
+		});
+	};
 
 	render() {
 		return (
@@ -165,48 +165,36 @@ handleEdit = () => {
 						</Button.Success>
 					</Column>
 				</Card>
-				<SvarList sporsmalid={this.props.sporsmalid} onReply={this.handleReply} />
+				<SvarList
+					sporsmalid={this.props.sporsmalid}
+					onReply={this.handleReply}
+				/>
 			</>
 		);
 	}
 
 	mounted() {
 		sporsmalService
-<<<<<<< HEAD
 			.get(this.props.sporsmalid)
-			.then((sporsmal: Sporsmal) => (this.sporsmal = sporsmal))
-			.then(() => {
-				//Increase points when user enters the page to increase popularity
-				const UpdatedQuestion = {
-					...this.sporsmal,
-					poeng: this.sporsmal.poeng + 1,
-				};
-				//sporsmalService.update(UpdatedQuestion).then(() => {});
-			})
-=======
-			.get(this.props.match.params.sporsmalid)
 			.then((sporsmal: Sporsmal) => {
-        // Increment poeng by 1
-        const updatedPoeng = sporsmal.poeng + 1;
-        const updatedSporsmal: Sporsmal = { ...sporsmal, poeng: updatedPoeng };
+				// Increment poeng by 1
+				const updatedPoeng = sporsmal.poeng + 1;
+				const updatedSporsmal: Sporsmal = { ...sporsmal, poeng: updatedPoeng };
 
-        // Update the sporsmal with the incremented poeng
-        sporsmalService.update(updatedSporsmal).then(() => {
-          // Set the sporsmal in the component state
-          this.sporsmal = updatedSporsmal;
+				// Update the sporsmal with the incremented poeng
+				sporsmalService.update(updatedSporsmal).then(() => {
+					// Set the sporsmal in the component state
+					this.sporsmal = updatedSporsmal;
 
-          // Increase points when user enters the page to increase popularity
-        });
-      })
->>>>>>> 044d99ea43934280635780319eece5df66d798d0
+					// Increase points when user enters the page to increase popularity
+				});
+			})
 			.catch((error) =>
 				Alert.danger("Finner ikke spørsmålet: " + error.message)
 			);
 		sporsmalTagService
 			.getTagForSporsmal(this.props.sporsmalid)
 			.then((tags) => (this.tags = tags));
-
-		
 	}
 }
 
