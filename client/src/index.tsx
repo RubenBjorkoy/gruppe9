@@ -85,6 +85,8 @@ class SporsmalDetails extends Component<{
 	svarer: Svar[] = [];
 	tags: Tag[] = [{ tagid: 0, navn: "", forklaring: "", antall: 0 }];
 	svartekst = "";
+	reply: string = "";
+	favoriteList: number[] = [];
 
 	render() {
 		return (
@@ -195,7 +197,7 @@ class SporsmalDetails extends Component<{
 									});
 							}}
 						>
-							Create
+							Create Answer
 						</Button.Success>
 					</Column>
 				</Card>
@@ -213,12 +215,91 @@ class SporsmalDetails extends Component<{
 								</Row>
 								<Row>
 									<Column width={2}>Dato:</Column>
-									{/* <Column>{this.svar.dato.toLocaleString()}</Column> */}
+									<Column>
+										{svar.dato.toString().replace("T", " ").substring(0, 19)}
+									</Column>
 								</Row>
 								<Row>
 									<Column width={2}>Sist Endret:</Column>
-									{/* <Column>{this.svar.sistendret.toLocaleString()}</Column> */}
+									<Column>
+										{svar.sistendret
+											.toLocaleString()
+											.toString()
+											.replace("T", " ")
+											.substring(0, 19)}
+									</Column>
 								</Row>
+								<Card title="Reply">
+									<Row>
+										<Column width={10}>
+											<Form.Input
+												type="text"
+												value={this.reply}
+												style={{ width: "80vw" }}
+												onChange={(event) => {
+													this.reply = event.currentTarget.value;
+												}}
+												onKeyDown={(event: any) => {
+													//submits on enter key
+													if (event.keyCode === 13 && !event.shiftKey) {
+														svarService
+															.create(
+																this.reply,
+																Number(this.sporsmal.sporsmalid),
+																0,
+																true,
+																svar.svarid
+															)
+															.then(() => {
+																// Reloads the Spørsmal
+																SporsmalDetails.instance()?.mounted(); // .? meaning: call SporsmalList.instance().mounted() if SporsmalList.instance() does not return null
+																this.reply = "";
+															});
+													}
+												}}
+											/>
+										</Column>
+									</Row>
+									<Column width={2}>
+										<Button.Success
+											onClick={() => {
+												svarService
+													.create(
+														this.reply,
+														Number(this.sporsmal.sporsmalid),
+														0,
+														true,
+														svar.svarid
+													)
+													.then(() => {
+														// Reloads the Spørsmal
+														SporsmalDetails.instance()?.mounted(); // .? meaning: call SporsmalList.instance().mounted() if SporsmalList.instance() does not return null
+														this.svartekst = "";
+													});
+											}}
+										>
+											Reply
+										</Button.Success>
+										<Button.Light
+											onClick={() => {
+												this.favoriteList.includes(svar.svarid!)
+													? favorittService.delete(svar.svarid!).then(() => {
+															Alert.success("Favoritt fjernet");
+													  })
+													: favorittService.create(svar.svarid!).then(() => {
+															Alert.success("Favoritt lagt til");
+													  });
+											}}
+										>
+											{
+												//Checks if the answer is in the favorite list
+												this.favoriteList.includes(svar.svarid!)
+													? "Remove Favorite"
+													: "Favorite"
+											}
+										</Button.Light>
+									</Column>
+								</Card>
 							</Card>
 						);
 					})}
@@ -238,7 +319,7 @@ class SporsmalDetails extends Component<{
 					poeng: this.sporsmal.poeng + 1,
 				};
 				console.log(UpdatedQuestion);
-				sporsmalService.update(UpdatedQuestion).then(() => {});
+				//sporsmalService.update(UpdatedQuestion).then(() => {});
 			})
 			.catch((error) =>
 				Alert.danger("Finner ikke spørsmålet: " + error.message)
@@ -250,6 +331,13 @@ class SporsmalDetails extends Component<{
 		svarService
 			.getAll(this.props.match.params.sporsmalid)
 			.then((svarer) => (this.svarer = svarer));
+
+		favorittService
+			.getAll()
+			.then(
+				(favoriteList) =>
+					(this.favoriteList = favoriteList.map((x) => x.svarid!))
+			);
 	}
 }
 
@@ -431,6 +519,11 @@ class FavorittList extends Component {
 	render() {
 		return (
 			<Card title="Favoritter">
+				<Row>
+					<Column width={5}>Svar</Column>
+					<Column width={1}>SvarID</Column>
+					<Column width={1}>Poeng</Column>
+				</Row>
 				{this.favoritter.map((favoritt) => (
 					<Row key={favoritt.svarid}>
 						<Column width={5}>{favoritt.svartekst}</Column>
