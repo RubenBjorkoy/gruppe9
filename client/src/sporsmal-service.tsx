@@ -1,4 +1,5 @@
 import axios from "axios";
+import sporsmalTagService from "./sporsmalTag-service";
 
 axios.defaults.baseURL = "http://localhost:3000/api/v2";
 
@@ -38,7 +39,8 @@ class SporsmalService {
 	create(
 		tittel: string,
 		innhold: string,
-		poeng: number,
+		chosenTags: number[],
+		poeng?: number,
 		sporsmal?: number,
 		dato?: Date,
 		sistendret?: Date
@@ -49,7 +51,13 @@ class SporsmalService {
 				innhold: innhold,
 				poeng: poeng,
 			})
-			.then((response) => response.data);
+			.then((response) => {
+				console.log(response.data.id);
+				chosenTags.forEach((tagid) => {
+					sporsmalTagService.create(response.data.id, tagid);
+				});
+				response.data;
+			});
 	}
 
 	delete(sporsmalid: number) {
