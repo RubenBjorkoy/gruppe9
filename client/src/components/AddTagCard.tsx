@@ -11,11 +11,7 @@ interface NewTag {
 	forklaring: string;
 }
 
-interface TagFormProps {
-	onTagCreated: () => void;
-}
-
-class AddTagCard extends Component<TagFormProps> {
+class AddTagCard extends Component<{onTagCreated: () => void}> {
 	newTag: NewTag = {
 		navn: "",
 		forklaring: "",
