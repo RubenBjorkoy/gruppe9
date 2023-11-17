@@ -20,7 +20,7 @@ class SvarService {
 	 */
 	get(sporsmalid: number, svarid: number) {
 		return axios
-			.get<Svar>("/sporsmal/" + svarid)
+			.get<Svar>(`/sporsmal/${sporsmalid}/svar/${svarid}`)
 			.then((response) => response.data);
 	}
 
@@ -62,9 +62,9 @@ class SvarService {
 			.then((response) => response.data);
 	}
 
-	put(svarid: number) {
+	update(svar: Svar, sporsmalid: number) {
 		return axios
-			.put<Svar>("/sporsmal/" + svarid)
+			.put<Svar>(`/sporsmal/${sporsmalid}/svar`, svar)
 			.then((response) => response.data);
 	}
 }
