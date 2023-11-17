@@ -172,6 +172,7 @@ handleEdit = () => {
 
 	mounted() {
 		sporsmalService
+<<<<<<< HEAD
 			.get(this.props.sporsmalid)
 			.then((sporsmal: Sporsmal) => (this.sporsmal = sporsmal))
 			.then(() => {
@@ -182,6 +183,22 @@ handleEdit = () => {
 				};
 				//sporsmalService.update(UpdatedQuestion).then(() => {});
 			})
+=======
+			.get(this.props.match.params.sporsmalid)
+			.then((sporsmal: Sporsmal) => {
+        // Increment poeng by 1
+        const updatedPoeng = sporsmal.poeng + 1;
+        const updatedSporsmal: Sporsmal = { ...sporsmal, poeng: updatedPoeng };
+
+        // Update the sporsmal with the incremented poeng
+        sporsmalService.update(updatedSporsmal).then(() => {
+          // Set the sporsmal in the component state
+          this.sporsmal = updatedSporsmal;
+
+          // Increase points when user enters the page to increase popularity
+        });
+      })
+>>>>>>> 044d99ea43934280635780319eece5df66d798d0
 			.catch((error) =>
 				Alert.danger("Finner ikke spørsmålet: " + error.message)
 			);
