@@ -271,15 +271,19 @@ class SporsmalDetails extends Component<{
 	mounted() {
 		sporsmalService
 			.get(this.props.match.params.sporsmalid)
-			.then((sporsmal: Sporsmal) => (this.sporsmal = sporsmal))
-			.then(() => {
-				//Increase points when user enters the page to increase popularity
-				const UpdatedQuestion = {
-					...this.sporsmal,
-					poeng: this.sporsmal.poeng + 1,
-				};
-				//sporsmalService.update(UpdatedQuestion).then(() => {});
-			})
+			.then((sporsmal: Sporsmal) => {
+        // Increment poeng by 1
+        const updatedPoeng = sporsmal.poeng + 1;
+        const updatedSporsmal: Sporsmal = { ...sporsmal, poeng: updatedPoeng };
+
+        // Update the sporsmal with the incremented poeng
+        sporsmalService.update(updatedSporsmal).then(() => {
+          // Set the sporsmal in the component state
+          this.sporsmal = updatedSporsmal;
+
+          // Increase points when user enters the page to increase popularity
+        });
+      })
 			.catch((error) =>
 				Alert.danger("Finner ikke spørsmålet: " + error.message)
 			);
