@@ -12,7 +12,7 @@ import SvarList from "./SvarListCard";
 const history = createHashHistory();
 
 class SporsmalDetails extends Component<{
-	sporsmalid: number;
+  match: { params: { sporsmalid: number } };
 }> {
 	sporsmal: Sporsmal = {
 		sporsmalid: 0,
@@ -31,12 +31,12 @@ class SporsmalDetails extends Component<{
 
 	handleReply = () => {
 		svarService
-			.getAll(this.props.sporsmalid)
+			.getAll(this.props.match.params.sporsmalid)
 			.then((svar: Svar[]) => (this.svarer = svar)); // Reloads the tags on tag creation
 	};
 
 	handleDelete = () => {
-		sporsmalService.delete(this.props.sporsmalid).then(() => {
+		sporsmalService.delete(this.props.match.params.sporsmalid).then(() => {
 			Alert.success("Spørsmål slettet");
 		});
 	};
@@ -166,7 +166,7 @@ class SporsmalDetails extends Component<{
 					</Column>
 				</Card>
 				<SvarList
-					sporsmalid={this.props.sporsmalid}
+					sporsmalid={this.props.match.params.sporsmalid}
 					onReply={this.handleReply}
 				/>
 			</>
@@ -175,7 +175,7 @@ class SporsmalDetails extends Component<{
 
 	mounted() {
 		sporsmalService
-			.get(this.props.sporsmalid)
+			.get(this.props.match.params.sporsmalid)
 			.then((sporsmal: Sporsmal) => {
 				// Increment poeng by 1
 				const updatedPoeng = sporsmal.poeng + 1;
@@ -193,7 +193,7 @@ class SporsmalDetails extends Component<{
 				Alert.danger("Finner ikke spørsmålet: " + error.message)
 			);
 		sporsmalTagService
-			.getTagForSporsmal(this.props.sporsmalid)
+			.getTagForSporsmal(this.props.match.params.sporsmalid)
 			.then((tags) => (this.tags = tags));
 	}
 }
