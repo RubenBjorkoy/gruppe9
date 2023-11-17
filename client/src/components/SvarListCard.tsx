@@ -157,17 +157,17 @@ class SvarList extends Component<{
 											Reply
 										</Button.Success>
 										<Row>
-								<Column width={1}>
-								<Button.Light onClick={() => this.handleVoting(svar, this.props.sporsmalid, 1)}>
-									Vote Up
-								</Button.Light>
-								</Column>
-								<Column width={1}>
-								<Button.Light onClick={() => this.handleVoting(svar, this.props.sporsmalid, -1)}>
-									Vote Down
-								</Button.Light>
-								</Column>
-							</Row>
+							<Column width={1}>
+							<Button.Light onClick={() => this.handleVoting(svar, this.props.sporsmalid, 1)}>
+								Vote Up
+							</Button.Light>
+							</Column>
+							<Column width={1}>
+							<Button.Light onClick={() => this.handleVoting(svar, this.props.sporsmalid, -1)}>
+								Vote Down
+							</Button.Light>
+							</Column>
+						</Row>
 									</Column>
 								</Card>
 							</Card>

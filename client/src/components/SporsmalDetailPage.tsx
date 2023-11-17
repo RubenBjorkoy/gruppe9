@@ -33,10 +33,19 @@ class SporsmalDetails extends Component<{
 		svarService.getAll(this.props.sporsmalid).then((svar: Svar[]) => (this.svarer = svar)); // Reloads the tags on tag creation
 	};
 
-	// function for deleting a question using sporsmalserivce
+handleDelete = () => { 
+		sporsmalService.delete(this.props.sporsmalid).then(() => { 
+			Alert.success("Spørsmål slettet");
+		});
+	};
 
-	// function for editing a queastion using sporsmalserivce
-	
+handleEdit = () => { 
+	sporsmalService.update(this.sporsmal).then(() => {
+		Alert.success("Spørsmål endret");
+	});
+};
+
+
 
 	render() {
 		return (
@@ -91,14 +100,19 @@ class SporsmalDetails extends Component<{
 					</Row>
 				</Card>
 				<Button.Success
-					onClick={() =>
-						history.push(
-							"/sporsmal/" + this.props.sporsmalid + "/rediger"
-						)
-					}
+					onClick={() => {
+						this.handleEdit;
+					}}
 				>
 					Rediger
 				</Button.Success>
+				<Button.Danger
+					onClick={() => {
+						this.handleDelete;
+					}}
+				>
+					Slett
+				</Button.Danger>
 
 				<Card title="Nytt Svar">
 					<Row>
