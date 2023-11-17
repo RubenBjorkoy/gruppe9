@@ -170,7 +170,7 @@ class SporsmalDetails extends Component<{
 											)
 											.then(() => {
 												// Reloads the Spørsmal
-												SporsmalList.instance()?.mounted(); // .? meaning: call SporsmalList.instance().mounted() if SporsmalList.instance() does not return null
+												SporsmalDetails.instance()?.mounted(); // .? meaning: call SporsmalList.instance().mounted() if SporsmalList.instance() does not return null
 												this.svartekst = "";
 											});
 									}
@@ -190,7 +190,7 @@ class SporsmalDetails extends Component<{
 									)
 									.then(() => {
 										// Reloads the Spørsmal
-										SporsmalList.instance()?.mounted(); // .? meaning: call SporsmalList.instance().mounted() if SporsmalList.instance() does not return null
+										SporsmalDetails.instance()?.mounted(); // .? meaning: call SporsmalList.instance().mounted() if SporsmalList.instance() does not return null
 										this.svartekst = "";
 									});
 							}}
@@ -249,6 +249,7 @@ class SporsmalDetails extends Component<{
 class SporsmalNew extends Component {
 	tittel: string = "";
 	innhold: string = "";
+	newTag: Tag = { tagid: 0, navn: "", forklaring: "", antall: 0 };
 	tags: Tag[] = [];
 	chosenTags: Tag[] = [];
 
@@ -276,80 +277,135 @@ class SporsmalNew extends Component {
 		return (
 			<>
 				<Card title="Nytt Spørsmål">
-					<Row>
+					<Column>
+						<Row>
+							<Column width={2}>
+								<Form.Label>Spørsmål Tittel:</Form.Label>
+							</Column>
+							<Column width={4}>
+								<Form.Input
+									type="text"
+									style={{ width: "20vw" }}
+									value={this.tittel}
+									onChange={(event) =>
+										(this.tittel = event.currentTarget.value)
+									}
+								/>
+							</Column>
+						</Row>
+						<Row>
+							<Column width={2}>
+								<Form.Label>Spørsmål Tekst:</Form.Label>
+							</Column>
+							<Column width={5}>
+								<Form.Textarea
+									type="text"
+									style={{ width: "40vw" }}
+									value={this.innhold}
+									onChange={(event) =>
+										(this.innhold = event.currentTarget.value)
+									}
+								/>
+							</Column>
+						</Row>
+						<Row>
+							<Column width={2}>
+								<Form.Label>Spørsmål Tag:</Form.Label>
+							</Column>
+							<Column width={4}>
+								<span>
+									{this.chosenTags.map((tag) => {
+										return (
+											<>
+												<Row key={tag.tagid}>
+													<Column width={5}>{tag.navn}</Column>
+												</Row>
+											</>
+										);
+									})}
+								</span>
+								<Form.Select
+									type="number"
+									value={this.innhold}
+									onChange={(event) => {
+										this.chosenTags.push(
+											this.tags.find(
+												(tag) => tag.tagid == Number(event.currentTarget.value)
+											) as Tag
+										);
+										this.tags = this.tags.filter(
+											(tag) => tag.tagid != Number(event.currentTarget.value)
+										);
+									}}
+								>
+									<option value={0}>Velg Tag</option>
+									{this.tags.map((tag) => {
+										return (
+											<option value={tag.tagid} key={tag.tagid}>
+												{tag.navn}
+											</option>
+										);
+									})}
+								</Form.Select>
+							</Column>
+						</Row>
 						<Column width={1}>
-							<Form.Label>Spørsmål Tittel:</Form.Label>
+							<Button.Success
+								onClick={() => {
+									this.createQuestion();
+								}}
+							>
+								Create Question
+							</Button.Success>
+						</Column>
+					</Column>
+				</Card>
+				<Card title="Missing a tag?">
+					<Row>
+						<Column width={2}>
+							<Form.Label>Tag Navn:</Form.Label>
 						</Column>
 						<Column width={4}>
 							<Form.Input
 								type="text"
 								style={{ width: "20vw" }}
-								value={this.tittel}
-								onChange={(event) => (this.tittel = event.currentTarget.value)}
+								value={this.newTag.navn}
+								onChange={(event) =>
+									(this.newTag.navn = event.currentTarget.value)
+								}
 							/>
 						</Column>
 					</Row>
 					<Row>
-						<Column width={1}>
-							<Form.Label>Spørsmål Tekst:</Form.Label>
+						<Column width={2}>
+							<Form.Label>Tag Forklaring:</Form.Label>
 						</Column>
 						<Column width={5}>
 							<Form.Textarea
 								type="text"
 								style={{ width: "40vw" }}
-								value={this.innhold}
-								onChange={(event) => (this.innhold = event.currentTarget.value)}
+								value={this.newTag.forklaring}
+								onChange={(event) =>
+									(this.newTag.forklaring = event.currentTarget.value)
+								}
 							/>
-						</Column>
-					</Row>
-					<Row>
-						<Column width={1}>
-							<Form.Label>Spørsmål Tag:</Form.Label>
-						</Column>
-						<Column width={4}>
-							<span>
-								{this.chosenTags.map((tag) => {
-									return (
-										<>
-											<Row key={tag.tagid}>
-												<Column width={5}>{tag.navn}</Column>
-											</Row>
-										</>
-									);
-								})}
-							</span>
-							<Form.Select
-								type="number"
-								value={this.innhold}
-								onChange={(event) => {
-									this.chosenTags.push(
-										this.tags.find(
-											(tag) => tag.tagid == Number(event.currentTarget.value)
-										) as Tag
-									);
-									this.tags = this.tags.filter(
-										(tag) => tag.tagid != Number(event.currentTarget.value)
-									);
-								}}
-							>
-								<option value={0}>Velg Tag</option>
-								{this.tags.map((tag) => {
-									return (
-										<option value={tag.tagid} key={tag.tagid}>
-											{tag.navn}
-										</option>
-									);
-								})}
-							</Form.Select>
 						</Column>
 					</Row>
 					<Column width={1}>
 						<Button.Success
 							onClick={() => {
-								this.createQuestion();
+								TagService.createTag(
+									this.newTag.navn,
+									this.newTag.forklaring
+								).then(() => {
+									// Reloads the Spørsmal
+									SporsmalNew.instance()?.mounted(); // .? meaning: call SporsmalList.instance().mounted() if SporsmalList.instance() does not return null
+									this.newTag.navn = "";
+									this.newTag.forklaring = "";
+								});
 							}}
 						>
-							Create
+							Create Tag
 						</Button.Success>
 					</Column>
 				</Card>
@@ -390,24 +446,76 @@ class FavorittList extends Component {
 class TagsList extends Component {
 	tags: Tag[] = [];
 	sporsmal: Sporsmal[] = [];
+	newTag: Tag = { tagid: 0, navn: "", forklaring: "", antall: 0 };
 
 	render() {
 		return (
-			<Card title="Tags">
-				{this.tags.map((tag) => (
-					<Row key={tag.tagid}>
-						<Column width={1}>{tag.tagid}</Column>
-						<Column width={1}>{tag.navn}</Column>
-						<Column width={1}>{tag.forklaring}</Column>
-						<Column width={3}>{tag.antall + "x spørsmål"}</Column>
-						{/* <Button.Success
+			<>
+				<Card title="Tags">
+					{this.tags.map((tag) => (
+						<Row key={tag.tagid}>
+							<Column width={1}>{tag.tagid}</Column>
+							<Column width={1}>{tag.navn}</Column>
+							<Column width={1}>{tag.forklaring}</Column>
+							<Column width={3}>{tag.antall + "x spørsmål"}</Column>
+							{/* <Button.Success
                           onClick={() => history.push('/tags/' + tag.tagid)}
                           >
                           Til Tag
                         </Button.Success> */}
+						</Row>
+					))}
+				</Card>
+				<Card title="Missing a tag?">
+					<Row>
+						<Column width={2}>
+							<Form.Label>Tag Navn:</Form.Label>
+						</Column>
+						<Column width={4}>
+							<Form.Input
+								type="text"
+								style={{ width: "20vw" }}
+								value={this.newTag.navn}
+								onChange={(event) =>
+									(this.newTag.navn = event.currentTarget.value)
+								}
+							/>
+						</Column>
 					</Row>
-				))}
-			</Card>
+					<Row>
+						<Column width={2}>
+							<Form.Label>Tag Forklaring:</Form.Label>
+						</Column>
+						<Column width={5}>
+							<Form.Textarea
+								type="text"
+								style={{ width: "40vw" }}
+								value={this.newTag.forklaring}
+								onChange={(event) =>
+									(this.newTag.forklaring = event.currentTarget.value)
+								}
+							/>
+						</Column>
+					</Row>
+					<Column width={1}>
+						<Button.Success
+							onClick={() => {
+								TagService.createTag(
+									this.newTag.navn,
+									this.newTag.forklaring
+								).then(() => {
+									// Reloads the Spørsmal
+									TagsList.instance()?.mounted(); // .? meaning: call SporsmalList.instance().mounted() if SporsmalList.instance() does not return null
+									this.newTag.navn = "";
+									this.newTag.forklaring = "";
+								});
+							}}
+						>
+							Create
+						</Button.Success>
+					</Column>
+				</Card>
+			</>
 		);
 	}
 
