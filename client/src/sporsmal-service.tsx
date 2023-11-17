@@ -46,7 +46,7 @@ class SporsmalService {
 		sistendret?: Date
 	) {
 		return axios
-			.post<{ sporsmal: Sporsmal }>("/sporsmal", {
+			.post<{ id: number }>("/sporsmal", {
 				tittel: tittel,
 				innhold: innhold,
 				poeng: poeng,
@@ -66,9 +66,9 @@ class SporsmalService {
 			.then((response) => response.data);
 	}
 
-	put(sporsmalid: number) {
+	update(sporsmal: Sporsmal) {
 		return axios
-			.put<Sporsmal>("/sporsmal/" + sporsmalid)
+			.put<Sporsmal>("/sporsmal", sporsmal as Sporsmal)
 			.then((response) => response.data);
 	}
 }

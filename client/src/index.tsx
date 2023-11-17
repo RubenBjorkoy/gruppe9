@@ -231,11 +231,18 @@ class SporsmalDetails extends Component<{
 		sporsmalService
 			.get(this.props.match.params.sporsmalid)
 			.then((sporsmal: Sporsmal) => (this.sporsmal = sporsmal))
+			.then(() => {
+				//Increase points when user enters the page to increase popularity
+				const UpdatedQuestion = {
+					...this.sporsmal,
+					poeng: this.sporsmal.poeng + 1,
+				};
+				console.log(UpdatedQuestion);
+				sporsmalService.update(UpdatedQuestion).then(() => {});
+			})
 			.catch((error) =>
 				Alert.danger("Finner ikke spørsmålet: " + error.message)
 			);
-		//svarservice
-		//getAll
 		sporsmalTagService
 			.getTagForSporsmal(this.props.match.params.sporsmalid)
 			.then((tags) => (this.tags = tags));
