@@ -12,7 +12,7 @@ import SvarList from "./SvarListCard";
 const history = createHashHistory();
 
 class SporsmalDetails extends Component<{
-  match: { params: { sporsmalid: number } };
+	match: { params: { sporsmalid: number } };
 }> {
 	sporsmal: Sporsmal = {
 		sporsmalid: 0,
@@ -32,7 +32,7 @@ class SporsmalDetails extends Component<{
 	handleReply = () => {
 		svarService
 			.getAll(this.props.match.params.sporsmalid)
-			.then((svar: Svar[]) => (this.svarer = svar)); // Reloads the tags on tag creation
+			.then((svar: Svar[]) => (this.svarer = svar));
 	};
 
 	handleDelete = () => {
@@ -108,7 +108,7 @@ class SporsmalDetails extends Component<{
 				</Button.Success>
 				<Button.Danger
 					onClick={() => {
-						this.handleDelete;
+						this.handleDelete();
 					}}
 				>
 					Slett
@@ -126,7 +126,7 @@ class SporsmalDetails extends Component<{
 								}}
 								onKeyDown={(event: any) => {
 									//submits on enter key
-									if (event.keyCode === 13 && !event.shiftKey) {
+									if (event.keyCode === 13) {
 										svarService
 											.create(
 												this.svartekst,
@@ -136,7 +136,7 @@ class SporsmalDetails extends Component<{
 											)
 											.then(() => {
 												// Reloads the Spørsmal
-												SporsmalDetails.instance()?.mounted(); // .? meaning: call SporsmalList.instance().mounted() if SporsmalList.instance() does not return null
+												SvarList.instance()?.mounted(); // .? meaning: call SvarList.instance().mounted() if SvarList.instance() does not return null
 												this.svartekst = "";
 											});
 									}
@@ -156,7 +156,7 @@ class SporsmalDetails extends Component<{
 									)
 									.then(() => {
 										// Reloads the Spørsmal
-										SporsmalDetails.instance()?.mounted(); // .? meaning: call SporsmalList.instance().mounted() if SporsmalList.instance() does not return null
+										SvarList.instance()?.mounted(); // .? meaning: call SvarList.instance().mounted() if SvarList.instance() does not return null
 										this.svartekst = "";
 									});
 							}}
