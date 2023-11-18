@@ -116,10 +116,13 @@ class SporsmalService {
 	/**
 	 * Updates a question with a given ID
 	 */
-	update(sporsmal: Sporsmal) {
-		const unixSistendret = Math.floor(new Date().getTime() / 1000);
+	update(sporsmal: Sporsmal, updateTime: boolean) {
+		const unixSistendret = updateTime
+			? Math.floor(new Date().getTime() / 1000)
+			: Math.floor(new Date(sporsmal.sistendret).getTime() / 1000);
+		//const unixSistendret = Math.floor(new Date().getTime() / 1000);
 		return new Promise<number>((resolve, reject) => {
-			//dato will not change after initial insert, however sistendret updates for every change.
+			//dato will not change after initial insert, however sistendret updates for every change where updateTime = true.
 			pool.query(
 				"UPDATE Sporsmal SET tittel=?, innhold=?, poeng=?, sistendret=FROM_UNIXTIME(?), bestsvarid=? WHERE sporsmalid=?",
 				[

@@ -66,9 +66,10 @@ class SporsmalService {
 			.then((response) => response.data);
 	}
 
-	update(sporsmal: Sporsmal) {
+	update(sporsmal: Sporsmal, updateTime: boolean = true) {
+		//Add false to the update call to avoid updating time on update. For example when only updating score
 		return axios
-			.put<Sporsmal>("/sporsmal", sporsmal as Sporsmal)
+			.put<Sporsmal>("/sporsmal", [sporsmal as Sporsmal, updateTime])
 			.then((response) => response.data);
 	}
 }

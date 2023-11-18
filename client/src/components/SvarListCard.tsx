@@ -21,7 +21,7 @@ class SvarList extends Component<{
 			...svar,
 			poeng: svar.poeng + increment,
 		};
-		svarService.update(updatedSvar, sporsmalid).then(() => {
+		svarService.update(updatedSvar, sporsmalid, false).then(() => {
 			Alert.success("Vurdering gitt");
 		});
 	};

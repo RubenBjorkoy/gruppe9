@@ -51,7 +51,8 @@ router.post("/sporsmal", (request, response) => {
 });
 
 router.put("/sporsmal", (request, response) => {
-	const data = request.body;
+	const data = request.body[0];
+	const updateTime = request.body[1];
 	if (
 		typeof data.sporsmalid == "number" &&
 		typeof data.tittel == "string" &&
@@ -61,7 +62,7 @@ router.put("/sporsmal", (request, response) => {
 		typeof data.poeng == "number"
 	) {
 		sporsmalService
-			.update(data)
+			.update(data, updateTime)
 			.then(() => response.send())
 			.catch((error) => response.status(500).send(error));
 	} else response.status(400).send("Missing sporsmal parameters");

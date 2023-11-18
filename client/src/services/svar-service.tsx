@@ -62,9 +62,9 @@ class SvarService {
 			.then((response) => response.data);
 	}
 
-	update(svar: Svar, sporsmalid: number) {
+	update(svar: Svar, sporsmalid: number, updateTime: boolean = true) {
 		return axios
-			.put<Svar>(`/sporsmal/${sporsmalid}/svar`, svar)
+			.put<Svar>(`/sporsmal/${sporsmalid}/svar`, [svar, updateTime])
 			.then((response) => response.data);
 	}
 }

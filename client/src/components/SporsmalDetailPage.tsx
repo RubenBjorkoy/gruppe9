@@ -182,7 +182,7 @@ class SporsmalDetails extends Component<{
 				const updatedSporsmal: Sporsmal = { ...sporsmal, poeng: updatedPoeng };
 
 				// Update the sporsmal with the incremented poeng
-				sporsmalService.update(updatedSporsmal).then(() => {
+				sporsmalService.update(updatedSporsmal, false).then(() => {
 					// Set the sporsmal in the component state
 					this.sporsmal = updatedSporsmal;
 
