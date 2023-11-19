@@ -8,45 +8,32 @@ import SvarCard from "./SvarCard";
 
 const history = createHashHistory();
 
-interface SvarListProps {
+class SvarList extends Component<{
 	sporsmalid: number;
 	onReply: () => void;
-}
-
-interface SvarListState {
-	svarer: Svar[];
-	sortedByPoeng: boolean;
-}
-
-class SvarList extends Component<SvarListProps, SvarListState> {
+}> {
 	svartekst: string = "";
 	reply: string = "";
 	favoriteList: number[] = [];
 	svarer: Svar[] = [];
 
-	state: SvarListState = {
-		svarer: [],
-		sortedByPoeng: false,
-	};
+	sortedByPoeng: boolean = false;
 
 	handleSortByPoeng = () => {
-		this.setState((prevState) => ({
-			svarer: [...prevState.svarer].sort((a, b) => b.poeng - a.poeng),
-			sortedByPoeng: true,
-		}));
+		this.sortedByPoeng = true;
+		this.fetchData();
 	};
 
 	handleSortByDefault = () => {
-		this.setState({
-			svarer: [...this.state.svarer],
-			sortedByPoeng: false,
-		});
+		this.sortedByPoeng = false;
+		this.fetchData();
 	};
 
 	handleVoting = (svar: Svar, sporsmalid: number, increment: number) => {
-		const updatedSvar = {
+		const updatedPoeng = svar.poeng + increment;
+		const updatedSvar: Svar = {
 			...svar,
-			poeng: svar.poeng + increment,
+			poeng: updatedPoeng,
 		};
 		svarService.update(updatedSvar, sporsmalid, false).then(() => {
 			Alert.success("Vurdering gitt");
@@ -78,6 +65,11 @@ class SvarList extends Component<SvarListProps, SvarListState> {
 			});
 	};
 	render() {
+		console.log("SvarList render", this.props.sporsmalid);
+		const sortedSvarer = [...this.svarer].sort((a, b) =>
+			this.sortedByPoeng ? b.poeng - a.poeng : 0
+		);
+
 		return (
 			<>
 				<div>
@@ -89,22 +81,20 @@ class SvarList extends Component<SvarListProps, SvarListState> {
 					</Button.Success>
 				</div>
 				<Card title="Svarene">
-					{this.svarer.map(
-						//Can change this to this.state.svarer.map((svar) => (... as it was, but in order to do that, please also update the state of this.svarer in the mounted svarService call. Please. Thank you.
-						(svar) => (
-							<SvarCard svar={svar} sporsmalid={this.props.sporsmalid} />
-						)
-					)}
+					{sortedSvarer.map((svar) => (
+						<SvarCard
+							key={svar.svarid}
+							svar={svar}
+							sporsmalid={this.props.sporsmalid}
+						/>
+					))}
 				</Card>
 			</>
 		);
 	}
 
 	mounted() {
-		svarService.getAll(this.props.sporsmalid).then((svarer) => {
-			this.svarer = svarer.filter((svar) => svar.ersvar === false);
-			console.log(this.svarer);
-		});
+		this.fetchData();
 
 		favorittService
 			.getAll()
@@ -112,6 +102,19 @@ class SvarList extends Component<SvarListProps, SvarListState> {
 				(favoriteList) =>
 					(this.favoriteList = favoriteList.map((x) => x.svarid!))
 			);
+	}
+
+	fetchData() {
+		svarService.getAll(this.props.sporsmalid).then((svarer) => {
+			// Apply filtering if needed
+			const filteredSvarer = svarer.filter((svar) => !svar.ersvar);
+
+			// Update the component data
+			this.svarer = filteredSvarer;
+
+			// Force a re-render by calling forceUpdate
+			// this.forceUpdate();
+		});
 	}
 }
 
