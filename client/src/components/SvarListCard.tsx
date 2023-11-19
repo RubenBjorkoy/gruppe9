@@ -8,27 +8,41 @@ import SvarCard from "./SvarCard";
 
 const history = createHashHistory();
 
-interface SvarListState {
-	svarer: Svar[];
+interface SvarListProps {
+  sporsmalid: number;
+  onReply: () => void;
 }
 
-class SvarList extends Component<{
-<<<<<<< HEAD
-	sporsmalid: number,
-    onReply: () => void
-}, SvarListState> 
-{
-    svartekst: string = "";
-=======
-	sporsmalid: number;
-	onReply: () => void;
-}> {
-	svartekst: string = "";
->>>>>>> ad9f1aeadc041688dbdff8256f835f3bf605ca12
+interface SvarListState {
+  svarer: Svar[];
+  sortedByPoeng: boolean;
+}
+
+class SvarList extends Component<SvarListProps, SvarListState> {
+  svartekst: string = "";
 	reply: string = "";
 	favoriteList: number[] = [];
 	svarer: Svar[] = [];
 	svarsvarer: Svar[] = [];
+
+	state: SvarListState = {
+    svarer: [],
+    sortedByPoeng: false,
+  };
+
+	handleSortByPoeng = () => {
+    this.setState((prevState) => ({
+      svarer: [...prevState.svarer].sort((a, b) => b.poeng - a.poeng),
+      sortedByPoeng: true,
+    }));
+  };
+
+  handleSortByDefault = () => {
+    this.setState({
+      svarer: [...this.state.svarer],
+      sortedByPoeng: false,
+    });
+  };
 
 	handleVoting = (svar: Svar, sporsmalid: number, increment: number) => {
 		const updatedSvar = {
@@ -64,15 +78,26 @@ class SvarList extends Component<{
 				SvarList.instance()?.mounted();
 			});
 	};
-	render() {
-		return (
-			<Card title="Svarene">
-				{this.svarer.map((svar) => {
-					return <SvarCard svar={svar} sporsmalid={this.props.sporsmalid} />;
-				})}
-			</Card>
-		);
-	}
+  render() {
+    return (
+			<>
+			<div>
+			<Button.Success onClick={this.handleSortByPoeng}>
+				Sort by Poeng
+			</Button.Success>
+			<Button.Success onClick={this.handleSortByDefault}>
+				Sort by Default
+			</Button.Success>
+		</div>
+      <Card title="Svarene">
+
+        {this.state.svarer.map((svar) => (
+          <SvarCard svar={svar} sporsmalid={this.props.sporsmalid} />
+        ))}
+      </Card>
+			</>
+    );
+  }
 
 	mounted() {
 		svarService.getAll(this.props.sporsmalid).then((svarer) => {

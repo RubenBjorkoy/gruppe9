@@ -19,10 +19,20 @@ class SporsmalList extends Component <{}, SporsmalListState> {
 		this.state = {
 			sporsmaler: [],
 			searchQuery: '',
-			besvart: false
+			besvart: false,
 		}
 	}
 
+	fetchSporsmaler = (besvart: boolean) => {
+    sporsmalService.getAll().then((sporsmaler) => {
+      if (!besvart) {
+        this.setState({ sporsmaler, besvart });
+      } else {
+        const unansweredSporsmaler = sporsmaler.filter((sporsmal) => !sporsmal.ersvart);
+        this.setState({ sporsmaler: unansweredSporsmaler, besvart });
+      }
+    });
+  };
 
 	sortSporsmalByPoeng = () => {
 		this.setState((prevState) => {
@@ -44,25 +54,24 @@ class SporsmalList extends Component <{}, SporsmalListState> {
 
 		return (
 			<>
-			<Button.Success
-				onClick={this.sortSporsmalByPoeng}
-			>
-				Sorter etter Antall Visninger
-			</Button.Success>
-			<Form.Label>Vis kun ubesvarte spørsmål</Form.Label>
-			<Form.Checkbox
-				checked={this.state.besvart}
-				height={"50px"}
-				width={"50px"}
-				onChange={(event) => {
-					const newBesvart = event.currentTarget.checked;
-					this.setState({ besvart: newBesvart });
-					this.setState((prevState) => {
-						const sporsmaler = prevState.sporsmaler.filter((sporsmal) => sporsmal.ersvart === false);
-						return { sporsmaler };
-					});
-				}}
-			/>
+			<Row>
+				<Column width={2}>
+				<Button.Success onClick={() => this.fetchSporsmaler(false)}>
+						Vis Alle Spørsmål
+				</Button.Success>
+				</Column>
+				<Column width={2}>
+				<Button.Success onClick={() => this.fetchSporsmaler(true)}>
+						Vis Ubesvarte Spørsmål
+				</Button.Success>
+				</Column>	
+				<Column width={2}>
+				<Button.Success	onClick={this.sortSporsmalByPoeng}>
+					Sorter etter Antall Visninger
+				</Button.Success>
+				</Column>
+			</Row>
+			<p></p>
 
 			<Form.Input
           		type="text"
@@ -70,7 +79,7 @@ class SporsmalList extends Component <{}, SporsmalListState> {
           		onChange={this.handleSearchChange}
           		placeholder="Søk etter spørsmål"
         	/>
-				
+			<p></p>				
 			<Card title="Spørsmål">
 				{filteredSporsmaler.map((sporsmal) => (
 					<Row key={sporsmal.sporsmalid}>
@@ -95,6 +104,7 @@ class SporsmalList extends Component <{}, SporsmalListState> {
 							</Button.Success>
 						</Column>
 					</Row>
+					
 				))}
 			</Card>
 			</>
@@ -105,17 +115,8 @@ class SporsmalList extends Component <{}, SporsmalListState> {
 		sporsmalService
 			.getAll()
 			.then((sporsmaler) => (this.setState({ sporsmaler })));
-
-		sporsmalService
-			.getAll()
-			.then((sporsmaler) => (this.setState({ sporsmaler })))
-            .then(() => {
-                this.setState((prevState) => {
-                    const sporsmaler = prevState.sporsmaler.filter((sporsmal) => sporsmal.ersvart === false);
-                    return { sporsmaler };
-                });
-             })
 	}
 }
+
 
 export default SporsmalList;

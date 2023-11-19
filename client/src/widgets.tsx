@@ -26,7 +26,10 @@ export class Card extends Component<{ title?: ReactNode }> {
  */
 export class Row extends Component {
 	render() {
-		return <div className="row">{this.props.children}</div>;
+		const rowStyle = {
+      marginBottom: '10px', // Adjust the value as needed
+    };
+		return <div className="row" style={rowStyle}>{this.props.children}</div>;
 	}
 }
 
@@ -57,19 +60,24 @@ class ButtonSuccess extends Component<{
 	onClick: () => void;
 }> {
 	render() {
+		const buttonStyle = {
+      border: '1px solid #28a745', // Add border style
+      // ... existing styles
+    };
 		return (
 			<button
 				type="button"
 				className="btn btn-success"
-				style={
-					this.props.small
-						? {
-								padding: "5px 5px",
-								fontSize: "16px",
-								lineHeight: "0.7",
-						  }
-						: {}
-				}
+				style={{
+          ...buttonStyle,
+          ...(this.props.small
+            ? {
+                padding: '5px 5px',
+                fontSize: '16px',
+                lineHeight: '0.7',
+              }
+            : {}),
+        }}
 				onClick={this.props.onClick}
 			>
 				{this.props.children}
