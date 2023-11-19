@@ -22,12 +22,12 @@ class SvarList extends Component<{
 
   handleSortByPoeng = () => {
 		this.sortedByPoeng = true;
-    this.fetchData(true);
+    this.fetchData();
   };
 
   handleSortByDefault = () => {
 		this.sortedByPoeng = false;
-    this.fetchData(false);
+    this.fetchData();
   };
 
 	handleVoting = (svar: Svar, sporsmalid: number, increment: number) => {
@@ -92,7 +92,7 @@ class SvarList extends Component<{
 
 	mounted() {
 
-		this.fetchData(false);
+		this.fetchData();
   
 		favorittService
 			.getAll()
@@ -102,7 +102,7 @@ class SvarList extends Component<{
 			);
 	}
 
-  fetchData(sortedByPoeng: boolean) {
+  fetchData() {
     svarService.getAll(this.props.sporsmalid).then((svarer) => {
       // Apply filtering if needed
       const filteredSvarer = svarer.filter((svar) => !svar.ersvar);
