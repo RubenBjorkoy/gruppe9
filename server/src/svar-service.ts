@@ -114,8 +114,10 @@ class SvarService {
 	/**
 	 * Updates a answers with a given ID
 	 */
-	update(svar: Svar) {
-		const unixSistendret = Math.floor(new Date().getTime() / 1000);
+	update(svar: Svar, updateTime: boolean) {
+		const unixSistendret = updateTime
+			? Math.floor(new Date().getTime() / 1000)
+			: Math.floor(new Date(svar.sistendret).getTime() / 1000);
 		return new Promise<number>((resolve, reject) => {
 			//dato will not change after initial insert, however sistendret updates for every change
 			//Absolutely no need to edit sporsmalid, as a comment is tied to a sporsmalid

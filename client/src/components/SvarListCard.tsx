@@ -1,12 +1,10 @@
 import * as React from "react";
 import { Component } from "react-simplified";
 import { Card, Row, Column, Form, Button, NavBar, Alert } from "../widgets";
-import sporsmalService, { Sporsmal } from "../services/sporsmal-service";
-import { Tag } from "../services/tag-service";
-import sporsmalTagService from "../services/sporsmalTag-service";
 import svarService, { Svar } from "../services/svar-service";
 import favorittService, { Favoritt } from "../services/favoritt-service";
 import { createHashHistory } from "history";
+import SvarCard from "./SvarCard";
 
 const history = createHashHistory();
 
@@ -15,28 +13,32 @@ interface SvarListState {
 }
 
 class SvarList extends Component<{
+<<<<<<< HEAD
 	sporsmalid: number,
     onReply: () => void
 }, SvarListState> 
 {
     svartekst: string = "";
+=======
+	sporsmalid: number;
+	onReply: () => void;
+}> {
+	svartekst: string = "";
+>>>>>>> ad9f1aeadc041688dbdff8256f835f3bf605ca12
 	reply: string = "";
 	favoriteList: number[] = [];
 	svarer: Svar[] = [];
-	
+	svarsvarer: Svar[] = [];
+
 	handleVoting = (svar: Svar, sporsmalid: number, increment: number) => {
-        const updatedSvar = {
-            ...svar,
-            poeng: svar.poeng + increment
-        }
-		svarService.update(updatedSvar, sporsmalid).then(() => {
+		const updatedSvar = {
+			...svar,
+			poeng: svar.poeng + increment,
+		};
+		svarService.update(updatedSvar, sporsmalid, false).then(() => {
 			Alert.success("Vurdering gitt");
-
-
 		});
-	
-		
-    }
+	};
 
 	handleFavoriting = (svar: Svar) => {
 		if (this.favoriteList.includes(svar.svarid!)) {
@@ -53,139 +55,32 @@ class SvarList extends Component<{
 		});
 	};
 
-    handleReply = (svar: Svar) => {
-        svarService.create(this.reply, this.props.sporsmalid, 0, true, svar.svarid).then(() => {
-            this.reply = "";
-            this.props.onReply();
-        });
-    }
-    render() {
-        return (
-            <Card title="Svarene">
-					{this.svarer.map((svar) => {
-						return (
-							<Card title={"SvarID " + svar.svarid} key={svar.svarid}>
-								<Row>
-									<Column>
-										<Row>
-											<Column width={2}>Svar:</Column>
-											<Column>{svar.svartekst}</Column>
-										</Row>
-										<Row>
-											<Column width={2}>Poeng:</Column>
-											<Column>{svar.poeng}</Column>
-										</Row>
-										<Row>
-											<Column width={2}>Dato:</Column>
-											<Column>
-												{svar.dato
-													.toString()
-													.replace("T", " ")
-													.substring(0, 19)}
-											</Column>
-										</Row>
-										<Row>
-											<Column width={2}>Sist Endret:</Column>
-											<Column>
-												{svar.sistendret
-													.toLocaleString()
-													.toString()
-													.replace("T", " ")
-													.substring(0, 19)}
-											</Column>
-										</Row>
-									</Column>
-									<Column>
-										<Button.Light
-											onClick={() => {
-												this.handleFavoriting(svar);
-											}}
-										>
-											{
-												//Checks if the answer is in the favorite list
-												this.favoriteList.includes(svar.svarid!)
-													? "Remove Favorite"
-													: "Favorite"
-											}
-										</Button.Light>
-									</Column>
-								</Row>
-								<Card title="Reply">
-									<Row>
-										<Column width={10}>
-											<Form.Input
-												type="text"
-												value={this.reply}
-												style={{ width: "80vw" }}
-												onChange={(event) => {
-													this.reply = event.currentTarget.value;
-												}}
-												onKeyDown={(event: any) => {
-													//submits on enter key
-													if (event.keyCode === 13 && !event.shiftKey) {
-														svarService
-															.create(
-																this.reply,
-																Number(this.props.sporsmalid),
-																0,
-																true,
-																svar.svarid
-															)
-															.then(() => {
-																// Reloads the Spørsmal
-																this.handleReply(svar);
-																this.reply = "";
-															});
-													}
-												}}
-											/>
-										</Column>
-									</Row>
-									<Column width={2}>
-										<Button.Success
-											onClick={() => {
-												svarService
-													.create(
-														this.reply,
-														Number(this.props.sporsmalid),
-														0,
-														true,
-														svar.svarid
-													)
-													.then(() => {
-														// Reloads the Spørsmal
-														this.handleReply(svar);
-														this.svartekst = "";
-													});
-											}}
-										>
-											Reply
-										</Button.Success>
-										<Row>
-							<Column width={1}>
-							<Button.Light onClick={() => this.handleVoting(svar, this.props.sporsmalid, 1)}>
-								Vote Up
-							</Button.Light>
-							</Column>
-							<Column width={1}>
-							<Button.Light onClick={() => this.handleVoting(svar, this.props.sporsmalid, -1)}>
-								Vote Down
-							</Button.Light>
-							</Column>
-						</Row>
-									</Column>
-								</Card>
-							</Card>
-						);
-					})}
+	handleReply = (svar: Svar) => {
+		svarService
+			.create(this.reply, this.props.sporsmalid, 0, true, svar.svarid)
+			.then(() => {
+				this.reply = "";
+				this.props.onReply();
+				SvarList.instance()?.mounted();
+			});
+	};
+	render() {
+		return (
+			<Card title="Svarene">
+				{this.svarer.map((svar) => {
+					return <SvarCard svar={svar} sporsmalid={this.props.sporsmalid} />;
+				})}
 			</Card>
-        );
-    }
+		);
+	}
 
-    mounted()  {
-        svarService
-			.getAll(this.props.sporsmalid)
-			.then((svarer) => (this.svarer = svarer));
+	mounted() {
+		svarService.getAll(this.props.sporsmalid).then((svarer) => {
+			this.svarer = svarer.filter((svar) => svar.ersvar === false);
+			this.svarsvarer = svarer.filter((svar) => svar.ersvar === true);
+			console.log(this.svarer);
+			console.log(this.svarsvarer);
+		});
 
 		favorittService
 			.getAll()
@@ -193,7 +88,7 @@ class SvarList extends Component<{
 				(favoriteList) =>
 					(this.favoriteList = favoriteList.map((x) => x.svarid!))
 			);
-    }
+	}
 }
 
 export default SvarList;

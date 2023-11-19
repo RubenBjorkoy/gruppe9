@@ -45,7 +45,8 @@ router.post("/sporsmal/:sporsmalid/svar", (request, response) => {
 });
 
 router.put("/sporsmal/:sporsmalid/svar", (request, response) => {
-	const data = request.body;
+	const data = request.body[0];
+	const updateTime = request.body[1];
 	if (
 		typeof data.svarid == "number" &&
 		typeof data.svartekst == "string" &&
@@ -54,7 +55,7 @@ router.put("/sporsmal/:sporsmalid/svar", (request, response) => {
 		typeof data.sporsmalid == "number"
 	) {
 		svarService
-			.update(data)
+			.update(data, updateTime)
 			.then(() => response.send())
 			.catch((error) => response.status(500).send(error));
 	} else response.status(400).send("Missing comment id");
