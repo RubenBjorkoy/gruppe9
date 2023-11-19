@@ -152,20 +152,11 @@ class SvarService {
 			//If fromQuestion is true, we need to delete all comments on the question as well
 			if (fromQuestion) {
 				pool.query(
-					"SELECT * FROM Svar WHERE svarsvarid = (SELECT svarid FROM Svar WHERE sporsmalid = ?)",
+					"DELETE FROM Svar WHERE sporsmalid = ?",
 					[svarid],
 					(error, results: RowDataPacket[]) => {
 						if (error) return reject(error);
-						if (results.length == 0) {
-							pool.query(
-								"DELETE FROM Svar WHERE sporsmalid = ?",
-								[svarid],
-								(error, _results: RowDataPacket[]) => {
-									if (error) return reject(error);
-									resolve();
-								}
-							);
-						}
+						resolve();
 					}
 				);
 			}

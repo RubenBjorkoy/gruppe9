@@ -10,6 +10,7 @@ const history = createHashHistory();
 interface SporsmalListState {
 	sporsmaler: Sporsmal[];
 	searchQuery: string;
+	besvart: boolean;
 }
 
 class SporsmalList extends Component <{}, SporsmalListState> {
@@ -18,9 +19,10 @@ class SporsmalList extends Component <{}, SporsmalListState> {
 		this.state = {
 			sporsmaler: [],
 			searchQuery: '',
+			besvart: false
 		}
 	}
-	// sporsmaler: Sporsmal[] = [];
+
 
 	sortSporsmalByPoeng = () => {
 		this.setState((prevState) => {
@@ -32,7 +34,7 @@ class SporsmalList extends Component <{}, SporsmalListState> {
 	handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
     this.setState({ searchQuery: event.target.value });
   };
-
+  	
 	render() {
 		const { sporsmaler, searchQuery } = this.state;
 
@@ -47,13 +49,27 @@ class SporsmalList extends Component <{}, SporsmalListState> {
 			>
 				Sorter etter Antall Visninger
 			</Button.Success>
+			<Form.Label>Vis kun ubesvarte spørsmål</Form.Label>
+			<Form.Checkbox
+				checked={this.state.besvart}
+				height={"50px"}
+				width={"50px"}
+				onChange={(event) => {
+					const newBesvart = event.currentTarget.checked;
+					this.setState({ besvart: newBesvart });
+					this.setState((prevState) => {
+						const sporsmaler = prevState.sporsmaler.filter((sporsmal) => sporsmal.ersvart === false);
+						return { sporsmaler };
+					});
+				}}
+			/>
 
 			<Form.Input
-          type="text"
-          value={searchQuery}
-          onChange={this.handleSearchChange}
-          placeholder="Søk etter spørsmål"
-        />
+          		type="text"
+          		value={searchQuery}
+          		onChange={this.handleSearchChange}
+          		placeholder="Søk etter spørsmål"
+        	/>
 				
 			<Card title="Spørsmål">
 				{filteredSporsmaler.map((sporsmal) => (
@@ -89,6 +105,16 @@ class SporsmalList extends Component <{}, SporsmalListState> {
 		sporsmalService
 			.getAll()
 			.then((sporsmaler) => (this.setState({ sporsmaler })));
+
+		sporsmalService
+			.getAll()
+			.then((sporsmaler) => (this.setState({ sporsmaler })))
+            .then(() => {
+                this.setState((prevState) => {
+                    const sporsmaler = prevState.sporsmaler.filter((sporsmal) => sporsmal.ersvart === false);
+                    return { sporsmaler };
+                });
+             })
 	}
 }
 

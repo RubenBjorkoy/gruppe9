@@ -10,10 +10,15 @@ import { createHashHistory } from "history";
 
 const history = createHashHistory();
 
+interface SvarListState {
+	svarer: Svar[];
+}
+
 class SvarList extends Component<{
 	sporsmalid: number,
     onReply: () => void
-}> {
+}, SvarListState> 
+{
     svartekst: string = "";
 	reply: string = "";
 	favoriteList: number[] = [];

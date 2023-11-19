@@ -38,6 +38,8 @@ class SporsmalDetails extends Component<{
 	handleDelete = () => {
 		sporsmalService.delete(this.props.match.params.sporsmalid).then(() => {
 			Alert.success("Spørsmål slettet");
+			history.push("/sporsmal");
+			
 		});
 	};
 
@@ -98,21 +100,23 @@ class SporsmalDetails extends Component<{
 							})}
 						</Column>
 					</Row>
-				</Card>
+				
 				<Button.Success
 					onClick={() => {
-						this.handleEdit;
+						this.handleEdit();
 					}}
 				>
 					Rediger
 				</Button.Success>
 				<Button.Danger
 					onClick={() => {
-						this.handleDelete;
+						this.handleDelete();
 					}}
 				>
 					Slett
 				</Button.Danger>
+				</Card>
+				
 
 				<Card title="Nytt Svar">
 					<Row>
@@ -194,8 +198,10 @@ class SporsmalDetails extends Component<{
 			);
 		sporsmalTagService
 			.getTagForSporsmal(this.props.match.params.sporsmalid)
-			.then((tags) => (this.tags = tags));
-	}
+
+          // Increase points when user enters the page to increase popularity
+    }
+      
 }
 
 export default SporsmalDetails;
