@@ -196,6 +196,7 @@ class SporsmalDetails extends Component<{
 			.catch((error) =>
 				Alert.danger("Finner ikke spørsmålet: " + error.message)
 			);
+
 		sporsmalTagService
 			.getTagForSporsmal(this.props.match.params.sporsmalid)
 
