@@ -5,7 +5,6 @@ import sporsmalService, { Sporsmal } from "../services/sporsmal-service";
 import { Tag } from "../services/tag-service";
 import sporsmalTagService from "../services/sporsmalTag-service";
 import svarService, { Svar } from "../services/svar-service";
-import favorittService, { Favoritt } from "../services/favoritt-service";
 import { createHashHistory } from "history";
 import SvarList from "./SvarListCard";
 
@@ -39,7 +38,6 @@ class SporsmalDetails extends Component<{
 		sporsmalService.delete(this.props.match.params.sporsmalid).then(() => {
 			Alert.success("Spørsmål slettet");
 			history.push("/sporsmal");
-			
 		});
 	};
 
@@ -100,23 +98,22 @@ class SporsmalDetails extends Component<{
 							})}
 						</Column>
 					</Row>
-				
-				<Button.Success
-					onClick={() => {
-						this.handleEdit();
-					}}
-				>
-					Rediger
-				</Button.Success>
-				<Button.Danger
-					onClick={() => {
-						this.handleDelete();
-					}}
-				>
-					Slett
-				</Button.Danger>
+
+					<Button.Success
+						onClick={() => {
+							this.handleEdit();
+						}}
+					>
+						Rediger
+					</Button.Success>
+					<Button.Danger
+						onClick={() => {
+							this.handleDelete();
+						}}
+					>
+						Slett
+					</Button.Danger>
 				</Card>
-				
 
 				<Card title="Nytt Svar">
 					<Row>
@@ -200,9 +197,8 @@ class SporsmalDetails extends Component<{
 		sporsmalTagService
 			.getTagForSporsmal(this.props.match.params.sporsmalid)
 
-          // Increase points when user enters the page to increase popularity
-    }
-      
+		// Increase points when user enters the page to increase popularity
+	}
 }
 
 export default SporsmalDetails;
