@@ -8,27 +8,26 @@ import SvarCard from "./SvarCard";
 
 const history = createHashHistory();
 
-
 class SvarList extends Component<{
-  sporsmalid: number;
-  onReply: () => void;
+	sporsmalid: number;
+	onReply: () => void;
 }> {
-  svartekst: string = "";
-  reply: string = "";
-  favoriteList: number[] = [];
-  svarer: Svar[] = [];
+	svartekst: string = "";
+	reply: string = "";
+	favoriteList: number[] = [];
+	svarer: Svar[] = [];
 
 	sortedByPoeng: boolean = false;
 
-  handleSortByPoeng = () => {
+	handleSortByPoeng = () => {
 		this.sortedByPoeng = true;
-    this.fetchData();
-  };
+		this.fetchData();
+	};
 
-  handleSortByDefault = () => {
+	handleSortByDefault = () => {
 		this.sortedByPoeng = false;
-    this.fetchData();
-  };
+		this.fetchData();
+	};
 
 	handleVoting = (svar: Svar, sporsmalid: number, increment: number) => {
 		const updatedPoeng = svar.poeng + increment;
@@ -65,35 +64,38 @@ class SvarList extends Component<{
 				SvarList.instance()?.mounted();
 			});
 	};
-  render() {
-		console.log('SvarList render', this.props.sporsmalid);
+	render() {
+		console.log("SvarList render", this.props.sporsmalid);
 		const sortedSvarer = [...this.svarer].sort((a, b) =>
-		this.sortedByPoeng ? b.poeng - a.poeng : 0
-	);
+			this.sortedByPoeng ? b.poeng - a.poeng : 0
+		);
 
-    return (
+		return (
 			<>
-			<div>
-			<Button.Success onClick={this.handleSortByPoeng}>
-				Sort by Poeng
-			</Button.Success>
-			<Button.Success onClick={this.handleSortByDefault}>
-				Sort by Default
-			</Button.Success>
-		</div>
-      <Card title="Svarene">
-			{sortedSvarer.map((svar) => (
-				<SvarCard key={svar.svarid} svar={svar} sporsmalid={this.props.sporsmalid} />
-			))}
-      </Card>
+				<div>
+					<Button.Success onClick={this.handleSortByPoeng}>
+						Sort by Poeng
+					</Button.Success>
+					<Button.Success onClick={this.handleSortByDefault}>
+						Sort by Default
+					</Button.Success>
+				</div>
+				<Card title="Svarene">
+					{sortedSvarer.map((svar) => (
+						<SvarCard
+							key={svar.svarid}
+							svar={svar}
+							sporsmalid={this.props.sporsmalid}
+						/>
+					))}
+				</Card>
 			</>
-    );
-  }
+		);
+	}
 
 	mounted() {
-
 		this.fetchData();
-  
+
 		favorittService
 			.getAll()
 			.then(
@@ -102,19 +104,18 @@ class SvarList extends Component<{
 			);
 	}
 
-  fetchData() {
-    svarService.getAll(this.props.sporsmalid).then((svarer) => {
-      // Apply filtering if needed
-      const filteredSvarer = svarer.filter((svar) => !svar.ersvar);
+	fetchData() {
+		svarService.getAll(this.props.sporsmalid).then((svarer) => {
+			// Apply filtering if needed
+			const filteredSvarer = svarer.filter((svar) => !svar.ersvar);
 
-      // Update the component data
-      this.svarer = filteredSvarer;
+			// Update the component data
+			this.svarer = filteredSvarer;
 
-      // Force a re-render by calling forceUpdate
-      // this.forceUpdate();
-    });
-  }
-	
+			// Force a re-render by calling forceUpdate
+			// this.forceUpdate();
+		});
+	}
 }
 
 export default SvarList;
