@@ -24,7 +24,9 @@ class SvarReplyCard extends Component<{
 			poeng: svar.poeng + increment,
 		};
 		svarService.update(updatedSvar, sporsmalid, false).then(() => {
+			svar = updatedSvar;
 			Alert.success("Vurdering gitt");
+			history.push("/sporsmal/" + this.props.sporsmalid)
 		});
 	};
 
@@ -53,10 +55,18 @@ class SvarReplyCard extends Component<{
 			});
 	};
 
+	handleDelete = (svar: Svar) => {
+		svarService.delete(svar.svarid!).then(() => {
+			history.push("/sporsmal/" + this.props.sporsmalid);
+			Alert.success("Svar slettet");
+			
+		});
+	};
+
 	render() {
 		const svar = this.props.svar;
 		return (
-			<Card title={"SvarID " + svar.svarid} key={svar.svarid}>
+			<Card title={"Kommentar"} key={svar.svarid}>
 				<Row>
 					<Column>
 						<Row>
@@ -101,33 +111,42 @@ class SvarReplyCard extends Component<{
 						<Column width={1}>
 							{/*Upvote button*/}
 							<Button.Light
-								small={true}
 								onClick={() =>
 									this.handleVoting(svar, this.props.sporsmalid, 1)
 								}
 							>
-								<span style={{ fontSize: "40px" }}>
-									&#11205; {/*Unicode for arrow up*/}
-								</span>
+								Stem Opp
+								{/* <span style={{ fontSize: "30px" }}>
+									&#11205; {/*Unicode for arrow up
+								</span> This wasn't working for me in Chrome..*/}
 							</Button.Light>
 						</Column>
 						<Column width={1}>
 							{/*Downvote button*/}
 							<Button.Light
-								small={true}
 								onClick={() =>
 									this.handleVoting(svar, this.props.sporsmalid, -1)
 								}
 							>
-								<span style={{ fontSize: "40px" }}>
-									&#11206; {/*Unicode for arrow down*/}
-								</span>
+								Stem Ned
+								{/* <span style={{ fontSize: "30px" }}>
+									&#11206; {/*Unicode for arrow down
+								</span> */}
 							</Button.Light>
 						</Column>
 					</Column>
 				</Row>
 				{this.svarsvarer.length > 0 && (
 					<Row>
+							<Column>
+							<Button.Danger
+								onClick={() => {
+									this.handleDelete(this.props.svar)
+							}}
+							>
+								Slett
+							</Button.Danger>
+							</Column>
 						<Column>{/*this.renderReplies()*/}</Column>
 					</Row>
 				)}

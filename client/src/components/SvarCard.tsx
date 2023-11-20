@@ -5,6 +5,7 @@ import svarService, { Svar } from "../services/svar-service";
 import favorittService, { Favoritt } from "../services/favoritt-service";
 import { createHashHistory } from "history";
 import SvarReplyCard from "./SvarReply";
+import SporsmalDetails from "./SporsmalDetailPage";
 
 const history = createHashHistory();
 
@@ -67,11 +68,18 @@ class SvarCard extends Component<{
 		return null; // If there are no replies, return null
 	}
 
+	handleDelete = (svar: Svar) => {
+		svarService.delete(svar.svarid!).then(() => {
+			Alert.success("Svar slettet");
+			history.push("/sporsmal/" + this.props.sporsmalid)
+		});
+	};
+
 	render() {
 		return (
 			<>
 				<Card
-					title={"SvarID " + this.props.svar.svarid}
+					title={"Svar til Spørsmål"}
 					key={this.props.svar.svarid}
 				>
 					<Row>
@@ -121,20 +129,19 @@ class SvarCard extends Component<{
 							<Column width={1}>
 								{/*Upvote button*/}
 								<Button.Light
-									small={true}
 									onClick={() =>
 										this.handleVoting(this.props.svar, this.props.sporsmalid, 1)
 									}
 								>
-									<span style={{ fontSize: "40px" }}>
-										&#11205; {/*Unicode for arrow up*/}
-									</span>
+									Stem Opp
+									{/* <span style={{ fontSize: "40px" }}>
+										&#11205; {/*Unicode for arrow up
+									</span> This wasn't working for me in Chrome...*/}
 								</Button.Light>
 							</Column>
 							<Column width={1}>
 								{/*Downvote button*/}
 								<Button.Light
-									small={true}
 									onClick={() =>
 										this.handleVoting(
 											this.props.svar,
@@ -143,9 +150,10 @@ class SvarCard extends Component<{
 										)
 									}
 								>
-									<span style={{ fontSize: "40px" }}>
-										&#11206; {/*Unicode for arrow down*/}
-									</span>
+									Stem Ned
+									{/* <span style={{ fontSize: "40px" }}>
+										&#11206; {/*Unicode for arrow down
+									</span> */}
 								</Button.Light>
 							</Column>
 						</Column>
@@ -175,6 +183,15 @@ class SvarCard extends Component<{
 							Reply
 						</Button.Success>
 					</Column>
+					<Column>
+							<Button.Danger
+								onClick={() => {
+									this.handleDelete(this.props.svar);
+								}}
+							>
+								Slett
+							</Button.Danger>
+							</Column>
 					<Column>
 						{
 							this.renderReplies() // Renders the replies
