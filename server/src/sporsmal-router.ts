@@ -13,13 +13,6 @@ router.get("/sporsmal", (_request, response) => {
 		.catch((error) => response.status(500).send(error));
 });
 
-// router.get('/sporsmal/unanswered', (request, response) => {
-//   sporsmalService
-//     .getUnanswered()
-//     .then((rows) => response.send(rows))
-//     .catch((error) => response.status(500).send(error));
-// });
-
 router.get("/sporsmal/:sporsmalid", (request, response) => {
 	const sporsmalid = Number(request.params.sporsmalid);
 	sporsmalService
@@ -27,7 +20,7 @@ router.get("/sporsmal/:sporsmalid", (request, response) => {
 		.then((sporsmal) =>
 			sporsmal
 				? response.send(sporsmal)
-				: response.status(404).send("Sporsmal not found")
+				: response.status(404).send("Sporsmal ikke funnet")
 		)
 		.catch((error) => response.status(500).send(error));
 });
@@ -47,7 +40,7 @@ router.post("/sporsmal", (request, response) => {
 			.catch((error) => {
 				response.status(500).send(error);
 			});
-	else response.status(400).send("Missing question title");
+	else response.status(400).send("Savner sporsmal tittel");
 });
 
 router.put("/sporsmal", (request, response) => {
@@ -65,7 +58,7 @@ router.put("/sporsmal", (request, response) => {
 			.update(data, updateTime)
 			.then(() => response.send())
 			.catch((error) => response.status(500).send(error));
-	} else response.status(400).send("Missing sporsmal parameters");
+	} else response.status(400).send("Savner sporsmal parametere");
 });
 
 router.delete("/sporsmal/:sporsmalid", (request, response) => {

@@ -135,7 +135,8 @@ class SporsmalService {
 				],
 				(error, results: ResultSetHeader) => {
 					if (error) return reject(error);
-					if (results.affectedRows == 0) reject(new Error("No row updated"));
+					if (results.affectedRows == 0)
+						reject(new Error("Ingen rad oppdatert"));
 
 					//Checks if answer put as bestsvar exists. If not, returns an error.
 					if (sporsmal.bestsvarid != null) {
@@ -145,7 +146,7 @@ class SporsmalService {
 							(error, results: RowDataPacket[]) => {
 								if (error) return reject(error);
 								if (results.length == 0)
-									reject(new Error('No answer found with given "bestsvarid"'));
+									reject(new Error('Ingen svar funnet med gitt "bestsvarid"'));
 							}
 						);
 					}
@@ -168,7 +169,7 @@ class SporsmalService {
 				[sporsmalid],
 				async (error, results: ResultSetHeader) => {
 					if (error) return reject(error);
-					if (results.affectedRows == 0) reject(new Error("No row deleted"));
+					if (results.affectedRows == 0) reject(new Error("Ingen rad slettet"));
 
 					await svarService.delete(sporsmalid, true);
 

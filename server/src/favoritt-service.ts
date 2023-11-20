@@ -46,7 +46,7 @@ class FavorittService {
 				(error, results: RowDataPacket[]) => {
 					if (error) return reject(error);
 					if (results.length > 0) {
-						return reject("Already favorited");
+						return reject("Allerede favoritt");
 					} else {
 						pool.query(
 							"SELECT * FROM Svar WHERE svarid = ?",
@@ -87,7 +87,7 @@ class FavorittService {
 				[svarid],
 				(error, results: ResultSetHeader) => {
 					if (error) return reject(error);
-					if (results.affectedRows == 0) reject(new Error("No row deleted"));
+					if (results.affectedRows == 0) reject(new Error("Ingen rad slettet"));
 
 					resolve();
 				}

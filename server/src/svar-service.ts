@@ -101,7 +101,7 @@ class SvarService {
 								return reject(error);
 							}
 							if (results.affectedRows == 0)
-								reject(new Error("No row updated"));
+								reject(new Error("Ingen rad oppdatert"));
 						}
 					);
 
@@ -127,7 +127,8 @@ class SvarService {
 				[svar.svartekst, svar.poeng, unixSistendret, svar.svarid],
 				(error, results: ResultSetHeader) => {
 					if (error) return reject(error);
-					if (results.affectedRows == 0) reject(new Error("No row updated"));
+					if (results.affectedRows == 0)
+						reject(new Error("Ingen rad oppdatert"));
 
 					resolve(results.affectedRows);
 				}
@@ -183,6 +184,8 @@ class SvarService {
 			);
 
 			//Recursive function to delete all comments on a comment
+			//Is not actually required too be this advanced, but exists based on how the rest of the codebase is built
+			//We removed the ability to comment on a comment to create long threads of comments already. But the code is still here.
 			function deleteComments(commentId: number): Promise<void> {
 				return new Promise<void>((resolve, reject) => {
 					// Fetch replies first
@@ -230,7 +233,7 @@ class SvarService {
 											return reject(error);
 										}
 										if (results.affectedRows == 0)
-											reject(new Error("No row updated"));
+											reject(new Error("Ingen rad oppdatert"));
 									}
 								);
 							}

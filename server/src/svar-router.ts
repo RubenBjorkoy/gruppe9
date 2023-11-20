@@ -20,7 +20,9 @@ router.get("/sporsmal/:sporsmalid/svar/:svarid", (request, response) => {
 	svarService
 		.get(sporsmalid, svarid)
 		.then((svar) => {
-			svar ? response.send(svar) : response.status(404).send("Svar not found");
+			svar
+				? response.send(svar)
+				: response.status(404).send("Svar ikke funnet");
 		})
 		.catch((error) => response.status(500).send(error));
 });
@@ -41,7 +43,7 @@ router.post("/sporsmal/:sporsmalid/svar", (request, response) => {
 			.catch((error) => {
 				response.status(500).send(error);
 			});
-	else response.status(400).send("Missing comment title");
+	else response.status(400).send("Mangler svar tekst");
 });
 
 router.put("/sporsmal/:sporsmalid/svar", (request, response) => {
@@ -58,7 +60,7 @@ router.put("/sporsmal/:sporsmalid/svar", (request, response) => {
 			.update(data, updateTime)
 			.then(() => response.send())
 			.catch((error) => response.status(500).send(error));
-	} else response.status(400).send("Missing comment id");
+	} else response.status(400).send("Savner kommentar id");
 });
 
 router.delete("/sporsmal/:sporsmalid/svar/:svarid", (request, response) => {

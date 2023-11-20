@@ -20,10 +20,10 @@ router.post("/favoritt/:svarid", (request, response) => {
 	FavorittService.create(svarid)
 		.then((id) => response.send({ id: id }))
 		.catch((error: any) => {
-			if (error === "Already favorited") {
-				response.status(409).send(`Svarid "${svarid}" is already favorited`);
+			if (error === "Allerede favoritt") {
+				response.status(409).send(`Svarid "${svarid}" er allerede favoritt`);
 			} else if (error === "Answer does not exist") {
-				response.status(400).send(`Svarid "${svarid}" does not exist`);
+				response.status(400).send(`Svarid "${svarid}" eksisterer ikke`);
 			}
 		});
 	//response.status(400).send('Missing question title');
@@ -34,7 +34,7 @@ router.delete("/favoritt/:svarid", (request, response) => {
 	FavorittService.delete(svarid)
 		.then(() => response.send())
 		.catch((error) => {
-			response.status(400).send("No row deleted");
+			response.status(400).send("Ingen rad slettet");
 		});
 });
 
