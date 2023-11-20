@@ -56,9 +56,9 @@ class SvarService {
 			.then((response) => response.data);
 	}
 
-	delete(svarid: number) {
+	delete(svar: Svar) {
 		return axios
-			.delete<Svar>("/sporsmal/" + svarid)
+			.delete<Svar>(`/sporsmal/${svar.sporsmalid}/svar/${svar.svarid}`)
 			.then((response) => response.data);
 	}
 
