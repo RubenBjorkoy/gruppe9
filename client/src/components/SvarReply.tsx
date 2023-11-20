@@ -4,6 +4,7 @@ import { Card, Row, Column, Form, Button, NavBar, Alert } from "../widgets";
 import svarService, { Svar } from "../services/svar-service";
 import favorittService, { Favoritt } from "../services/favoritt-service";
 import { createHashHistory } from "history";
+import { Link } from "react-router-dom";
 
 const history = createHashHistory();
 
@@ -26,7 +27,7 @@ class SvarReplyCard extends Component<{
 		svarService.update(updatedSvar, sporsmalid, false).then(() => {
 			svar = updatedSvar;
 			Alert.success("Vurdering gitt");
-			history.push("/sporsmal/" + this.props.sporsmalid)
+			
 		});
 	};
 
