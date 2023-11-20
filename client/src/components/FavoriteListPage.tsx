@@ -4,6 +4,7 @@ import { Card, Row, Column, Form, Button, NavBar, Alert } from "../widgets";
 import { Svar } from "../services/svar-service";
 import favorittService, { Favoritt } from "../services/favoritt-service";
 import { createHashHistory } from "history";
+import sporsmalService, { Sporsmal } from "../services/sporsmal-service";
 
 const history = createHashHistory();
 

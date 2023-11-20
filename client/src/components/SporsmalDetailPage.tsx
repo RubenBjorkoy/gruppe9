@@ -27,6 +27,7 @@ class SporsmalDetails extends Component<{
 	tags: Tag[] = [{ tagid: 0, navn: "", forklaring: "", antall: 0 }];
 	svartekst = "";
 	svarer: Svar[] = [];
+	svarListe: Svar[] = [];
 
 	handleReply = () => {
 		svarService
@@ -66,22 +67,29 @@ class SporsmalDetails extends Component<{
 					<Row>
 						<Column width={2}>Dato:</Column>
 						<Column>
-							{this.sporsmal.dato.toString().replace("T", " ").substring(0, 19)}
+							{new Date(this.sporsmal.dato)
+								.toLocaleString()
+								.toString()
+								.replace(",", " ")}
 						</Column>
 					</Row>
 					<Row>
 						<Column width={2}>Sist Endret:</Column>
 						<Column>
-							{this.sporsmal.sistendret
+							{new Date(this.sporsmal.sistendret)
+								.toLocaleString()
 								.toString()
-								.replace("T", " ")
-								.substring(0, 19)}
+								.replace(",", " ")}
 						</Column>
 					</Row>
 					<Row>
 						<Column width={2}>Godkjent Svar:</Column>
 						<Column>
-							{/* <Form.Checkbox checked={this.sporsmal.ersvart} onChange={() => {}} /> */}
+							{
+								this.svarListe.find((svar) => {
+									return svar.svarid === this.sporsmal.bestsvarid;
+								})?.svartekst // If question has a best answer, display the text of that answer
+							}
 						</Column>
 					</Row>
 					<Row>
@@ -100,7 +108,7 @@ class SporsmalDetails extends Component<{
 					</Row>
 
 					<Button.Success
-					onClick={() => history.push(`/rediger/${this.sporsmal.sporsmalid}`)}
+						onClick={() => history.push(`/rediger/${this.sporsmal.sporsmalid}`)}
 					>
 						Rediger
 					</Button.Success>
@@ -172,7 +180,6 @@ class SporsmalDetails extends Component<{
 		);
 	}
 
-
 	mounted() {
 		sporsmalService
 			.get(this.props.match.params.sporsmalid)
@@ -193,11 +200,17 @@ class SporsmalDetails extends Component<{
 				Alert.danger("Finner ikke spørsmålet: " + error.message)
 			);
 
-		sporsmalTagService.getTagForSporsmal(this.props.match.params.sporsmalid).then((tags: Tag[]) => {
-			this.tags = tags;
-		}); // Get every tag for the sporsmal
+		sporsmalTagService
+			.getTagForSporsmal(this.props.match.params.sporsmalid)
+			.then((tags: Tag[]) => {
+				this.tags = tags;
+			}); // Get every tag for the sporsmal
 
 		// Increase points when user enters the page to increase popularity
+
+		svarService
+			.getAll(this.props.match.params.sporsmalid)
+			.then((svar: Svar[]) => (this.svarListe = svar));
 	}
 }
 

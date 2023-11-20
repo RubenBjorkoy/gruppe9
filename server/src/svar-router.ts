@@ -1,5 +1,6 @@
 import express from "express";
 import svarService from "./svar-service";
+import FavorittService from "./favoritt-service";
 
 /**
  * Express router containing task methods.
@@ -67,7 +68,14 @@ router.delete("/sporsmal/:sporsmalid/svar/:svarid", (request, response) => {
 	const svarid: number = Number(request.params.svarid);
 	svarService
 		.delete(svarid)
-		.then((_result) => response.send())
+		.then((_result) => {
+			response.send();
+			FavorittService.getAll().then((svar: any) => {
+				if (svar.some((svar: any) => svar.svarid === svarid)) {
+					FavorittService.delete(svarid); //delete from favoritt table if svar exists
+				}
+			});
+		})
 		.catch((error) => response.status(500).send(error));
 });
 

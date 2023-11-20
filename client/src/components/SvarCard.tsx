@@ -3,6 +3,7 @@ import { Component } from "react-simplified";
 import { Card, Row, Column, Form, Button, NavBar, Alert } from "../widgets";
 import svarService, { Svar } from "../services/svar-service";
 import favorittService, { Favoritt } from "../services/favoritt-service";
+import sporsmalService, { Sporsmal } from "../services/sporsmal-service";
 import { createHashHistory } from "history";
 import SvarReplyCard from "./SvarReply";
 import SvarList from "./SvarListCard";
@@ -28,6 +29,7 @@ class SvarCard extends Component<{
 		svarService.update(updatedSvar, sporsmalid, false).then(() => {
 			Alert.success("Vurdering gitt");
 		});
+		//Doesn't update the view here as that could encourage a quick spam by the user
 	};
 
 	handleFavoriting = (svar: Svar) => {
@@ -43,6 +45,7 @@ class SvarCard extends Component<{
 		favorittService.getAll().then((favoriteList) => {
 			this.favoriteList = favoriteList.map((x) => x.svarid!);
 		});
+		SvarList.instance()?.mounted();
 	};
 
 	handleReply = (svar: Svar) => {
@@ -76,6 +79,24 @@ class SvarCard extends Component<{
 		});
 	};
 
+	handleBest = (svar: Svar) => {
+		sporsmalService.get(this.props.sporsmalid).then((sporsmal) => {
+			if (sporsmal.bestsvarid === svar.svarid) {
+				sporsmal.bestsvarid = undefined;
+				sporsmalService.update(sporsmal, false).then(() => {
+					SvarList.instance()?.mounted();
+					Alert.success("Best svar fjernet");
+				});
+				return;
+			}
+			sporsmal.bestsvarid = svar.svarid;
+			sporsmalService.update(sporsmal, false).then(() => {
+				SvarList.instance()?.mounted();
+				Alert.success("Svar satt som best svar");
+			});
+		});
+	};
+
 	render() {
 		return (
 			<>
@@ -93,20 +114,19 @@ class SvarCard extends Component<{
 							<Row>
 								<Column width={4}>Dato:</Column>
 								<Column>
-									{this.props.svar.dato
+									{new Date(this.props.svar.dato)
+										.toLocaleString()
 										.toString()
-										.replace("T", " ")
-										.substring(0, 19)}
+										.replace(",", " ")}
 								</Column>
 							</Row>
 							<Row>
 								<Column width={4}>Sist Endret:</Column>
 								<Column>
-									{this.props.svar.sistendret
+									{new Date(this.props.svar.sistendret)
 										.toLocaleString()
 										.toString()
-										.replace("T", " ")
-										.substring(0, 19)}
+										.replace(",", " ")}
 								</Column>
 							</Row>
 						</Column>
@@ -132,8 +152,6 @@ class SvarCard extends Component<{
 									}
 								>
 									Stem Opp
-									 <span style={{ fontSize: "40px" }}>
-									</span>
 								</Button.Light>
 							</Column>
 							<Column width={1}>
@@ -148,9 +166,14 @@ class SvarCard extends Component<{
 									}
 								>
 									Stem Ned
-									{/* <span style={{ fontSize: "40px" }}>
-										&#11206; {/*Unicode for arrow down
-									</span> */}
+								</Button.Light>
+							</Column>
+						</Column>
+						<Column>
+							<Column width={1}>
+								{/*Best answer button*/}
+								<Button.Light onClick={() => this.handleBest(this.props.svar)}>
+									Best svar
 								</Button.Light>
 							</Column>
 						</Column>

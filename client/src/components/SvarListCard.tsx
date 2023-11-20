@@ -17,14 +17,14 @@ class SvarList extends Component<{
 	favoriteList: number[] = [];
 	svarer: Svar[] = [];
 
-	sortedByPoeng: boolean = false;
+	sortedByPoeng: boolean = true;
 
 	handleSortByPoeng = () => {
 		this.sortedByPoeng = true;
 		this.fetchData();
 	};
 
-	handleSortByDefault = () => {
+	handleSortByEditedDate = () => {
 		this.sortedByPoeng = false;
 		this.fetchData();
 	};
@@ -64,19 +64,35 @@ class SvarList extends Component<{
 				SvarList.instance()?.mounted();
 			});
 	};
+
+	fetchData() {
+		svarService.getAll(this.props.sporsmalid).then((svarer) => {
+			// Apply filtering if needed
+			const filteredSvarer = svarer.filter((svar) => !svar.ersvar);
+
+			// Update the component data
+			this.svarer = filteredSvarer;
+
+			// Force a re-render by calling forceUpdate
+			// this.forceUpdate();
+		});
+	}
+
 	render() {
 		const sortedSvarer = [...this.svarer].sort((a, b) =>
-			this.sortedByPoeng ? b.poeng - a.poeng : 0
+			this.sortedByPoeng
+				? b.poeng - a.poeng
+				: new Date(b.sistendret).getTime() - new Date(a.sistendret).getTime()
 		);
 
 		return (
 			<>
 				<div>
 					<Button.Success onClick={this.handleSortByPoeng}>
-						Sorter etter Poeng
+						Sorter etter poeng
 					</Button.Success>
-					<Button.Success onClick={this.handleSortByDefault}>
-						Sorter vanlig etter dato lastet opp
+					<Button.Success onClick={this.handleSortByEditedDate}>
+						Sorter tidspunkt endret
 					</Button.Success>
 				</div>
 				<Card title="Svarene">
@@ -101,19 +117,6 @@ class SvarList extends Component<{
 				(favoriteList) =>
 					(this.favoriteList = favoriteList.map((x) => x.svarid!))
 			);
-	}
-
-	fetchData() {
-		svarService.getAll(this.props.sporsmalid).then((svarer) => {
-			// Apply filtering if needed
-			const filteredSvarer = svarer.filter((svar) => !svar.ersvar);
-
-			// Update the component data
-			this.svarer = filteredSvarer;
-
-			// Force a re-render by calling forceUpdate
-			// this.forceUpdate();
-		});
 	}
 }
 
