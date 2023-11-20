@@ -17,7 +17,7 @@ class SporsmalNew extends Component {
 
 	createQuestion = () => {
 		if (this.chosenTags.length == 0) {
-			return Alert.danger("Du må velge minst en tag");
+			return Alert.danger("Alert no worky");
 		}
 		sporsmalService
 			.create(
@@ -84,6 +84,22 @@ class SporsmalNew extends Component {
 											<>
 												<Row key={tag.tagid}>
 													<Column width={5}>{tag.navn}</Column>
+													<Column width={5}>
+														<Button.Danger
+															onClick={() => {
+																this.tags.push(tag);
+																this.chosenTags = this.chosenTags.filter(
+																	(chosenTag) =>
+																		chosenTag.tagid != tag.tagid
+																);
+																this.tags.sort((a, b) =>
+																	a.tagid - b.tagid
+																);
+															}}
+														>
+															Remove
+														</Button.Danger>
+													</Column>
 												</Row>
 											</>
 										);
@@ -120,7 +136,7 @@ class SporsmalNew extends Component {
 									this.createQuestion();
 								}}
 							>
-								Lag Spørsmål
+								Create Question
 							</Button.Success>
 						</Column>
 					</Column>

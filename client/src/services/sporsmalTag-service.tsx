@@ -28,7 +28,7 @@ class SporsmalTagService {
 
 	delete(sporsmalid: number, tagid: number) {
 		return axios
-			.delete<Sporsmal>(`/sporsmal/${sporsmalid}/${tagid}`)
+			.delete<Number>(`/sporsmalTag/${sporsmalid}/${tagid}`)
 			.then((response) => response.data);
 	}
 }

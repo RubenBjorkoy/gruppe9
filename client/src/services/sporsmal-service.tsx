@@ -1,5 +1,6 @@
 import axios from "axios";
 import sporsmalTagService from "./sporsmalTag-service";
+import { Tag } from "./tag-service";
 
 axios.defaults.baseURL = "http://localhost:3000/api/v2";
 
@@ -65,11 +66,23 @@ class SporsmalService {
 			.then((response) => response.data);
 	}
 
-	update(sporsmal: Sporsmal, updateTime: boolean = true) {
+	update(sporsmal: Sporsmal, updateTime: boolean = true, tags?: Tag[]) {
 		//Add false to the update call to avoid updating time on update. For example when only updating score
 		return axios
 			.put<Sporsmal>("/sporsmal", [sporsmal as Sporsmal, updateTime])
-			.then((response) => response.data);
+			.then(async (response) => {
+				if(tags){
+					await sporsmalTagService.getTagForSporsmal(sporsmal.sporsmalid!).then((response: Tag[]) => {
+						response.forEach((tag) => {
+							sporsmalTagService.delete(sporsmal.sporsmalid!, tag.tagid);
+						});
+						tags.forEach((tag) => {
+							sporsmalTagService.create(sporsmal.sporsmalid!, tag.tagid);
+						});
+					});
+				}
+				response.data
+			});
 	}
 }
 

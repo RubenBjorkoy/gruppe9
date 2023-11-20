@@ -132,9 +132,8 @@ class SvarCard extends Component<{
 									}
 								>
 									Stem Opp
-									{/* <span style={{ fontSize: "40px" }}>
-										&#11205; {/*Unicode for arrow up
-									</span> This wasn't working for me in Chrome...*/}
+									 <span style={{ fontSize: "40px" }}>
+									</span>
 								</Button.Light>
 							</Column>
 							<Column width={1}>

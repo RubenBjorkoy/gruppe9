@@ -108,6 +108,8 @@ class TagService {
 					if (error) return reject(error);
 					if (results.affectedRows == 0) reject(new Error("Ingen rad slettet"));
 
+					pool.query("DELETE FROM SporsmalTag WHERE tagid = ?", [tagid]);
+
 					resolve();
 				}
 			);

@@ -37,15 +37,15 @@ class SporsmalDetails extends Component<{
 	handleDelete = () => {
 		sporsmalService.delete(this.props.match.params.sporsmalid).then(() => {
 			Alert.success("Spørsmål slettet");
-			history.push("/sporsmal");
+			history.push("/");
 		});
 	};
 
-	handleEdit = () => {
-		sporsmalService.update(this.sporsmal).then(() => {
-			Alert.success("Spørsmål endret");
-		});
-	};
+	// handleEdit = () => {
+	// 	sporsmalService.update(this.sporsmal).then(() => {
+	// 		Alert.success("Spørsmål endret");
+	// 	});
+	// };
 
 	render() {
 		return (
@@ -100,9 +100,7 @@ class SporsmalDetails extends Component<{
 					</Row>
 
 					<Button.Success
-						onClick={() => {
-							this.handleEdit();
-						}}
+					onClick={() => history.push(`/rediger/${this.sporsmal.sporsmalid}`)}
 					>
 						Rediger
 					</Button.Success>
@@ -195,84 +193,12 @@ class SporsmalDetails extends Component<{
 				Alert.danger("Finner ikke spørsmålet: " + error.message)
 			);
 
-		sporsmalTagService.getTagForSporsmal(this.props.match.params.sporsmalid); // Get every tag for the sporsmal
+		sporsmalTagService.getTagForSporsmal(this.props.match.params.sporsmalid).then((tags: Tag[]) => {
+			this.tags = tags;
+		}); // Get every tag for the sporsmal
 
 		// Increase points when user enters the page to increase popularity
 	}
 }
 
-// class SporsmalEdit extends Component<{
-// 	match: { params: { id: number } };
-//   }> {
-// 	sporsmal: Sporsmal = {
-// 	  sporsmalid: 0,
-// 	  tittel: "",
-// 	  innhold: "",
-// 	  poeng: 0,
-// 	  dato: new Date(),
-// 	  sistendret: new Date(),
-// 	};
-  
-// 	tags: Tag[] = [];
-// 	selectedTags: number[] = [];
-  
-// 	componentDidMount() {
-// 	  const sporsmalid = this.props.match.params.id;
-// 	  sporsmalService.get(sporsmalid).then((sporsmal: Sporsmal) => {
-// 		this.sporsmal = sporsmal;
-// 		this.selectedTags = sporsmal.tags; // 
-// 	  });
-// 	  tagService.getAll().then((tags: Tag[]) => (this.tags = tags));
-// 	}
-  
-// 	handleUpdate = () => {
-// 	  const updatedSporsmal: Sporsmal = {
-// 		...this.sporsmal,
-// 		tags: this.selectedTags,
-// 	  };
-  
-// 	  sporsmalService.update(updatedSporsmal).then(() => {
-// 		Alert.success("Spørsmål endret");
-// 		// Redirect or perform additional actions
-// 	  });
-// 	};
-  
-// 	render() {
-// 	  return (
-// 		<Card title="Rediger Spørsmål">
-// 		  <Row>
-// 			<Column width={2}>Tittel:</Column>
-// 			<Column>
-// 			  <Form.Input
-// 				value={this.sporsmal.tittel}
-// 				onChange={(e) => (this.sporsmal.tittel = e.target.value)}
-// 			  />
-// 			</Column>
-// 		  </Row>
-// 		  <Row>
-// 			<Column width={2}>Innhold:</Column>
-// 			<Column>
-// 			  <Form.Textarea
-// 				value={this.sporsmal.innhold}
-// 				onChange={(e) => (this.sporsmal.innhold = e.target.value)}
-// 			  />
-// 			</Column>
-// 		  </Row>
-// 		  <Row>
-// 			<Column width={2}>Tagger:</Column>
-// 			<Column>
-// 			  {/*tag */}
-// 			</Column>
-// 		  </Row>
-// 		  <Row>
-// 			<Column>
-// 			  <Button.Success onClick={this.handleUpdate}>Oppdater</Button.Success>
-// 			</Column>
-// 		  </Row>
-// 		</Card>
-// 	  );
-// 	}
-//   }
-  
-//  export default {SporsmalEdit, SporsmalDetails};
 export default SporsmalDetails;

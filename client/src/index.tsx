@@ -5,6 +5,7 @@ import { createHashHistory } from "history";
 import SporsmalList from "./components/SporsmalList";
 import SporsmalDetails from "./components/SporsmalDetailPage";
 import SporsmalNew from "./components/SporsmalNewPage";
+import SporsmalEdit from "./components/SporsmalEditPage";
 import TagsList from "./components/TagsListPage";
 import FavoriteList from "./components/FavoriteListPage";
 import Navigation from "./components/Navigation";
@@ -19,6 +20,7 @@ if (root)
 				<Navigation />
 				<Route exact path="/" component={SporsmalList} />
 				<Route path={"/sporsmal/:sporsmalid"} component={SporsmalDetails} />
+				<Route path={"/rediger/:sporsmalid"} component={SporsmalEdit} />
 				<Route exact path="/nyspor" component={SporsmalNew} />
 				<Route exact path="/favs" component={FavoriteList} />
 				<Route exact path="/tags" component={TagsList} />

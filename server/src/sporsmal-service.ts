@@ -1,6 +1,7 @@
 import pool from "./mysql-pool";
 import type { RowDataPacket, ResultSetHeader } from "mysql2";
 import svarService from "./svar-service";
+import sporsmalTagService from "./sporsmalTag-service";
 
 export type Sporsmal = {
 	sporsmalid?: number; //sporsmalid is handled by the database
@@ -172,6 +173,7 @@ class SporsmalService {
 					if (results.affectedRows == 0) reject(new Error("Ingen rad slettet"));
 
 					await svarService.delete(sporsmalid, true);
+					pool.query('DELETE FROM SporsmalTag WHERE sporsmalid = ?', [sporsmalid]);
 
 					resolve();
 				}

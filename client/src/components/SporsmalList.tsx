@@ -36,8 +36,20 @@ class SporsmalList extends Component <{}, SporsmalListState> {
 
 	sortSporsmalByPoeng = () => {
 		this.setState((prevState) => {
-    const sortedSporsmaler = [...prevState.sporsmaler].sort((a, b) => b.poeng - a.poeng);
-    return { sporsmaler: sortedSporsmaler };
+			const sortedSporsmaler = [...prevState.sporsmaler].sort((a, b) => b.poeng - a.poeng);
+			return { sporsmaler: sortedSporsmaler };
+		});
+	};
+
+	sortSporsmalByEditedDate = () => {
+		this.setState((prevState) => {
+			//Sorts by timestamp of last edited date
+    		const sortedSporsmaler = [...prevState.sporsmaler].sort((a, b) => {
+				const Adate = new Date(a.sistendret).getTime();
+				const Bdate = new Date(b.sistendret).getTime();
+				return Bdate - Adate;
+			});
+    		return { sporsmaler: sortedSporsmaler };
 		});
 	};
 
@@ -68,6 +80,11 @@ class SporsmalList extends Component <{}, SporsmalListState> {
 				<Column width={2}>
 				<Button.Success	onClick={this.sortSporsmalByPoeng}>
 					Sorter etter Antall Visninger
+				</Button.Success>
+				</Column>
+				<Column width={2}>
+				<Button.Success	onClick={this.sortSporsmalByEditedDate}>
+					Sorter etter Sist Endret
 				</Button.Success>
 				</Column>
 			</Row>
