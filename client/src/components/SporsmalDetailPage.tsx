@@ -7,6 +7,7 @@ import sporsmalTagService from "../services/sporsmalTag-service";
 import svarService, { Svar } from "../services/svar-service";
 import { createHashHistory } from "history";
 import SvarList from "./SvarListCard";
+import SvarReply from "./SvarReply";
 
 const history = createHashHistory();
 
@@ -25,9 +26,11 @@ class SporsmalDetails extends Component<{
 	};
 
 	tags: Tag[] = [{ tagid: 0, navn: "", forklaring: "", antall: 0 }];
+	kommentartekst = "";
 	svartekst = "";
 	svarer: Svar[] = [];
 	svarListe: Svar[] = [];
+	kommentarer: Svar[] = [];
 
 	handleReply = () => {
 		svarService
@@ -119,6 +122,67 @@ class SporsmalDetails extends Component<{
 					>
 						Slett
 					</Button.Danger>
+
+					<Card title="Kommentarer">
+						<Row>
+							<Column width={10}>
+								<Form.Input
+									type="text"
+									value={this.kommentartekst}
+									style={{ width: "80vw" }}
+									onChange={(event) => {
+										this.kommentartekst = event.currentTarget.value;
+									}}
+									onKeyDown={(event: any) => {
+										//submits on enter key
+										if (event.keyCode === 13) {
+											svarService
+												.create(
+													this.kommentartekst,
+													Number(this.sporsmal.sporsmalid),
+													0,
+													true
+												)
+												.then(() => {
+													// Reloads the Spørsmal
+													SvarList.instance()?.mounted(); // .? meaning: call SvarList.instance().mounted() if SvarList.instance() does not return null
+													this.kommentartekst = "";
+												});
+										}
+									}}
+								/>
+							</Column>
+							<Column width={1}>
+								<Button.Success
+									onClick={() => {
+										svarService
+											.create(
+												this.kommentartekst,
+												Number(this.sporsmal.sporsmalid),
+												0,
+												true
+											)
+											.then(() => {
+												// Reloads the Spørsmal
+												SvarList.instance()?.mounted(); // .? meaning: call SvarList.instance().mounted() if SvarList.instance() does not return null
+												this.kommentartekst = "";
+											});
+									}}
+								>
+									Lag Kommentar
+								</Button.Success>
+							</Column>
+						</Row>
+
+						{this.kommentarer.length > 0 &&
+							this.kommentarer.map((svar) => (
+								<SvarReply
+									key={svar.svarid}
+									svar={svar}
+									sporsmalid={this.props.match.params.sporsmalid}
+								/>
+							))}
+					</Card>
 				</Card>
 
 				<Card title="Nytt Svar">
@@ -210,7 +274,13 @@ class SporsmalDetails extends Component<{
 
 		svarService
 			.getAll(this.props.match.params.sporsmalid)
-			.then((svar: Svar[]) => (this.svarListe = svar));
+			.then((svar: Svar[]) => {
+				this.svarListe = svar;
+				this.kommentarer = svar.filter((svar) => svar.ersvar);
+				this.kommentarer = this.kommentarer.filter(
+					(kommentar) => kommentar.svarsvarid == null
+				);
+			});
 	}
 }
 
