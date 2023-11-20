@@ -194,8 +194,7 @@ class SporsmalDetails extends Component<{
 				Alert.danger("Finner ikke spørsmålet: " + error.message)
 			);
 
-		sporsmalTagService
-			.getTagForSporsmal(this.props.match.params.sporsmalid)
+		sporsmalTagService.getTagForSporsmal(this.props.match.params.sporsmalid); // Get every tag for the sporsmal
 
 		// Increase points when user enters the page to increase popularity
 	}
