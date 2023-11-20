@@ -261,7 +261,7 @@ class SporsmalDetails extends Component<{
 // 		  <Row>
 // 			<Column width={2}>Tagger:</Column>
 // 			<Column>
-// 			  {/* Add tag selection logic here */}
+// 			  {/*tag */}
 // 			</Column>
 // 		  </Row>
 // 		  <Row>
@@ -274,4 +274,5 @@ class SporsmalDetails extends Component<{
 // 	}
 //   }
   
+//  export default {SporsmalEdit, SporsmalDetails};
 export default SporsmalDetails;
