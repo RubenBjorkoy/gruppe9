@@ -5,7 +5,7 @@ import svarService, { Svar } from "../services/svar-service";
 import favorittService, { Favoritt } from "../services/favoritt-service";
 import { createHashHistory } from "history";
 import SvarReplyCard from "./SvarReply";
-import SporsmalDetails from "./SporsmalDetailPage";
+import SvarList from "./SvarListCard";
 
 const history = createHashHistory();
 
@@ -69,19 +69,17 @@ class SvarCard extends Component<{
 	}
 
 	handleDelete = (svar: Svar) => {
-		svarService.delete(svar.svarid!).then(() => {
+		svarService.delete(svar).then(() => {
+			SvarList.instance()?.mounted();
+			history.push("/sporsmal/" + this.props.sporsmalid);
 			Alert.success("Svar slettet");
-			history.push("/sporsmal/" + this.props.sporsmalid)
 		});
 	};
 
 	render() {
 		return (
 			<>
-				<Card
-					title={"Svar til Spørsmål"}
-					key={this.props.svar.svarid}
-				>
+				<Card title={"Svar til Spørsmål"} key={this.props.svar.svarid}>
 					<Row>
 						<Column>
 							<Row>
@@ -184,14 +182,14 @@ class SvarCard extends Component<{
 						</Button.Success>
 					</Column>
 					<Column>
-							<Button.Danger
-								onClick={() => {
-									this.handleDelete(this.props.svar);
-								}}
-							>
-								Slett
-							</Button.Danger>
-							</Column>
+						<Button.Danger
+							onClick={() => {
+								this.handleDelete(this.props.svar);
+							}}
+						>
+							Slett
+						</Button.Danger>
+					</Column>
 					<Column>
 						{
 							this.renderReplies() // Renders the replies

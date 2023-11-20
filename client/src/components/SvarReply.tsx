@@ -4,7 +4,7 @@ import { Card, Row, Column, Form, Button, NavBar, Alert } from "../widgets";
 import svarService, { Svar } from "../services/svar-service";
 import favorittService, { Favoritt } from "../services/favoritt-service";
 import { createHashHistory } from "history";
-import { Link } from "react-router-dom";
+import SvarCard from "./SvarCard";
 
 const history = createHashHistory();
 
@@ -27,7 +27,7 @@ class SvarReplyCard extends Component<{
 		svarService.update(updatedSvar, sporsmalid, false).then(() => {
 			svar = updatedSvar;
 			Alert.success("Vurdering gitt");
-			
+			history.push("/sporsmal/" + this.props.sporsmalid);
 		});
 	};
 
@@ -57,10 +57,9 @@ class SvarReplyCard extends Component<{
 	};
 
 	handleDelete = (svar: Svar) => {
-		svarService.delete(svar.svarid!).then(() => {
-			history.push("/sporsmal/" + this.props.sporsmalid);
+		svarService.delete(svar).then(() => {
+			SvarCard.instance()?.mounted();
 			Alert.success("Svar slettet");
-			
 		});
 	};
 
@@ -139,15 +138,15 @@ class SvarReplyCard extends Component<{
 				</Row>
 				{this.svarsvarer.length > 0 && (
 					<Row>
-							<Column>
+						<Column>
 							<Button.Danger
 								onClick={() => {
-									this.handleDelete(this.props.svar)
-							}}
+									this.handleDelete(this.props.svar);
+								}}
 							>
 								Slett
 							</Button.Danger>
-							</Column>
+						</Column>
 						<Column>{/*this.renderReplies()*/}</Column>
 					</Row>
 				)}
