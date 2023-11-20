@@ -162,7 +162,7 @@ class SporsmalDetails extends Component<{
 									});
 							}}
 						>
-							Create Answer
+							Lag Svar
 						</Button.Success>
 					</Column>
 				</Card>

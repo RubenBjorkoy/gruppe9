@@ -65,7 +65,6 @@ class SvarList extends Component<{
 			});
 	};
 	render() {
-		console.log("SvarList render", this.props.sporsmalid);
 		const sortedSvarer = [...this.svarer].sort((a, b) =>
 			this.sortedByPoeng ? b.poeng - a.poeng : 0
 		);
@@ -74,10 +73,10 @@ class SvarList extends Component<{
 			<>
 				<div>
 					<Button.Success onClick={this.handleSortByPoeng}>
-						Sort by Poeng
+						Sorter etter Poeng
 					</Button.Success>
 					<Button.Success onClick={this.handleSortByDefault}>
-						Sort by Default
+						Sorter vanlig etter dato lastet opp
 					</Button.Success>
 				</div>
 				<Card title="Svarene">

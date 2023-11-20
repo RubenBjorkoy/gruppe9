@@ -13,7 +13,7 @@ class Navigation extends Component {
 					<NavBar.Link to="/">Spørsmål</NavBar.Link>
 					<NavBar.Link to="/nyspor">Nytt Spørsmål</NavBar.Link>
 					<NavBar.Link to="/favs">Favoritter</NavBar.Link>
-					<NavBar.Link to="/tags">Tags</NavBar.Link>
+					<NavBar.Link to="/tags">Tagger</NavBar.Link>
 				</NavBar>
 			</>
 		);

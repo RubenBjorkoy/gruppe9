@@ -11,7 +11,7 @@ interface NewTag {
 	forklaring: string;
 }
 
-class AddTagCard extends Component<{onTagCreated: () => void}> {
+class AddTagCard extends Component<{ onTagCreated: () => void }> {
 	newTag: NewTag = {
 		navn: "",
 		forklaring: "",
@@ -32,7 +32,7 @@ class AddTagCard extends Component<{onTagCreated: () => void}> {
 
 	render() {
 		return (
-			<Card title="Missing a tag?">
+			<Card title="Savner en tag?">
 				<Row>
 					<Column width={2}>
 						<Form.Label>Tag Navn:</Form.Label>
@@ -69,7 +69,7 @@ class AddTagCard extends Component<{onTagCreated: () => void}> {
 							this.handleTagCreation();
 						}}
 					>
-						Create Tag
+						Lag Tag
 					</Button.Success>
 				</Column>
 			</Card>

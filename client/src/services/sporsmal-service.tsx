@@ -52,7 +52,6 @@ class SporsmalService {
 				poeng: poeng,
 			})
 			.then((response) => {
-				console.log(response.data.id);
 				chosenTags.forEach((tagid) => {
 					sporsmalTagService.create(response.data.id, tagid);
 				});

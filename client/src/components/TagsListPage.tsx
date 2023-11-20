@@ -15,14 +15,14 @@ interface TagListState {
 	sporsmal: Sporsmal[];
 	searchQuery: string;
 }
-class TagsList extends Component <{}, TagListState> {
+class TagsList extends Component<{}, TagListState> {
 	constructor(props: {}) {
 		super(props);
 		this.state = {
 			tags: [],
 			sporsmal: [],
-			searchQuery: '',
-		}
+			searchQuery: "",
+		};
 	}
 
 	// tags: Tag[] = [];
@@ -31,18 +31,20 @@ class TagsList extends Component <{}, TagListState> {
 
 	sortTagByAntall = () => {
 		this.setState((prevState) => {
-    		const sortedTags = [...prevState.tags].sort((a, b) => b.antall - a.antall);
-    		return { tags: sortedTags };
+			const sortedTags = [...prevState.tags].sort(
+				(a, b) => b.antall - a.antall
+			);
+			return { tags: sortedTags };
 		});
 	};
 
 	handleTagCreated = () => {
-		tagService.getAll().then((tags: Tag[]) => (this.setState({ tags }))); // Reloads the tags on tag creation
+		tagService.getAll().then((tags: Tag[]) => this.setState({ tags })); // Reloads the tags on tag creation
 	};
 
 	handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
 		this.setState({ searchQuery: event.target.value });
-	  };
+	};
 
 	render() {
 		const { tags, searchQuery } = this.state;
@@ -52,20 +54,18 @@ class TagsList extends Component <{}, TagListState> {
 		);
 		return (
 			<>
-			<Button.Success
-				onClick={this.sortTagByAntall}
-			>
-				Sorter etter Antall Spørsmål
-			</Button.Success>
+				<Button.Success onClick={this.sortTagByAntall}>
+					Sorter etter Antall Spørsmål
+				</Button.Success>
 
-			<Form.Input
-          		type="text"
-          		value={searchQuery}
-          		onChange={this.handleSearchChange}
-          		placeholder="Søk etter Tag"
-        	/>
+				<Form.Input
+					type="text"
+					value={searchQuery}
+					onChange={this.handleSearchChange}
+					placeholder="Søk etter Tag"
+				/>
 
-				<Card title="Tags">
+				<Card title="Tagger">
 					{filteredTags.map((tag) => (
 						<Row key={tag.tagid}>
 							<Column width={1}>{tag.tagid}</Column>
@@ -81,23 +81,27 @@ class TagsList extends Component <{}, TagListState> {
 	}
 
 	componentDidMount() {
-		tagService.getAll().then((tags: Tag[]) => {
-		  const updatedTags: Tag[] = [];
-	  
-		  Promise.all(
-			tags.map((tag: Tag) => {
-			  return sporsmalTagService.getSporsmalForTags(tag.tagid).then((sporsmal: Sporsmal[]) => {
-				tag.antall = sporsmal.length;
-				updatedTags.push(tag);
-			  });
+		tagService
+			.getAll()
+			.then((tags: Tag[]) => {
+				const updatedTags: Tag[] = [];
+
+				Promise.all(
+					tags.map((tag: Tag) => {
+						return sporsmalTagService
+							.getSporsmalForTags(tag.tagid)
+							.then((sporsmal: Sporsmal[]) => {
+								tag.antall = sporsmal.length;
+								updatedTags.push(tag);
+							});
+					})
+				).then(() => {
+					this.setState({ tags: updatedTags });
+				});
 			})
-		  ).then(() => {
-			this.setState({ tags: updatedTags });
-			console.log(this.state.tags);
-		  });
-		}).catch((error: Error) => {
-		  console.error(error);
-		});
+			.catch((error: Error) => {
+				console.error(error);
+			});
 	}
 }
 
