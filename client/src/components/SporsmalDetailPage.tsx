@@ -174,6 +174,7 @@ class SporsmalDetails extends Component<{
 		);
 	}
 
+
 	mounted() {
 		sporsmalService
 			.get(this.props.match.params.sporsmalid)
@@ -200,4 +201,77 @@ class SporsmalDetails extends Component<{
 	}
 }
 
+// class SporsmalEdit extends Component<{
+// 	match: { params: { id: number } };
+//   }> {
+// 	sporsmal: Sporsmal = {
+// 	  sporsmalid: 0,
+// 	  tittel: "",
+// 	  innhold: "",
+// 	  poeng: 0,
+// 	  dato: new Date(),
+// 	  sistendret: new Date(),
+// 	};
+  
+// 	tags: Tag[] = [];
+// 	selectedTags: number[] = [];
+  
+// 	componentDidMount() {
+// 	  const sporsmalid = this.props.match.params.id;
+// 	  sporsmalService.get(sporsmalid).then((sporsmal: Sporsmal) => {
+// 		this.sporsmal = sporsmal;
+// 		this.selectedTags = sporsmal.tags; // 
+// 	  });
+// 	  tagService.getAll().then((tags: Tag[]) => (this.tags = tags));
+// 	}
+  
+// 	handleUpdate = () => {
+// 	  const updatedSporsmal: Sporsmal = {
+// 		...this.sporsmal,
+// 		tags: this.selectedTags,
+// 	  };
+  
+// 	  sporsmalService.update(updatedSporsmal).then(() => {
+// 		Alert.success("Spørsmål endret");
+// 		// Redirect or perform additional actions
+// 	  });
+// 	};
+  
+// 	render() {
+// 	  return (
+// 		<Card title="Rediger Spørsmål">
+// 		  <Row>
+// 			<Column width={2}>Tittel:</Column>
+// 			<Column>
+// 			  <Form.Input
+// 				value={this.sporsmal.tittel}
+// 				onChange={(e) => (this.sporsmal.tittel = e.target.value)}
+// 			  />
+// 			</Column>
+// 		  </Row>
+// 		  <Row>
+// 			<Column width={2}>Innhold:</Column>
+// 			<Column>
+// 			  <Form.Textarea
+// 				value={this.sporsmal.innhold}
+// 				onChange={(e) => (this.sporsmal.innhold = e.target.value)}
+// 			  />
+// 			</Column>
+// 		  </Row>
+// 		  <Row>
+// 			<Column width={2}>Tagger:</Column>
+// 			<Column>
+// 			  {/* Add tag selection logic here */}
+// 			</Column>
+// 		  </Row>
+// 		  <Row>
+// 			<Column>
+// 			  <Button.Success onClick={this.handleUpdate}>Oppdater</Button.Success>
+// 			</Column>
+// 		  </Row>
+// 		</Card>
+// 	  );
+// 	}
+//   }
+  
 export default SporsmalDetails;
