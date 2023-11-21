@@ -1,10 +1,8 @@
 import * as React from "react";
 import { Component } from "react-simplified";
-import { Card, Row, Column, Form, Button, NavBar, Alert } from "../widgets";
-import tagService, { Tag } from "../services/tag-service";
-import { createHashHistory } from "history";
+import { Card, Row, Column, Form, Button, Alert } from "../widgets";
+import tagService from "../services/tag-service";
 
-const history = createHashHistory();
 
 interface NewTag {
 	navn: string;
@@ -22,7 +20,7 @@ class AddTagCard extends Component<{ onTagCreated: () => void }> {
 			return Alert.danger("Tag name cannot be empty");
 		}
 		tagService.createTag(this.newTag.navn, this.newTag.forklaring).then(() => {
-			// Reloads the Spørsmal
+	
 			this.props.onTagCreated();
 			this.newTag.navn = "";
 			this.newTag.forklaring = "";

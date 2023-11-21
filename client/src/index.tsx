@@ -1,7 +1,6 @@
 import * as React from "react";
-import { BrowserRouter, Route, HashRouter, Switch } from "react-router-dom";
+import { Route, HashRouter } from "react-router-dom";
 import { createRoot } from "react-dom/client";
-import { createHashHistory } from "history";
 import SporsmalList from "./components/SporsmalList";
 import SporsmalDetails from "./components/SporsmalDetailPage";
 import SporsmalNew from "./components/SporsmalNewPage";
@@ -12,7 +11,6 @@ import FavoriteList from "./components/FavoriteListPage";
 import Navigation from "./components/Navigation";
 import SvarEdit from "./components/SvarEditPage";
 
-const history = createHashHistory(); // Use history.push(...) to programmatically change path
 
 let root = document.getElementById("root");
 if (root)

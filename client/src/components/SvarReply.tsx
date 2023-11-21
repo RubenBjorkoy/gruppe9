@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Component } from "react-simplified";
-import { Card, Row, Column, Form, Button, NavBar, Alert } from "../widgets";
+import { Card, Row, Column, Button, Alert } from "../widgets";
 import svarService, { Svar } from "../services/svar-service";
 import { createHashHistory } from "history";
 import SvarCard from "./SvarCard";
@@ -10,7 +10,6 @@ const history = createHashHistory();
 class SvarReplyCard extends Component<{
 	sporsmalid: number;
 	svar: Svar;
-	//onReply: () => void;
 }> {
 	svarsvarer: Svar[] = [];
 
@@ -68,7 +67,6 @@ class SvarReplyCard extends Component<{
 					</Column>
 					<Column>
 						<Column width={1}>
-							{/*Upvote button*/}
 							<Button.Light
 								onClick={() =>
 									this.handleVoting(svar, this.props.sporsmalid, 1)
@@ -78,7 +76,6 @@ class SvarReplyCard extends Component<{
 							</Button.Light>
 						</Column>
 						<Column width={1}>
-							{/*Downvote button*/}
 							<Button.Light
 								onClick={() =>
 									this.handleVoting(svar, this.props.sporsmalid, -1)

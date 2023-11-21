@@ -1,10 +1,9 @@
 import * as React from "react";
 import { Component } from "react-simplified";
-import { Card, Row, Column, Form, Button, NavBar, Alert } from "../widgets";
+import { Card, Row, Column } from "../widgets";
 import { Svar } from "../services/svar-service";
 import favorittService, { Favoritt } from "../services/favoritt-service";
 import { createHashHistory } from "history";
-import sporsmalService, { Sporsmal } from "../services/sporsmal-service";
 
 const history = createHashHistory();
 
@@ -24,7 +23,6 @@ class FavoriteList extends Component {
 						<Column width={5}>{favoritt.svartekst}</Column>
 						<Column width={1}>{favoritt.svarid}</Column>
 						<Column width={1}>{favoritt.poeng}</Column>
-						{/* <Column width={1}>{favoritt.sistendret}</Column> */}
 					</Row>
 				))}
 			</Card>

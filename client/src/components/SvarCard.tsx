@@ -1,9 +1,9 @@
 import * as React from "react";
 import { Component } from "react-simplified";
-import { Card, Row, Column, Form, Button, NavBar, Alert } from "../widgets";
+import { Card, Row, Column, Form, Button, Alert } from "../widgets";
 import svarService, { Svar } from "../services/svar-service";
-import favorittService, { Favoritt } from "../services/favoritt-service";
-import sporsmalService, { Sporsmal } from "../services/sporsmal-service";
+import favorittService from "../services/favoritt-service";
+import sporsmalService from "../services/sporsmal-service";
 import { createHashHistory } from "history";
 import SvarReplyCard from "./SvarReply";
 import SvarList from "./SvarListCard";
@@ -13,7 +13,6 @@ const history = createHashHistory();
 class SvarCard extends Component<{
 	sporsmalid: number;
 	svar: Svar;
-	//onReply: () => void;
 }> {
 	svartekst: string = "";
 	reply: string = "";
@@ -29,7 +28,6 @@ class SvarCard extends Component<{
 		svarService.update(updatedSvar, sporsmalid, false).then(() => {
 			Alert.success("Vurdering gitt");
 		});
-		//Doesn't update the view here as that could encourage a quick spam by the user
 	};
 
 	handleFavoriting = (svar: Svar) => {
@@ -53,7 +51,6 @@ class SvarCard extends Component<{
 			.create(this.reply, this.props.sporsmalid, 0, true, svar.svarid)
 			.then(() => {
 				this.reply = "";
-				//this.props.onReply();
 				SvarCard.instance()?.mounted();
 			});
 	};
@@ -68,7 +65,7 @@ class SvarCard extends Component<{
 				/>
 			));
 		}
-		return null; // If there are no replies, return null
+		return null; // Retur null dersom det ikke er nokon replies
 	}
 
 	handleDelete = (svar: Svar) => {
@@ -138,14 +135,13 @@ class SvarCard extends Component<{
 								}}
 							>
 								{
-									//Checks if the answer is in the favorite list
+									//Sjekk om svaret er favoritt
 									this.favoriteList.includes(this.props.svar.svarid!)
 										? "Remove Favorite"
 										: "Favorite"
 								}
 							</Button.Light>
 							<Column width={1}>
-								{/*Upvote button*/}
 								<Button.Light
 									onClick={() =>
 										this.handleVoting(this.props.svar, this.props.sporsmalid, 1)
@@ -155,7 +151,6 @@ class SvarCard extends Component<{
 								</Button.Light>
 							</Column>
 							<Column width={1}>
-								{/*Downvote button*/}
 								<Button.Light
 									onClick={() =>
 										this.handleVoting(
@@ -171,7 +166,6 @@ class SvarCard extends Component<{
 						</Column>
 						<Column>
 							<Column width={1}>
-								{/*Best answer button*/}
 								<Button.Light onClick={() => this.handleBest(this.props.svar)}>
 									Best svar
 								</Button.Light>
@@ -187,7 +181,6 @@ class SvarCard extends Component<{
 								this.reply = event.currentTarget.value;
 							}}
 							onKeyDown={(event: any) => {
-								//submits on enter key
 								if (event.keyCode === 13 && !event.shiftKey) {
 									this.handleReply(this.props.svar);
 								}
@@ -200,7 +193,7 @@ class SvarCard extends Component<{
 								this.handleReply(this.props.svar);
 							}}
 						>
-							Reply
+							Kommentar
 						</Button.Success>
 					</Column>
 					<Column>

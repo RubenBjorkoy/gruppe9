@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Component } from "react-simplified";
-import { Card, Row, Column, Form, Button, NavBar, Alert } from "../widgets";
+import { Card, Row, Column, Form, Button, Alert } from "../widgets";
 import sporsmalService, { Sporsmal } from "../services/sporsmal-service";
 import { Tag } from "../services/tag-service";
 import sporsmalTagService from "../services/sporsmalTag-service";
@@ -45,12 +45,6 @@ class SporsmalDetails extends Component<{
 		});
 	};
 
-	// handleEdit = () => {
-	// 	sporsmalService.update(this.sporsmal).then(() => {
-	// 		Alert.success("Spørsmål endret");
-	// 	});
-	// };
-
 	render() {
 		return (
 			<>
@@ -91,7 +85,7 @@ class SporsmalDetails extends Component<{
 							{
 								this.svarListe.find((svar) => {
 									return svar.svarid === this.sporsmal.bestsvarid;
-								})?.svartekst // If question has a best answer, display the text of that answer
+								})?.svartekst // Vis text til bestsvar dersom det finnes.
 							}
 						</Column>
 					</Row>
@@ -134,7 +128,7 @@ class SporsmalDetails extends Component<{
 										this.kommentartekst = event.currentTarget.value;
 									}}
 									onKeyDown={(event: any) => {
-										//submits on enter key
+										//Bruk returtast i tillegg til knapp
 										if (event.keyCode === 13) {
 											svarService
 												.create(
@@ -144,8 +138,8 @@ class SporsmalDetails extends Component<{
 													true
 												)
 												.then(() => {
-													// Reloads the Spørsmal
-													SvarList.instance()?.mounted(); // .? meaning: call SvarList.instance().mounted() if SvarList.instance() does not return null
+													// Laster inn Spørsmål på nytt
+													SvarList.instance()?.mounted();
 													this.kommentartekst = "";
 												});
 										}
@@ -163,13 +157,13 @@ class SporsmalDetails extends Component<{
 												true
 											)
 											.then(() => {
-												// Reloads the Spørsmal
-												SvarList.instance()?.mounted(); // .? meaning: call SvarList.instance().mounted() if SvarList.instance() does not return null
+												// Laster inn Spørsmål på nytt
+												SvarList.instance()?.mounted(); 
 												this.kommentartekst = "";
 											});
 									}}
 								>
-									Lag Kommentar
+									Kommentar
 								</Button.Success>
 							</Column>
 						</Row>
@@ -206,8 +200,8 @@ class SporsmalDetails extends Component<{
 												false
 											)
 											.then(() => {
-												// Reloads the Spørsmal
-												SvarList.instance()?.mounted(); // .? meaning: call SvarList.instance().mounted() if SvarList.instance() does not return null
+												// Laster inn Spørsmål på nytt
+												SvarList.instance()?.mounted();
 												this.svartekst = "";
 											});
 									}
@@ -227,7 +221,7 @@ class SporsmalDetails extends Component<{
 									)
 									.then(() => {
 										// Reloads the Spørsmal
-										SvarList.instance()?.mounted(); // .? meaning: call SvarList.instance().mounted() if SvarList.instance() does not return null
+										SvarList.instance()?.mounted();
 										this.svartekst = "";
 									});
 							}}
@@ -248,16 +242,14 @@ class SporsmalDetails extends Component<{
 		sporsmalService
 			.get(this.props.match.params.sporsmalid)
 			.then((sporsmal: Sporsmal) => {
-				// Increment poeng by 1
+				// Øker poeng for Spørsmål med lasting av side
 				const updatedPoeng = sporsmal.poeng + 1;
 				const updatedSporsmal: Sporsmal = { ...sporsmal, poeng: updatedPoeng };
 
-				// Update the sporsmal with the incremented poeng
+				// Oppdatere spørsmål med nytt poeng
 				sporsmalService.update(updatedSporsmal, false).then(() => {
-					// Set the sporsmal in the component state
 					this.sporsmal = updatedSporsmal;
 
-					// Increase points when user enters the page to increase popularity
 				});
 			})
 			.catch((error) =>
@@ -268,19 +260,8 @@ class SporsmalDetails extends Component<{
 			.getTagForSporsmal(this.props.match.params.sporsmalid)
 			.then((tags: Tag[]) => {
 				this.tags = tags;
-			}); // Get every tag for the sporsmal
+			}); // Hent alle tagene for spørsmålet
 
-		// Increase points when user enters the page to increase popularity
-
-		// svarService
-		// 	.getAll(this.props.match.params.sporsmalid)
-		// 	.then((svar: Svar[]) => {
-		// 		this.svarListe = svar;
-		// 		this.kommentarer = svar.filter((svar) => svar.ersvar);
-		// 		this.kommentarer = this.kommentarer.filter(
-		// 			(kommentar) => kommentar.svarsvarid == null
-		// 		);
-		// 	});
 		const getAllPromise = svarService.getAll(this.props.match.params.sporsmalid);
 		if (getAllPromise) {
 		getAllPromise.then((svar: Svar[]) => {

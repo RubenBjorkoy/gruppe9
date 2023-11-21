@@ -1,7 +1,7 @@
 import * as React from "react";
-import { ReactNode, ChangeEvent } from "react";
+import { ChangeEvent } from "react";
 import { Component } from "react-simplified";
-import { Card, Row, Column, Form, Button, NavBar, Alert } from "../widgets";
+import { Card, Row, Column, Form, Button } from "../widgets";
 import sporsmalService, { Sporsmal } from "../services/sporsmal-service";
 import { createHashHistory } from "history";
 
@@ -47,7 +47,7 @@ class SporsmalList extends Component<{}, SporsmalListState> {
 
 	sortSporsmalByEditedDate = () => {
 		this.setState((prevState) => {
-			//Sorts by timestamp of last edited date
+			//Sorterer etter tid sistendret
 			const sortedSporsmaler = [...prevState.sporsmaler].sort((a, b) => {
 				const Adate = new Date(a.sistendret).getTime();
 				const Bdate = new Date(b.sistendret).getTime();

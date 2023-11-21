@@ -29,9 +29,8 @@ class SvarEdit extends Component<{
         const updatedSvar: Svar = {
             ...this.svar
         };
-    
-        // Assuming you have sporsmalid available in your component's state or props
-        const sporsmalid = this.svar.sporsmalid; // or this.props.sporsmalid, based on your component's structure
+
+        const sporsmalid = this.svar.sporsmalid;
     
         try {
             await svarService.update(updatedSvar, sporsmalid);
@@ -42,9 +41,7 @@ class SvarEdit extends Component<{
             Alert.danger("En feil oppstod: " + error);
         }
     };
-    
-    
-    
+     
     render() {
         return (
             <Card title="Rediger Svar">
@@ -54,7 +51,6 @@ class SvarEdit extends Component<{
                     onChange={(e) => (this.svar.svartekst = e.target.value)}
                     placeholder={this.svar.svartekst}
                 />
-                {/* Add other input fields if necessary */}
                 <Row>
                     <Column>
                         <Button.Success onClick={this.handleUpdate}>

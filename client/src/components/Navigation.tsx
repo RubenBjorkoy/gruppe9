@@ -1,9 +1,7 @@
 import * as React from "react";
 import { Component } from "react-simplified";
-import { Card, Row, Column, Form, Button, NavBar, Alert } from "../widgets";
-import { createHashHistory } from "history";
+import { NavBar } from "../widgets";
 
-const history = createHashHistory();
 
 class Navigation extends Component {
 	render() {

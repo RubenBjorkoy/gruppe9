@@ -1,12 +1,10 @@
 import * as React from "react";
 import { Component } from "react-simplified";
-import { Card, Row, Column, Form, Button, NavBar, Alert } from "../widgets";
+import { Card, Button, Alert } from "../widgets";
 import svarService, { Svar } from "../services/svar-service";
-import favorittService, { Favoritt } from "../services/favoritt-service";
-import { createHashHistory } from "history";
+import favorittService from "../services/favoritt-service";
 import SvarCard from "./SvarCard";
 
-const history = createHashHistory();
 
 class SvarList extends Component<{
 	sporsmalid: number;
@@ -67,14 +65,8 @@ class SvarList extends Component<{
 
 	fetchData() {
 		svarService.getAll(this.props.sporsmalid).then((svarer) => {
-			// Apply filtering if needed
 			const filteredSvarer = svarer.filter((svar) => !svar.ersvar);
-
-			// Update the component data
 			this.svarer = filteredSvarer;
-
-			// Force a re-render by calling forceUpdate
-			// this.forceUpdate();
 		});
 	}
 

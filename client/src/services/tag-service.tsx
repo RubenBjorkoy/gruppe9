@@ -10,9 +10,7 @@ export type Tag = {
 };
 
 class TagService {
-	/**
-	 * Get Tag with given id.
-	 */
+
 	getAll() {
 		return axios.get<Tag[]>("/tag").then((response) => response.data);
 	}

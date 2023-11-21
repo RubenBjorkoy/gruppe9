@@ -1,7 +1,7 @@
 import * as React from "react";
-import { ReactNode, ChangeEvent } from "react";
+import { ChangeEvent } from "react";
 import { Component } from "react-simplified";
-import { Card, Row, Column, Form, Button, NavBar, Alert } from "../widgets";
+import { Card, Row, Column, Form, Button } from "../widgets";
 import { Sporsmal } from "../services/sporsmal-service";
 import tagService, { Tag } from "../services/tag-service";
 import sporsmalTagService from "../services/sporsmalTag-service";
@@ -25,8 +25,6 @@ class TagsList extends Component<{}, TagListState> {
 		};
 	}
 
-	// tags: Tag[] = [];
-	// sporsmal: Sporsmal[] = [];
 	newTag: Tag = { tagid: 0, navn: "", forklaring: "", antall: 0 };
 
 	sortTagByAntall = () => {
@@ -39,7 +37,7 @@ class TagsList extends Component<{}, TagListState> {
 	};
 
 	handleTagCreated = () => {
-		tagService.getAll().then((tags: Tag[]) => this.setState({ tags })); // Reloads the tags on tag creation
+		tagService.getAll().then((tags: Tag[]) => this.setState({ tags }));
 	};
 
 	handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {

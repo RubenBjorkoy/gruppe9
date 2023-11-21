@@ -1,12 +1,10 @@
 import * as React from "react";
 import { Component } from "react-simplified";
-import { Card, Row, Column, Form, Button, NavBar, Alert } from "../widgets";
-import sporsmalService, { Sporsmal } from "../services/sporsmal-service";
+import { Card, Row, Column, Form, Button, Alert } from "../widgets";
+import sporsmalService from "../services/sporsmal-service";
 import tagService, { Tag } from "../services/tag-service";
-import { createHashHistory } from "history";
 import AddTagCard from "./AddTagCard";
 
-const history = createHashHistory();
 
 class SporsmalNew extends Component {
 	tittel: string = "";
@@ -23,19 +21,18 @@ class SporsmalNew extends Component {
 			.create(
 				this.tittel,
 				this.innhold,
-				this.chosenTags.map((tag) => tag.tagid), //Send tagids with the sporsmal
+				this.chosenTags.map((tag) => tag.tagid), //Send tagids med sporsmalet
 				0
 			)
 			.then(() => {
-				// Reloads the Spørsmal
-				SporsmalNew.instance()?.mounted(); // .? meaning: call SporsmalList.instance().mounted() if SporsmalList.instance() does not return null
+				SporsmalNew.instance()?.mounted();
 				this.tittel = "";
 				this.innhold = "";
 			});
 	};
 
 	handleTagCreated = () => {
-		tagService.getAll().then((tags: Tag[]) => (this.tags = tags)); // Reloads the tags on tag creation
+		tagService.getAll().then((tags: Tag[]) => (this.tags = tags));
 	};
 
 	render() {

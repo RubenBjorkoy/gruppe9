@@ -1,10 +1,10 @@
 import * as React from "react";
 import { Component } from "react-simplified";
-import { Card, Row, Column, Form, Button, NavBar, Alert } from "../widgets";
+import { Card, Row, Column, Form, Button, Alert } from "../widgets";
 import sporsmalService, { Sporsmal } from "../services/sporsmal-service";
 import tagService, { Tag } from "../services/tag-service";
 import sporsmalTagService from "../services/sporsmalTag-service";
-import svarService, { Svar } from "../services/svar-service";
+
 import { createHashHistory } from "history";
 import AddTagCard from "./AddTagCard";
 
@@ -40,7 +40,6 @@ class SporsmalEdit extends Component<{
 			.update(updatedSporsmal, true, this.chosenTags)
 			.then(() => {
 				Alert.success("Spørsmål endret");
-				// Redirect or perform additional actions
 			})
 			.catch((error) => {
 				Alert.danger("Kunne ikke endre spørsmål: " + error.message);
@@ -50,7 +49,7 @@ class SporsmalEdit extends Component<{
 	};
 
 	handleTagCreated = () => {
-		tagService.getAll().then((tags: Tag[]) => (this.tags = tags)); // Reloads the tags on tag creation
+		tagService.getAll().then((tags: Tag[]) => (this.tags = tags)); // Laste inn tagene etter de er skapt
 	};
 
 	render() {
@@ -151,7 +150,6 @@ class SporsmalEdit extends Component<{
 		);
 	}
 	componentDidMount() {
-		// const sporsmalid = this.props.match.params.id;
 		sporsmalService
 			.get(this.props.match.params.sporsmalid)
 			.then((sporsmal: Sporsmal) => {
@@ -167,7 +165,7 @@ class SporsmalEdit extends Component<{
 			.then(([chosenTags, allTags]) => {
 				this.chosenTags = chosenTags;
 
-				// Filter out the chosen tags from all tags
+				// Filtrer for kun chosenTags
 				this.tags = allTags.filter(
 					(tag) =>
 						!chosenTags.some((chosenTag) => chosenTag.tagid === tag.tagid)

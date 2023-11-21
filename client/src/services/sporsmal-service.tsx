@@ -17,7 +17,7 @@ export type Sporsmal = {
 
 class SporsmalService {
 	/**
-	 * Get Sporsmal with given id.
+	 * Hent Sporsmål med gitt sporsmalid.
 	 */
 	get(sporsmalid: number) {
 		return axios
@@ -26,16 +26,16 @@ class SporsmalService {
 	}
 
 	/**
-	 * Get all Sporsmaler.
+	 * Hent alle Sporsmaler.
 	 */
 	getAll() {
 		return axios.get<Sporsmal[]>("/sporsmal").then((response) => response.data);
 	}
 
 	/**
-	 * Create new Sporsmal having the given tittel.
+	 * Lag nytt Spørsmål med gitt tittel og innhold.
 	 *
-	 * Resolves the newly created Sporsmal id.
+	 * Lage det nye spørsmålet sitt sporsmalid.
 	 */
 	create(
 		tittel: string,
@@ -63,14 +63,12 @@ class SporsmalService {
 				.then(async (response) => {
 					const sporsmalId = response.data.id;
 
-					// Create tags and associate them with the created spørsmål
 					await Promise.all(
 						chosenTags.map((tagId) =>
 							sporsmalTagService.create(sporsmalId, tagId)
 						)
 					);
 
-					// Return the created spørsmål
 					return { sporsmalid: sporsmalId, tittel, innhold, chosenTags, poeng };
 				})
 		);
@@ -83,7 +81,6 @@ class SporsmalService {
 	}
 
 	update(sporsmal: Sporsmal, updateTime: boolean = true, tags?: Tag[]) {
-		//Add false to the update call to avoid updating time on update. For example when only updating score
 		return (
 			axios
 				.put<Sporsmal>("/sporsmal", [sporsmal as Sporsmal, updateTime])
@@ -101,9 +98,7 @@ class SporsmalService {
 				// 	response.data
 				// }); Code er endra for testinga. Om oppdatering feila så bør dette endrast.
 				.then(async () => {
-					// If tags are provided, update associated tags
 					if (tags) {
-						// Delete existing tags
 						await sporsmalTagService
 							.getTagForSporsmal(sporsmal.sporsmalid!)
 							.then((response: Tag[]) => {
@@ -111,14 +106,12 @@ class SporsmalService {
 									sporsmalTagService.delete(sporsmal.sporsmalid!, tag.tagid);
 								});
 
-								// Create new tags
 								tags.forEach((tag) => {
 									sporsmalTagService.create(sporsmal.sporsmalid!, tag.tagid);
 								});
 							});
 					}
 
-					// Return the updated spørsmål
 					return sporsmal;
 				})
 		);
