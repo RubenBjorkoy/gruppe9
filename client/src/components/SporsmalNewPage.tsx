@@ -5,7 +5,6 @@ import sporsmalService from "../services/sporsmal-service";
 import tagService, { Tag } from "../services/tag-service";
 import AddTagCard from "./AddTagCard";
 
-
 class SporsmalNew extends Component {
 	tittel: string = "";
 	innhold: string = "";
@@ -78,27 +77,22 @@ class SporsmalNew extends Component {
 								<span>
 									{this.chosenTags.map((tag) => {
 										return (
-											<>
-												<Row key={tag.tagid}>
-													<Column width={5}>{tag.navn}</Column>
-													<Column width={5}>
-														<Button.Danger
-															onClick={() => {
-																this.tags.push(tag);
-																this.chosenTags = this.chosenTags.filter(
-																	(chosenTag) =>
-																		chosenTag.tagid != tag.tagid
-																);
-																this.tags.sort((a, b) =>
-																	a.tagid - b.tagid
-																);
-															}}
-														>
-															Remove
-														</Button.Danger>
-													</Column>
-												</Row>
-											</>
+											<Row key={tag.tagid}>
+												<Column width={5}>{tag.navn}</Column>
+												<Column width={5}>
+													<Button.Danger
+														onClick={() => {
+															this.tags.push(tag);
+															this.chosenTags = this.chosenTags.filter(
+																(chosenTag) => chosenTag.tagid != tag.tagid
+															);
+															this.tags.sort((a, b) => a.tagid - b.tagid);
+														}}
+													>
+														Remove
+													</Button.Danger>
+												</Column>
+											</Row>
 										);
 									})}
 								</span>
@@ -133,7 +127,7 @@ class SporsmalNew extends Component {
 									this.createQuestion();
 								}}
 							>
-								Create Question
+								Lag Spørsmål
 							</Button.Success>
 						</Column>
 					</Column>

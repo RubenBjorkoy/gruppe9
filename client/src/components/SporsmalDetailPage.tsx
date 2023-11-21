@@ -94,11 +94,9 @@ class SporsmalDetails extends Component<{
 						<Column>
 							{this.tags.map((tag) => {
 								return (
-									<>
-										<Row key={tag.tagid}>
-											<Column width={5}>{tag.navn}</Column>
-										</Row>
-									</>
+									<Row key={"Tag:" + tag.tagid}>
+										<Column width={5}>{tag.navn}</Column>
+									</Row>
 								);
 							})}
 						</Column>
@@ -158,7 +156,7 @@ class SporsmalDetails extends Component<{
 											)
 											.then(() => {
 												// Laster inn Spørsmål på nytt
-												SvarList.instance()?.mounted(); 
+												SvarList.instance()?.mounted();
 												this.kommentartekst = "";
 											});
 									}}
@@ -249,7 +247,6 @@ class SporsmalDetails extends Component<{
 				// Oppdatere spørsmål med nytt poeng
 				sporsmalService.update(updatedSporsmal, false).then(() => {
 					this.sporsmal = updatedSporsmal;
-
 				});
 			})
 			.catch((error) =>
@@ -262,15 +259,17 @@ class SporsmalDetails extends Component<{
 				this.tags = tags;
 			}); // Hent alle tagene for spørsmålet
 
-		const getAllPromise = svarService.getAll(this.props.match.params.sporsmalid);
+		const getAllPromise = svarService.getAll(
+			this.props.match.params.sporsmalid
+		);
 		if (getAllPromise) {
-		getAllPromise.then((svar: Svar[]) => {
-			this.svarListe = svar;
-			this.kommentarer = svar.filter((svar) => svar.ersvar);
-			this.kommentarer = this.kommentarer.filter(
-				(kommentar) => kommentar.svarsvarid == null
-			);
-		});
+			getAllPromise.then((svar: Svar[]) => {
+				this.svarListe = svar;
+				this.kommentarer = svar.filter((svar) => svar.ersvar);
+				this.kommentarer = this.kommentarer.filter(
+					(kommentar) => kommentar.svarsvarid == null
+				);
+			});
 		}
 	}
 }

@@ -85,30 +85,28 @@ class SporsmalEdit extends Component<{
 							<span>
 								{this.chosenTags.map((tag) => {
 									return (
-										<>
-											<Row key={tag.tagid}>
-												<Column width={5}>{tag.navn}</Column>
-												<Column width={5}>
-													<Button.Danger
-														onClick={() => {
-															sporsmalTagService.delete(
-																this.props.match.params.sporsmalid,
-																tag.tagid
-															);
-															this.tags.push(tag);
-															this.chosenTags = this.chosenTags.filter(
-																(chosenTag) => {
-																	return chosenTag.tagid != tag.tagid;
-																}
-															);
-															this.tags.sort((a, b) => a.tagid - b.tagid);
-														}}
-													>
-														Slett
-													</Button.Danger>
-												</Column>
-											</Row>
-										</>
+										<Row key={tag.tagid}>
+											<Column width={5}>{tag.navn}</Column>
+											<Column width={5}>
+												<Button.Danger
+													onClick={() => {
+														sporsmalTagService.delete(
+															this.props.match.params.sporsmalid,
+															tag.tagid
+														);
+														this.tags.push(tag);
+														this.chosenTags = this.chosenTags.filter(
+															(chosenTag) => {
+																return chosenTag.tagid != tag.tagid;
+															}
+														);
+														this.tags.sort((a, b) => a.tagid - b.tagid);
+													}}
+												>
+													Slett
+												</Button.Danger>
+											</Column>
+										</Row>
 									);
 								})}
 							</span>
