@@ -19,12 +19,14 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+
       - name: Install dependencies
         run: |
           cd server
-          npm install
+          npm ci
           cd ../client
-          npm install
+          npm ci
+
       
       - name: Prettier Check
         run: |
