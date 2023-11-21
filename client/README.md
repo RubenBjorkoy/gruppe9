@@ -75,20 +75,4 @@ Favoritter – This page gives you a list of all favorite answers to questions,
 Tagger – This page gives you a list of all the different tags which have been created. You can either sort the tags by how many questions they have received or by searching for the name of a tag.
 
 
-## Usage
 
-The user first comes to the Forum page where the questions are shown in order of sporsmalid.
-The user can then filter the unanswered questions or sort according to number of viewings or last changed.
-
-The user can use the buttons to come into the question details. 
-Here the user can comment on, edit or delete the given question.  
-
-In addition to the question, the user is presented with the answers to the question, or the user can create a new answer.
-Answers can be commented on, edited or deleted. The user may mark the answer as a favorite, vote up or down the answer.  The answers can be sorted based on votes (poeng) or after last changed.  
-Comments can be changed or deleted.  
-
-Nytt Spørsmal page allows the user to create a new question.  The question must contain a tag. A list of tags is presented. The user can add a new tag if the current tags do not cover their topic.
-
-Favoritter lists the current favorite answers. 
-
-Tagger lists the current tags in the database. Tags can either be created, edited or deleted. The user can also sort the tags based on the number of questions where the tag is referanced.
