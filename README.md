@@ -27,3 +27,9 @@ cd client
 npm install
 npm start
 ```
+
+### Run client tests:
+
+```sh
+npm test
+```
