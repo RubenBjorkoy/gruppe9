@@ -53,6 +53,10 @@ class TagsList extends Component<{}, TagListState> {
 		});
 	};
 
+	handleEdit = (tag: Tag) => {
+		history.push("/tags/" + tag.tagid + "/edit");
+	};
+
 	render() {
 		const { tags, searchQuery } = this.state;
 
@@ -79,6 +83,15 @@ class TagsList extends Component<{}, TagListState> {
 							<Column width={1}>{tag.navn}</Column>
 							<Column width={1}>{tag.forklaring}</Column>
 							<Column width={3}>{tag.antall + "x spørsmål"}</Column>
+							<Column width={3}>
+								<Button.Success
+									onClick={() => {
+										this.handleEdit(tag);
+									}}
+								>
+									Rediger
+								</Button.Success>
+							</Column>
 							<Column width={3}>
 								<Button.Danger
 									onClick={() => {

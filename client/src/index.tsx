@@ -7,10 +7,10 @@ import SporsmalDetails from "./components/SporsmalDetailPage";
 import SporsmalNew from "./components/SporsmalNewPage";
 import SporsmalEdit from "./components/SporsmalEditPage";
 import TagsList from "./components/TagsListPage";
+import TagEdit from "./components/EditTagPage";
 import FavoriteList from "./components/FavoriteListPage";
 import Navigation from "./components/Navigation";
 import SvarEdit from "./components/SvarEditPage";
-
 
 const history = createHashHistory(); // Use history.push(...) to programmatically change path
 
@@ -27,6 +27,7 @@ if (root)
 				<Route path={"/edit/:sporsmalid/:svarid"} component={SvarEdit} />
 				<Route exact path="/favs" component={FavoriteList} />
 				<Route exact path="/tags" component={TagsList} />
+				<Route path={"/tags/:tagid/edit"} component={TagEdit} />
 			</div>
 		</HashRouter>
 	);
