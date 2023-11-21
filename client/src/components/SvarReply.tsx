@@ -92,6 +92,13 @@ class SvarReplyCard extends Component<{
 				{
 					<Row>
 						<Column>
+					<Button.Success
+						onClick={() => history.push(`/edit/${this.props.svar.sporsmalid}/${this.props.svar.svarid}`)}
+					>
+						Rediger
+					</Button.Success>
+				</Column>
+										<Column>
 							<Button.Danger
 								onClick={() => {
 									this.handleDelete(this.props.svar);

@@ -29,6 +29,20 @@ class TagService {
 			})
 			.then((response) => response.data);
 	}
+
+	updateTag(tag: Tag) {
+		return axios
+			.put<Tag>(`/tag/`, {
+				tagid: tag.tagid,
+				navn: tag.navn,
+				forklaring: tag.forklaring,
+			})
+			.then((response) => response.data);
+	}
+
+	deleteTag(tagid: number) {
+		return axios.delete("/tag/" + tagid).then((response) => response.data);
+	}
 }
 
 const tagService = new TagService();

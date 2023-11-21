@@ -7,7 +7,6 @@ export type Svar = {
 	svartekst: string;
 	poeng: number;
 	sporsmalid: number;
-	erbest: boolean;
 	dato: Date | any;
 	sistendret: Date | any;
 	ersvar: boolean;

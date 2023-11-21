@@ -13,30 +13,34 @@ interface SporsmalListState {
 	besvart: boolean;
 }
 
-class SporsmalList extends Component <{}, SporsmalListState> {
+class SporsmalList extends Component<{}, SporsmalListState> {
 	constructor(props: {}) {
 		super(props);
 		this.state = {
 			sporsmaler: [],
-			searchQuery: '',
+			searchQuery: "",
 			besvart: false,
-		}
+		};
 	}
 
 	fetchSporsmaler = (besvart: boolean) => {
-    sporsmalService.getAll().then((sporsmaler) => {
-      if (!besvart) {
-        this.setState({ sporsmaler, besvart });
-      } else {
-        const unansweredSporsmaler = sporsmaler.filter((sporsmal) => !sporsmal.ersvart);
-        this.setState({ sporsmaler: unansweredSporsmaler, besvart });
-      }
-    });
-  };
+		sporsmalService.getAll().then((sporsmaler) => {
+			if (!besvart) {
+				this.setState({ sporsmaler, besvart });
+			} else {
+				const unansweredSporsmaler = sporsmaler.filter(
+					(sporsmal) => !sporsmal.ersvart
+				);
+				this.setState({ sporsmaler: unansweredSporsmaler, besvart });
+			}
+		});
+	};
 
 	sortSporsmalByPoeng = () => {
 		this.setState((prevState) => {
-			const sortedSporsmaler = [...prevState.sporsmaler].sort((a, b) => b.poeng - a.poeng);
+			const sortedSporsmaler = [...prevState.sporsmaler].sort(
+				(a, b) => b.poeng - a.poeng
+			);
 			return { sporsmaler: sortedSporsmaler };
 		});
 	};
@@ -44,19 +48,19 @@ class SporsmalList extends Component <{}, SporsmalListState> {
 	sortSporsmalByEditedDate = () => {
 		this.setState((prevState) => {
 			//Sorts by timestamp of last edited date
-    		const sortedSporsmaler = [...prevState.sporsmaler].sort((a, b) => {
+			const sortedSporsmaler = [...prevState.sporsmaler].sort((a, b) => {
 				const Adate = new Date(a.sistendret).getTime();
 				const Bdate = new Date(b.sistendret).getTime();
 				return Bdate - Adate;
 			});
-    		return { sporsmaler: sortedSporsmaler };
+			return { sporsmaler: sortedSporsmaler };
 		});
 	};
 
 	handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
-    this.setState({ searchQuery: event.target.value });
-  };
-  	
+		this.setState({ searchQuery: event.target.value });
+	};
+
 	render() {
 		const { sporsmaler, searchQuery } = this.state;
 
@@ -66,64 +70,68 @@ class SporsmalList extends Component <{}, SporsmalListState> {
 
 		return (
 			<>
-			<Row>
-				<Column width={2}>
-				<Button.Success onClick={() => this.fetchSporsmaler(false)}>
-						Vis Alle Spørsmål
-				</Button.Success>
-				</Column>
-				<Column width={2}>
-				<Button.Success onClick={() => this.fetchSporsmaler(true)}>
-						Vis Ubesvarte Spørsmål
-				</Button.Success>
-				</Column>	
-				<Column width={2}>
-				<Button.Success	onClick={this.sortSporsmalByPoeng}>
-					Sorter etter Antall Visninger
-				</Button.Success>
-				</Column>
-				<Column width={2}>
-				<Button.Success	onClick={this.sortSporsmalByEditedDate}>
-					Sorter etter Sist Endret
-				</Button.Success>
-				</Column>
-			</Row>
-			<p></p>
+				<Row>
+					<Column width={2}>
+						<Button.Success onClick={() => this.fetchSporsmaler(false)}>
+							Vis Alle Spørsmål
+						</Button.Success>
+					</Column>
+					<Column width={2}>
+						<Button.Success onClick={() => this.fetchSporsmaler(true)}>
+							Vis Ubesvarte Spørsmål
+						</Button.Success>
+					</Column>
+					<Column width={2}>
+						<Button.Success onClick={this.sortSporsmalByPoeng}>
+							Sorter etter Antall Visninger
+						</Button.Success>
+					</Column>
+					<Column width={2}>
+						<Button.Success onClick={this.sortSporsmalByEditedDate}>
+							Sorter etter Sist Endret
+						</Button.Success>
+					</Column>
+				</Row>
+				<p></p>
 
-			<Form.Input
-          		type="text"
-          		value={searchQuery}
-          		onChange={this.handleSearchChange}
-          		placeholder="Søk etter spørsmål"
-        	/>
-			<p></p>				
-			<Card title="Spørsmål">
-				{filteredSporsmaler.map((sporsmal) => (
-					<Row key={sporsmal.sporsmalid}>
-						<Column width={1}>{sporsmal.sporsmalid}</Column>
-						<Column width={1}>{sporsmal.tittel}</Column>
-						<Column width={1}>{sporsmal.innhold}</Column>
-						<Column width={1}>{sporsmal.poeng}</Column>
-						<Column width={2}>
-							{sporsmal.dato?.toString().replace("T", " ").substring(0, 19)}
-						</Column>
-						<Column width={2}>
-							{sporsmal.sistendret
-								?.toString()
-								.replace("T", " ")
-								.substring(0, 19)}
-						</Column>
-						<Column width={1}>
-							<Button.Success
-								onClick={() => history.push("/sporsmal/" + sporsmal.sporsmalid)}
-							>
-								Til Spørsmål
-							</Button.Success>
-						</Column>
-					</Row>
-					
-				))}
-			</Card>
+				<Form.Input
+					type="text"
+					value={searchQuery}
+					onChange={this.handleSearchChange}
+					placeholder="Søk etter spørsmål"
+				/>
+				<p></p>
+				<Card title="Spørsmål">
+					{filteredSporsmaler.map((sporsmal) => (
+						<Row key={sporsmal.sporsmalid}>
+							<Column width={1}>{sporsmal.sporsmalid}</Column>
+							<Column width={1}>{sporsmal.tittel}</Column>
+							<Column width={1}>{sporsmal.innhold}</Column>
+							<Column width={1}>{sporsmal.poeng}</Column>
+							<Column width={2}>
+								{new Date(sporsmal.dato)
+									.toLocaleString()
+									.toString()
+									.replace(",", " ")}
+							</Column>
+							<Column width={2}>
+								{new Date(sporsmal.sistendret)
+									.toLocaleString()
+									.toString()
+									.replace(",", " ")}
+							</Column>
+							<Column width={1}>
+								<Button.Success
+									onClick={() =>
+										history.push("/sporsmal/" + sporsmal.sporsmalid)
+									}
+								>
+									Til Spørsmål
+								</Button.Success>
+							</Column>
+						</Row>
+					))}
+				</Card>
 			</>
 		);
 	}
@@ -131,9 +139,8 @@ class SporsmalList extends Component <{}, SporsmalListState> {
 	componentDidMount() {
 		sporsmalService
 			.getAll()
-			.then((sporsmaler) => (this.setState({ sporsmaler })));
+			.then((sporsmaler) => this.setState({ sporsmaler }));
 	}
 }
-
 
 export default SporsmalList;
