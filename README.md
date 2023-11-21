@@ -4,9 +4,6 @@
 
 - [ ] Fix client services to avoid use of NorEnglish and be more readable and understandable @Anyone
 - [ ] Finish tests @Aaron
-- [ ] Edit pages for Question and Answer @Ahmed
-- [ ] Mark answers as best for that question @Ruben
-- [ ] Comment questions, not ONLY answers @Ruben
 - [ ] Update or, for that matter, add a readme explaining briefly how client side works @Anyone
 - [ ] Continous integration? @I really don't know
 
