@@ -3,7 +3,8 @@ import { Component } from "react-simplified";
 import { Card, Row, Column, Button, Alert } from "../widgets";
 import svarService, { Svar } from "../services/svar-service";
 import { createHashHistory } from "history";
-import SvarCard from "./SvarCard";
+import SvarList from "./SvarListCard";
+import CommentCard from "./commentCard";
 
 const history = createHashHistory();
 
@@ -21,14 +22,14 @@ class SvarReplyCard extends Component<{
 		svarService.update(updatedSvar, sporsmalid, false).then(() => {
 			svar = updatedSvar;
 			Alert.success("Vurdering gitt");
-			SvarCard.instance()?.mounted();
 		});
 	};
 
 	handleDelete = (svar: Svar) => {
 		svarService.delete(svar).then(() => {
-			SvarCard.instance()?.mounted();
 			Alert.success("Svar slettet");
+			SvarList.instance()?.mounted();
+			CommentCard.instance()?.mounted();
 		});
 	};
 
@@ -89,13 +90,17 @@ class SvarReplyCard extends Component<{
 				{
 					<Row>
 						<Column>
-					<Button.Success
-						onClick={() => history.push(`/edit/${this.props.svar.sporsmalid}/${this.props.svar.svarid}`)}
-					>
-						Rediger
-					</Button.Success>
-				</Column>
-										<Column>
+							<Button.Success
+								onClick={() =>
+									history.push(
+										`/edit/${this.props.svar.sporsmalid}/${this.props.svar.svarid}`
+									)
+								}
+							>
+								Rediger
+							</Button.Success>
+						</Column>
+						<Column>
 							<Button.Danger
 								onClick={() => {
 									this.handleDelete(this.props.svar);

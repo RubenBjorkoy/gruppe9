@@ -5,7 +5,6 @@ import svarService, { Svar } from "../services/svar-service";
 import favorittService from "../services/favoritt-service";
 import SvarCard from "./SvarCard";
 
-
 class SvarList extends Component<{
 	sporsmalid: number;
 	onReply: () => void;

@@ -7,7 +7,8 @@ import sporsmalTagService from "../services/sporsmalTag-service";
 import svarService, { Svar } from "../services/svar-service";
 import { createHashHistory } from "history";
 import SvarList from "./SvarListCard";
-import SvarReply from "./SvarReply";
+//import SvarReply from "./SvarReply";
+import CommentCard from "./commentCard";
 
 const history = createHashHistory();
 
@@ -114,67 +115,7 @@ class SporsmalDetails extends Component<{
 					>
 						Slett
 					</Button.Danger>
-
-					<Card title="Kommentarer">
-						<Row>
-							<Column width={10}>
-								<Form.Input
-									type="text"
-									value={this.kommentartekst}
-									style={{ width: "80vw" }}
-									onChange={(event) => {
-										this.kommentartekst = event.currentTarget.value;
-									}}
-									onKeyDown={(event: any) => {
-										//Bruk returtast i tillegg til knapp
-										if (event.keyCode === 13) {
-											svarService
-												.create(
-													this.kommentartekst,
-													Number(this.sporsmal.sporsmalid),
-													0,
-													true
-												)
-												.then(() => {
-													// Laster inn Spørsmål på nytt
-													SvarList.instance()?.mounted();
-													this.kommentartekst = "";
-												});
-										}
-									}}
-								/>
-							</Column>
-							<Column width={1}>
-								<Button.Success
-									onClick={() => {
-										svarService
-											.create(
-												this.kommentartekst,
-												Number(this.sporsmal.sporsmalid),
-												0,
-												true
-											)
-											.then(() => {
-												// Laster inn Spørsmål på nytt
-												SvarList.instance()?.mounted();
-												this.kommentartekst = "";
-											});
-									}}
-								>
-									Kommentar
-								</Button.Success>
-							</Column>
-						</Row>
-
-						{this.kommentarer.length > 0 &&
-							this.kommentarer.map((svar) => (
-								<SvarReply
-									key={svar.svarid}
-									svar={svar}
-									sporsmalid={this.props.match.params.sporsmalid}
-								/>
-							))}
-					</Card>
+					<CommentCard sporsmalid={this.props.match.params.sporsmalid} />
 				</Card>
 
 				<Card title="Nytt Svar">

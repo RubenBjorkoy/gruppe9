@@ -51,7 +51,7 @@ class SvarCard extends Component<{
 			.create(this.reply, this.props.sporsmalid, 0, true, svar.svarid)
 			.then(() => {
 				this.reply = "";
-				SvarCard.instance()?.mounted();
+				SvarList.instance()?.mounted();
 			});
 	};
 
@@ -197,13 +197,17 @@ class SvarCard extends Component<{
 						</Button.Success>
 					</Column>
 					<Column>
-					<Button.Success
-						onClick={() => history.push(`/edit/${this.props.svar.sporsmalid}/${this.props.svar.svarid}`)}
-					>
-						Rediger
-					</Button.Success>
-				</Column>
-				<Column>
+						<Button.Success
+							onClick={() =>
+								history.push(
+									`/edit/${this.props.svar.sporsmalid}/${this.props.svar.svarid}`
+								)
+							}
+						>
+							Rediger
+						</Button.Success>
+					</Column>
+					<Column>
 						<Button.Danger
 							onClick={() => {
 								this.handleDelete(this.props.svar);

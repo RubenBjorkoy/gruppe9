@@ -11,7 +11,6 @@ import FavoriteList from "./components/FavoriteListPage";
 import Navigation from "./components/Navigation";
 import SvarEdit from "./components/SvarEditPage";
 
-
 let root = document.getElementById("root");
 if (root)
 	createRoot(root).render(
