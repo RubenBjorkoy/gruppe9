@@ -1,0 +1,57 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main # Change to your main branch name
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: |
+          cd server
+          npm install
+          cd ../client
+          npm install
+
+      - name: Prettier Check
+        run: |
+          cd server
+          npx prettier --check src/* test/*
+          cd ../client
+          npx prettier --check src/* test/*
+
+      - name: TypeScript Check
+        run: |
+          cd server
+          npx tsc --noEmit --skipLibCheck
+          cd ../client
+          npx tsc --noEmit --skipLibCheck
+
+      - name: Setup MySQL
+        run: |
+          sudo apt-get update
+          sudo apt-get -y upgrade
+          sudo apt-get -y install default-mysql-server
+          sudo service mysql start
+          echo "CREATE DATABASE $MYSQL_DATABASE;" | mysql -uroot
+          echo "CREATE TABLE Tasks (id INT NOT NULL AUTO_INCREMENT, title TEXT NOT NULL, done BOOL DEFAULT false, PRIMARY KEY(id));" | mysql -u$MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE
+
+      - name: Run Tests
+        run: |
+          cd server
+          touch test/config.ts
+          npm test
+          cd ../client
+          npm test
