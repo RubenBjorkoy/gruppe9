@@ -1,5 +1,22 @@
 ### Server API
 
+## Installation
+
+Install dependencies and start server files:
+
+```sh
+cd server
+npm install
+npm start
+```
+Run tests for server:
+
+```sh
+cd server
+npm install
+npm test
+```
+
 ### API Documentation: Sporsmal (Questions) Service
 
 #### 1. Get All Questions
