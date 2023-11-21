@@ -26,7 +26,6 @@ class AddTagCard extends Component<{ onTagCreated: () => void }> {
 			this.props.onTagCreated();
 			this.newTag.navn = "";
 			this.newTag.forklaring = "";
-			history.push("/tags");
 		});
 	};
 

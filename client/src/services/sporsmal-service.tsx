@@ -46,30 +46,34 @@ class SporsmalService {
 		dato?: Date,
 		sistendret?: Date
 	) {
-		return axios
-			.post<{ id: number }>("/sporsmal", {
-				tittel: tittel,
-				innhold: innhold,
-				poeng: poeng,
-			})
-			// Gammel code. Endret til async pga at testinga feila.
-			// .then((response) => {
-			// 	chosenTags.forEach((tagid) => {
-			// 		sporsmalTagService.create(response.data.id, tagid);
-			// 	});
-			// 	response.data;
-			// });
-			.then(async (response) => {
-        const sporsmalId = response.data.id;
+		return (
+			axios
+				.post<{ id: number }>("/sporsmal", {
+					tittel: tittel,
+					innhold: innhold,
+					poeng: poeng,
+				})
+				// Gammel code. Endret til async pga at testinga feila.
+				// .then((response) => {
+				// 	chosenTags.forEach((tagid) => {
+				// 		sporsmalTagService.create(response.data.id, tagid);
+				// 	});
+				// 	response.data;
+				// });
+				.then(async (response) => {
+					const sporsmalId = response.data.id;
 
-        // Create tags and associate them with the created spørsmål
-        await Promise.all(
-          chosenTags.map((tagId) => sporsmalTagService.create(sporsmalId, tagId))
-        );
+					// Create tags and associate them with the created spørsmål
+					await Promise.all(
+						chosenTags.map((tagId) =>
+							sporsmalTagService.create(sporsmalId, tagId)
+						)
+					);
 
-        // Return the created spørsmål
-        return { sporsmalid: sporsmalId, tittel, innhold, chosenTags, poeng };
-      });
+					// Return the created spørsmål
+					return { sporsmalid: sporsmalId, tittel, innhold, chosenTags, poeng };
+				})
+		);
 	}
 
 	delete(sporsmalid: number) {
@@ -80,42 +84,44 @@ class SporsmalService {
 
 	update(sporsmal: Sporsmal, updateTime: boolean = true, tags?: Tag[]) {
 		//Add false to the update call to avoid updating time on update. For example when only updating score
-		return axios
-			.put<Sporsmal>("/sporsmal", [sporsmal as Sporsmal, updateTime])
-			// .then(async (response) => {
-			// 	if(tags){
-			// 		await sporsmalTagService.getTagForSporsmal(sporsmal.sporsmalid!).then((response: Tag[]) => {
-			// 			response.forEach((tag) => {
-			// 				sporsmalTagService.delete(sporsmal.sporsmalid!, tag.tagid);
-			// 			});
-			// 			tags.forEach((tag) => {
-			// 				sporsmalTagService.create(sporsmal.sporsmalid!, tag.tagid);
-			// 			});
-			// 		});
-			// 	}
-			// 	response.data
-			// }); Code er endra for testinga. Om oppdatering feila så bør dette endrast.
-			.then(async (response) => {
-        const updatedSporsmal = response.data;
+		return (
+			axios
+				.put<Sporsmal>("/sporsmal", [sporsmal as Sporsmal, updateTime])
+				// .then(async (response) => {
+				// 	if(tags){
+				// 		await sporsmalTagService.getTagForSporsmal(sporsmal.sporsmalid!).then((response: Tag[]) => {
+				// 			response.forEach((tag) => {
+				// 				sporsmalTagService.delete(sporsmal.sporsmalid!, tag.tagid);
+				// 			});
+				// 			tags.forEach((tag) => {
+				// 				sporsmalTagService.create(sporsmal.sporsmalid!, tag.tagid);
+				// 			});
+				// 		});
+				// 	}
+				// 	response.data
+				// }); Code er endra for testinga. Om oppdatering feila så bør dette endrast.
+				.then(async () => {
+					// If tags are provided, update associated tags
+					if (tags) {
+						// Delete existing tags
+						await sporsmalTagService
+							.getTagForSporsmal(sporsmal.sporsmalid!)
+							.then((response: Tag[]) => {
+								response.forEach((tag) => {
+									sporsmalTagService.delete(sporsmal.sporsmalid!, tag.tagid);
+								});
 
-        // If tags are provided, update associated tags
-        if (tags) {
-          // Delete existing tags
-          await sporsmalTagService.getTagForSporsmal(updatedSporsmal.sporsmalid!).then((response: Tag[]) => {
-            response.forEach((tag) => {
-              sporsmalTagService.delete(updatedSporsmal.sporsmalid!, tag.tagid);
-            });
+								// Create new tags
+								tags.forEach((tag) => {
+									sporsmalTagService.create(sporsmal.sporsmalid!, tag.tagid);
+								});
+							});
+					}
 
-            // Create new tags
-            tags.forEach((tag) => {
-              sporsmalTagService.create(updatedSporsmal.sporsmalid!, tag.tagid);
-            });
-          });
-        }
-
-        // Return the updated spørsmål
-        return updatedSporsmal;
-      });
+					// Return the updated spørsmål
+					return sporsmal;
+				})
+		);
 	}
 }
 

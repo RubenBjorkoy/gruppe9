@@ -2,17 +2,16 @@ import pool from "./mysql-pool";
 import type { RowDataPacket, ResultSetHeader } from "mysql2";
 
 export type Tag = {
-	tagid?: number; //sporsmalid is handled by the database
+	tagid?: number; //tagid is handled by the database
 	navn: string;
 	forklaring: string;
 };
 
 class TagService {
 	/**
-	 * Get question with given id.
+	 * Get tag with given id.
 	 */
 	get(id: number) {
-		//Also use this to get comments.
 		return new Promise<Tag | undefined>((resolve, reject) => {
 			pool.query(
 				"SELECT * FROM Tag WHERE tagid = ?",
@@ -32,7 +31,7 @@ class TagService {
 		});
 	}
 	/**
-	 * Get all questions.
+	 * Get all tags.
 	 */
 	getAll() {
 		return new Promise<Tag[]>((resolve, reject) => {
@@ -55,9 +54,9 @@ class TagService {
 	}
 
 	/**
-	 * Create new question having the given title.
+	 * Create new tag with the passed tag as parameter.
 	 *
-	 * Resolves the newly created question id.
+	 * Resolves the newly created tag id.
 	 */
 	create(tag: Tag) {
 		return new Promise<number>((resolve, reject) => {
@@ -75,11 +74,10 @@ class TagService {
 	}
 
 	/**
-	 * Updates a question with a given ID
+	 * Updates a tag by the inserted tag by that's tag tagid
 	 */
 	update(tag: Tag) {
 		return new Promise<number>((resolve, reject) => {
-			//dato will not change after initial insert, however sistendret updates for every change.
 			pool.query(
 				"UPDATE Tag SET navn=?, forklaring=? WHERE tagid=?",
 				[tag.navn, tag.forklaring, tag.tagid],
@@ -95,9 +93,9 @@ class TagService {
 	}
 
 	/**
-	 * Delete question with given id.
+	 * Delete tag with given id.
 	 *
-	 * Deleting a question will also delete all answers to that question.
+	 * Deleting a tag will also delete all tag-questions relations.
 	 */
 	delete(tagid: number) {
 		return new Promise<void>((resolve, reject) => {

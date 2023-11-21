@@ -29,6 +29,10 @@ class TagService {
 			})
 			.then((response) => response.data);
 	}
+
+	deleteTag(tagid: number) {
+		return axios.delete("/tag/" + tagid).then((response) => response.data);
+	}
 }
 
 const tagService = new TagService();

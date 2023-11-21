@@ -46,6 +46,13 @@ class TagsList extends Component<{}, TagListState> {
 		this.setState({ searchQuery: event.target.value });
 	};
 
+	handleDelete = (tag: Tag) => {
+		tagService.deleteTag(tag.tagid);
+		this.setState({
+			tags: this.state.tags.filter((t) => t.tagid != tag.tagid),
+		});
+	};
+
 	render() {
 		const { tags, searchQuery } = this.state;
 
@@ -66,12 +73,21 @@ class TagsList extends Component<{}, TagListState> {
 				/>
 
 				<Card title="Tagger">
-					{filteredTags.map((tag) => (
+					{filteredTags.map((tag: Tag) => (
 						<Row key={tag.tagid}>
 							<Column width={1}>{tag.tagid}</Column>
 							<Column width={1}>{tag.navn}</Column>
 							<Column width={1}>{tag.forklaring}</Column>
 							<Column width={3}>{tag.antall + "x spørsmål"}</Column>
+							<Column width={3}>
+								<Button.Danger
+									onClick={() => {
+										this.handleDelete(tag);
+									}}
+								>
+									Slett
+								</Button.Danger>
+							</Column>
 						</Row>
 					))}
 				</Card>
