@@ -10,6 +10,47 @@ describe('SporsmalService', () => {
     jest.resetAllMocks();
   });
 
+  it('should get a specific sporsmal by id', async () => {
+    // Arrange
+    const mockSporsmalId = 1;
+    const mockSporsmal: Sporsmal = {
+      sporsmalid: mockSporsmalId,
+      tittel: 'Test Question',
+      innhold: 'Question Contents',
+      poeng: 0,
+    };
+
+    (axios.get as jest.Mock).mockImplementation(() =>
+    Promise.resolve({ data: mockSporsmal })
+    );
+
+    // Act
+    const result = await SporsmalService.get(mockSporsmalId);
+
+    // Assert
+    expect(result).toEqual(mockSporsmal);
+    expect(axios.get).toHaveBeenCalledWith(`/sporsmal/${mockSporsmalId}`);
+  });
+
+  it('should get all sporsmaler', async () => {
+    // Arrange
+    const mockSporsmaler: Sporsmal[] = [
+      { sporsmalid: 1, tittel: 'Question 1', innhold: 'Content 1', poeng: 1 },
+      { sporsmalid: 2, tittel: 'Question 2', innhold: 'Content 2', poeng: 2 },
+    ];
+
+    (axios.get as jest.Mock).mockImplementation(() =>
+    Promise.resolve({ data: mockSporsmaler })
+    );
+
+    // Act
+    const result = await SporsmalService.getAll();
+
+    // Assert
+    expect(result).toEqual(mockSporsmaler);
+    expect(axios.get).toHaveBeenCalledWith('/sporsmal');
+  });
+
   it('should create a new sporsmal', async () => {
     const mockSporsmal = {
       tittel: 'Test Question',
