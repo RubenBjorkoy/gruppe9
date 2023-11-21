@@ -272,15 +272,25 @@ class SporsmalDetails extends Component<{
 
 		// Increase points when user enters the page to increase popularity
 
-		svarService
-			.getAll(this.props.match.params.sporsmalid)
-			.then((svar: Svar[]) => {
-				this.svarListe = svar;
-				this.kommentarer = svar.filter((svar) => svar.ersvar);
-				this.kommentarer = this.kommentarer.filter(
-					(kommentar) => kommentar.svarsvarid == null
-				);
-			});
+		// svarService
+		// 	.getAll(this.props.match.params.sporsmalid)
+		// 	.then((svar: Svar[]) => {
+		// 		this.svarListe = svar;
+		// 		this.kommentarer = svar.filter((svar) => svar.ersvar);
+		// 		this.kommentarer = this.kommentarer.filter(
+		// 			(kommentar) => kommentar.svarsvarid == null
+		// 		);
+		// 	});
+		const getAllPromise = svarService.getAll(this.props.match.params.sporsmalid);
+		if (getAllPromise) {
+		getAllPromise.then((svar: Svar[]) => {
+			this.svarListe = svar;
+			this.kommentarer = svar.filter((svar) => svar.ersvar);
+			this.kommentarer = this.kommentarer.filter(
+				(kommentar) => kommentar.svarsvarid == null
+			);
+		});
+		}
 	}
 }
 
