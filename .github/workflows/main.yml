@@ -3,7 +3,7 @@ name: CI/CD
 on:
   push:
     branches:
-      - main # Change to your main branch name
+      - dev
 
 jobs:
   build:
