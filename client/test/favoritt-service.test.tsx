@@ -14,8 +14,10 @@ describe('FavorittService', () => {
       { favorittid: 2, svarid: 2 },
     ];
 
-    axios.get.mockResolvedValue({ data: mockFavoritter });
-
+    (axios.get as jest.Mock).mockImplementation(() =>
+    Promise.resolve({ data: mockFavoritter })
+    );
+    
     const result = await FavorittService.getAll();
 
     expect(result).toEqual(mockFavoritter);
@@ -26,11 +28,12 @@ describe('FavorittService', () => {
     const mockSvarId = 1;
     const mockCreatedFavoritt: Favoritt = { favorittid: 3, svarid: 1 };
 
-    axios.post.mockResolvedValue({ data: { favoritt: mockCreatedFavoritt } });
+    (axios.post as jest.Mock).mockImplementation(() =>
+    Promise.resolve({ data: { favoritt: mockCreatedFavoritt } })
+    );
 
     const result = await FavorittService.create(mockSvarId);
 
-    // Adjust the expectation based on your actual implementation
     expect(result.favoritt.favorittid).toEqual(mockCreatedFavoritt.favorittid);
     expect(result.favoritt.svarid).toEqual(mockCreatedFavoritt.svarid);
     expect(axios.post).toHaveBeenCalledWith('/favoritt/1');
@@ -40,7 +43,11 @@ describe('FavorittService', () => {
     const mockSvarId = 1;
     const mockDeletedFavoritt: Favoritt = { favorittid: 1, svarid: mockSvarId };
 
-    axios.delete.mockResolvedValue({ data: mockDeletedFavoritt });
+
+    (axios.delete as jest.Mock).mockImplementation(() =>
+    Promise.resolve({ data: mockDeletedFavoritt })
+    );
+    
 
     const result = await FavorittService.delete(mockSvarId);
 
