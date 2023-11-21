@@ -12,12 +12,10 @@ describe('SporsmalTagService', () => {
     const mockSporsmalId = 1;
     const mockTags = [{ tagid: 1, navn: 'Tag1', forklaring: 'Description1' }];
 
-    // Mocking the Axios get method
     (axios.get as jest.Mock).mockResolvedValue({ data: mockTags });
 
     const result = await SporsmalTagService.getTagForSporsmal(mockSporsmalId);
 
-    // Adjust the expectation based on your actual implementation
     expect(result).toEqual(mockTags);
     expect(axios.get).toHaveBeenCalledWith(`/sporsmal/${mockSporsmalId}/tags`);
   });
@@ -31,7 +29,6 @@ describe('SporsmalTagService', () => {
 
     const result = await SporsmalTagService.getSporsmalForTags(mockTagId);
 
-    // Adjust the expectation based on your actual implementation
     expect(result).toEqual(mockSporsmal);
     expect(axios.get).toHaveBeenCalledWith(`/tag/${mockTagId}/sporsmal`);
   });
@@ -41,12 +38,10 @@ describe('SporsmalTagService', () => {
     const mockTagId = 1;
     const mockCreatedSporsmalTag = { sporsmalid: mockSporsmalId, tagid: mockTagId };
 
-    // Mocking the Axios post method
     (axios.post as jest.Mock).mockResolvedValue({ data: mockCreatedSporsmalTag });
 
     const result = await SporsmalTagService.create(mockSporsmalId, mockTagId);
 
-    // Adjust the expectation based on your actual implementation
     expect(result).toEqual(mockCreatedSporsmalTag);
     expect(axios.post).toHaveBeenCalledWith('/sporsmalTag/', {
       sporsmalid: mockSporsmalId,
@@ -58,12 +53,10 @@ describe('SporsmalTagService', () => {
     const mockSporsmalId = 1;
     const mockTagId = 1;
 
-    // Mocking the Axios delete method
     (axios.delete as jest.Mock).mockResolvedValue({ data: 1 });
 
     const result = await SporsmalTagService.delete(mockSporsmalId, mockTagId);
 
-    // Adjust the expectation based on your actual implementation
     expect(result).toEqual(1);
     expect(axios.delete).toHaveBeenCalledWith(`/sporsmalTag/${mockSporsmalId}/${mockTagId}`);
   });
