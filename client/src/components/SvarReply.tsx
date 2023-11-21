@@ -102,7 +102,7 @@ class SvarReplyCard extends Component<{
 						</Column>
 						<Column>
 					<Button.Success
-						onClick={() => history.push(`/edit/${this.props.svar.svarid}`)}
+						onClick={() => history.push(`/edit/${this.props.svar.sporsmalid}/${this.props.svar.svarid}`)}
 					>
 						Rediger
 					</Button.Success>

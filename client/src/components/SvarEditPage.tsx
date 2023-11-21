@@ -7,7 +7,7 @@ import { createHashHistory } from "history";
 const history = createHashHistory();
 
 class SvarEdit extends Component<{
-    match: { params: { svarid: number } };
+    match: { params: { sporsmalid: number, svarid: number} };
 }> {
     svar: Svar = {
         svarid: 0,
@@ -16,12 +16,11 @@ class SvarEdit extends Component<{
         poeng: 0,
         dato: new Date(),
         sistendret: new Date(),
-        ersvar: false,
-        ersvarsvarid: 0
+        ersvar: false
     };
 
     componentDidMount() {
-        svarService.get(this.props.match.params.svarid).then((svar: Svar) => {
+        svarService.get(this.props.match.params.sporsmalid, this.props.match.params.svarid!).then((svar: Svar) => {
             this.svar = svar;
         });
     }
@@ -49,7 +48,7 @@ class SvarEdit extends Component<{
     render() {
         return (
             <Card title="Rediger Svar">
-                <Form.Input
+                <Form.Input type="text"
                     label="Svar Tekst"
                     value={this.svar.svartekst}
                     onChange={(e) => (this.svar.svartekst = e.target.value)}

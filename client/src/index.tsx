@@ -24,7 +24,7 @@ if (root)
 				<Route path={"/sporsmal/:sporsmalid"} component={SporsmalDetails} />
 				<Route path={"/rediger/:sporsmalid"} component={SporsmalEdit} />
 				<Route exact path="/nyspor" component={SporsmalNew} />
-				<Route path={"/edit/:svarid"} component={SvarEdit} />
+				<Route path={"/edit/:sporsmalid/:svarid"} component={SvarEdit} />
 				<Route exact path="/favs" component={FavoriteList} />
 				<Route exact path="/tags" component={TagsList} />
 			</div>
