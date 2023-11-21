@@ -27,7 +27,7 @@ class CommentCard extends Component<{
 
 	render() {
 		return (
-			<Card title="Kommentarerer">
+			<Card title="Kommentarer">
 				<Row>
 					<Column width={10}>
 						<Form.Input
