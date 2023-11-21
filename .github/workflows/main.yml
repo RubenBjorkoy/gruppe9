@@ -19,14 +19,12 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
+          cache-dependency-path: |
+            server/package-lock.json
+            client/package-lock.json
 
-      - name: Install dependencies
-        run: |
-          cd server
-          npm ci
-          cd ../client
-          npm ci
+      - run: npm install
+      - run: npm test
 
       
       - name: Prettier Check
@@ -52,10 +50,4 @@ jobs:
           echo "CREATE DATABASE $MYSQL_DATABASE;" | mysql -uroot
           echo "CREATE TABLE Tasks (id INT NOT NULL AUTO_INCREMENT, title TEXT NOT NULL, done BOOL DEFAULT false, PRIMARY KEY(id));" | mysql -u$MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE
       
-      - name: Run Tests
-        run: 
-          cd server
-          touch test/config.ts
-          npm test
-          cd ../client
-          npm test
+
