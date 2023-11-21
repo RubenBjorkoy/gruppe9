@@ -1,0 +1,60 @@
+image: node:latest # Use a Docker image from https://hub.docker.com with the latest Node.js already installed
+
+variables:
+  MYSQL_HOST: localhost
+  MYSQL_USER: test
+  MYSQL_PASSWORD: test
+  MYSQL_DATABASE: test
+
+stages:
+  - build
+  - test
+
+before_script:
+  - apt-get update
+  - apt-get -y install default-mysql-server
+  - service mysql start
+  - mysql -e "CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE;"
+  - mysql -e "CREATE USER IF NOT EXISTS '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';"
+  - mysql -e "GRANT ALL PRIVILEGES ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%';"
+  - mysql -e "FLUSH PRIVILEGES;"
+
+install:
+  stage: build
+  script:
+    - cd server
+    - npm install
+    - cd ../client
+    - npm install
+  artifacts:
+    paths:
+      - server/node_modules
+      - client/node_modules
+
+prettier:
+  stage: test
+  script:
+    - cd server
+    - ./node_modules/.bin/prettier --check src/**/* test/**/*
+    - cd ../client
+    - ./node_modules/.bin/prettier --check src/**/* test/**/*
+
+typescript:
+  stage: test
+  script:
+    - cd server
+    - ./node_modules/.bin/tsc --noEmit --skipLibCheck
+    - cd ../client
+    - ./node_modules/.bin/tsc --noEmit --skipLibCheck
+
+test_server:
+  stage: test
+  script:
+    - cd server
+    - npm test
+
+test_client:
+  stage: test
+  script:
+    - cd client
+    - npm test
