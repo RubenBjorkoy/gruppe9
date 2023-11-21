@@ -204,6 +204,13 @@ class SvarCard extends Component<{
 						</Button.Success>
 					</Column>
 					<Column>
+					<Button.Success
+						onClick={() => history.push(`/edit/${this.props.svar.sporsmalid}/${this.props.svar.svarid}`)}
+					>
+						Rediger
+					</Button.Success>
+				</Column>
+				<Column>
 						<Button.Danger
 							onClick={() => {
 								this.handleDelete(this.props.svar);
@@ -212,13 +219,6 @@ class SvarCard extends Component<{
 							Slett
 						</Button.Danger>
 					</Column>
-					<Column>
-					<Button.Success
-						onClick={() => history.push(`/edit/${this.props.svar.sporsmalid}/${this.props.svar.svarid}`)}
-					>
-						Rediger
-					</Button.Success>
-				</Column>
 					<Column>
 						{
 							this.renderReplies() // Renders the replies
