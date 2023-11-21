@@ -4,7 +4,7 @@ import { Card, Row, Column, Button, Alert } from "../widgets";
 import svarService, { Svar } from "../services/svar-service";
 import { createHashHistory } from "history";
 import SvarList from "./SvarListCard";
-import CommentCard from "./commentCard";
+import CommentCard from "./CommentCard";
 
 const history = createHashHistory();
 
