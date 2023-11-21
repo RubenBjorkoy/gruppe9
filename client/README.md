@@ -1,6 +1,4 @@
-# Project Name
-
-Brief description or tagline for your project.
+# Gruppe 9
 
 ## Table of Contents
 
