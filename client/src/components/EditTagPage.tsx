@@ -60,6 +60,11 @@ class TagEdit extends Component<{
 							Oppdater
 						</Button.Success>
 					</Column>
+					<Column>
+					<Button.Danger onClick={() => history.goBack()}>
+						Gå tilbake
+					</Button.Danger>
+				</Column>
 				</Row>
 			</Card>
 		);

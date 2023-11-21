@@ -143,6 +143,11 @@ class SporsmalEdit extends Component<{
 								Oppdater
 							</Button.Success>
 						</Column>
+						<Column>
+							<Button.Danger onClick={() => history.goBack()}>
+								Gå tilbake
+							</Button.Danger>
+						</Column>
 					</Row>
 				</Card>
 				<AddTagCard onTagCreated={this.handleTagCreated} />
