@@ -57,13 +57,5 @@ jobs:
           cd ../client
           npx tsc --noEmit --skipLibCheck
       
-      - name: Setup MySQL
-        run: |
-          sudo apt-get update
-          sudo apt-get -y upgrade
-          sudo apt-get -y install default-mysql-server
-          sudo service mysql start
-          echo "CREATE DATABASE $MYSQL_DATABASE;" | mysql -uroot
-          echo "CREATE TABLE Tasks (id INT NOT NULL AUTO_INCREMENT, title TEXT NOT NULL, done BOOL DEFAULT false, PRIMARY KEY(id));" | mysql -u$MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE
       
 
