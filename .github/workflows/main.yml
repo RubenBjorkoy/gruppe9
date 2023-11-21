@@ -10,36 +10,38 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    strategy:
+      matrix:
+        node-version: ['14.x', '16.x', '18.x']
 
-      - name: Set up Node.js
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
-          node-version: '14'
-
+          node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         run: |
           cd server
           npm install
           cd ../client
           npm install
-
+      
       - name: Prettier Check
         run: |
           cd server
           npx prettier --check src/* test/*
           cd ../client
           npx prettier --check src/* test/*
-
+      
       - name: TypeScript Check
         run: |
           cd server
           npx tsc --noEmit --skipLibCheck
           cd ../client
           npx tsc --noEmit --skipLibCheck
-
+      
       - name: Setup MySQL
         run: |
           sudo apt-get update
@@ -48,7 +50,7 @@ jobs:
           sudo service mysql start
           echo "CREATE DATABASE $MYSQL_DATABASE;" | mysql -uroot
           echo "CREATE TABLE Tasks (id INT NOT NULL AUTO_INCREMENT, title TEXT NOT NULL, done BOOL DEFAULT false, PRIMARY KEY(id));" | mysql -u$MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE
-
+      
       - name: Run Tests
         run: |
           cd server
