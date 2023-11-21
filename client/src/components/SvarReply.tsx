@@ -100,6 +100,13 @@ class SvarReplyCard extends Component<{
 								Slett
 							</Button.Danger>
 						</Column>
+						<Column>
+					<Button.Success
+						onClick={() => history.push(`/edit/${this.props.svar.svarid}`)}
+					>
+						Rediger
+					</Button.Success>
+				</Column>
 					</Row>
 				}
 			</Card>

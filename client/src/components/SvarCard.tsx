@@ -213,6 +213,13 @@ class SvarCard extends Component<{
 						</Button.Danger>
 					</Column>
 					<Column>
+					<Button.Success
+						onClick={() => history.push(`/edit/${this.props.svar.svarid}`)}
+					>
+						Rediger
+					</Button.Success>
+				</Column>
+					<Column>
 						{
 							this.renderReplies() // Renders the replies
 						}
